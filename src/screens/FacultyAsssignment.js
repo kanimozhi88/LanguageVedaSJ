@@ -5,9 +5,6 @@ import { getAccessToken } from '../../redux/actions';
 import { useDispatch, useSelector } from 'react-redux';
 
 const FacultyAssignment=({navigation})=>{
-   
-   
-
     return(
         <View style={{flex:1}}>
             <Text style={{justifyContent:"center",margin:30,alignSelf:"center",color:"#A22451",fontWeight:"900",fontSize:23}}>ASSIGNMENT</Text>
