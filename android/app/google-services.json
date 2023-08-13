@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "682670575534",
+    "project_id": "connectedapp-a7a5e",
+    "storage_bucket": "connectedapp-a7a5e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:682670575534:android:618e0a05b986354c40423f",
+        "android_client_info": {
+          "package_name": "com.languageveda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "682670575534-thumv9m4ubd0qjfubmi6eqjt9s2uhsl0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3d3Z2OuutX7vMjUSpaCT3MxwU5oQqH_M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "682670575534-thumv9m4ubd0qjfubmi6eqjt9s2uhsl0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
