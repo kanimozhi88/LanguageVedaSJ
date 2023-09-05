@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { getAccessToken } from '../../redux/actions';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import moment from 'moment';
 import PieChart from 'react-native-pie-chart';
-import { useNavigation } from '@react-navigation/native';
 
 
 const HelpCenterScreen = ({ navigation }) => {
@@ -18,12 +17,6 @@ const HelpCenterScreen = ({ navigation }) => {
         Closed: 0,
         Done:0
     });
-
-    const data = [
-        { value: 35, color: '#FFC300' },
-        { value: 20, color: '#FF5733' },
-        { value: 45, color: '#C70039' },
-    ];
 
     const sum = statusCounts['Ticket Raised'] + statusCounts['Reopen'];
     const doneCloseSum = statusCounts['Closed'] + statusCounts['Done'];

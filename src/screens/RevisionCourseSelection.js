@@ -26,7 +26,7 @@ import moment from 'moment';
 import CheckBox from '@react-native-community/checkbox';
 
 
-const FacultyCourseSelection = ({ navigation, route }) => {
+const RevisionCourseSelection = ({ navigation, route }) => {
 
   const recordId = useSelector(state => state.recordId);
   const [final, setFinal] = useState('');
@@ -46,24 +46,28 @@ const FacultyCourseSelection = ({ navigation, route }) => {
   const [status,setStatus] = useState('');
   const [reopenStatus, setReopenStatus] = useState(false);
   const [reopenRes, setReopenRes] = useState('');
-  const testTypeValues = [{Type:"In Progress"},{Type:"Yet To Start"},{Type:"Completed"}]
+  const testTypeValues = [{Type:"In Progress"},{Type:"Yet To Start"},{Type:"Redo"}]
 
 
-  const { LPExecutionId, Status } = route.params;
-
+  const { LPExecutionId, Status, revisionId }= route.params;
+  console.log("paasedparamsrevision", LPExecutionId,Status, revisionId)
   useEffect(() => {
-    FacultyCourseSelection();
-    FacultyCourseRetrieval();
+    RevisionCourseSelection();
+    revisioncontentRetrieval();
   }, [])
 
-  const FacultyCourseSelection = async () => {
+  const RevisionCourseSelection = async () => {
     let data = {};
-    data.LPExecutionId = LPExecutionId;
+    data.revisionId = revisionId;
+    data.lesssonplanExId = LPExecutionId;
+    // data.revisionId = "a1B1e000000gihAEAQ",
+    // data.lessonplanExId = "a0z1e0000018jQoAAI"
 
     const body = JSON.stringify(data)
+    console.log("payload bodyis", body)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultylessonPlanExecutionsAndTests`, {
+    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyRevisionlessonPlanExecutionsAndTests`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -71,19 +75,19 @@ const FacultyCourseSelection = ({ navigation, route }) => {
       }),
       body,
     });
-    let FacultyCourseSelecRes = await response.json()
-    console.log("FacultyCourseSelection", FacultyCourseSelecRes);
-    setFinal(FacultyCourseSelecRes);
-    const newArray = FacultyCourseSelecRes?.testResponses.map((item) => ({
+    let RevisionCourseSelection = await response.json()
+    console.log("RevisionCourseSelection", RevisionCourseSelection);
+    setFinal(RevisionCourseSelection);
+    const newArray = RevisionCourseSelection?.testResponses.map((item) => ({
       testId: item.testId,
       IsActive: true,
     }))
     setTestArray(newArray);
 
-    if (final?.lessonPlanExecutions?.StartTime !== null && final?.lessonPlanExecutions?.EndTime
+    if (final?.revisions?.StartTime !== null && final?.revisions?.EndTime
       !== null) {
-      const startTime = new Date(final?.lessonPlanExecutions?.StartTime);
-      const endTime = new Date(final?.lessonPlanExecutions?.EndTime);
+      const startTime = new Date(final?.revisions?.StartTime);
+      const endTime = new Date(final?.revisions?.EndTime);
       const currentTime = new Date();
       const fifteenMinutesBeforeStartTime = new Date(startTime.getTime() - 15 * 60000);
       const isTouchable = currentTime >= fifteenMinutesBeforeStartTime && currentTime <= endTime;
@@ -132,19 +136,19 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     let FacultyTestActive = await response.json()
     console.log("faculty TestActive", FacultyTestActive);
    if(Array.isArray(FacultyTestActive)){
-    Alert.alert(" Test Assigned To Student successfully")
+    Alert.alert("Test Assigned To Student successfully")
    }
    setAssignEnable(false)
   }
 
-  const FacultyCourseRetrieval = async () => {
+  const revisioncontentRetrieval = async () => {
     let data = {};
     data.lpExecutionId = LPExecutionId;
 
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyLessonPlanFileContent`, {
+    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyRevisionLessonPlanExContent`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -272,15 +276,15 @@ const FacultyCourseSelection = ({ navigation, route }) => {
 
   const ExeDateUpdate = async () => {
     let data = {};
-    data.LessonPlanExecutionId = LPExecutionId;
-    data.TeacherExecutionDate = formatDate(date);
+    data.revisionId = revisionId;
+    data.revisionExecutionDate = formatDate(date);
     data.Status = status;
     data.Remarks = description
 
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyLpExecutionDateUpdate`, {
+    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyRevisionStatusDateUpdate`, {
       method: 'PATCH',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -292,7 +296,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     console.log("ExeDateUpdate", ExeDateUpdate);
  Alert.alert(
           "Successful",
-         "Data Updated Successfully",
+      "Data Updated Successfully",
        [{text: 'OK', onPress: () => setDescription('')}]
        )
 
@@ -326,7 +330,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
           <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Topic Name</Text>
           <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10 }}>
             {final !== '' ?
-              <Text style={{ color: "#B2B2B2", fontSize: 16, fontWeight: "400", marginHorizontal: 40 }}>{final?.lessonPlanExecutions[0]?.TopicName}</Text>
+              <Text style={{ color: "#B2B2B2", fontSize: 16, fontWeight: "400", marginHorizontal: 40 }}>{final?.revisions[0]?.TopicName}</Text>
               : null}
           </View>
         </View>
@@ -335,7 +339,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
           <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Sub Topic Name</Text>
           <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10 }}>
             {final !== '' ?
-              <Text style={{ color: "#B2B2B2", fontSize: 16, fontWeight: "400", marginHorizontal: 40 }}>{final?.lessonPlanExecutions[0]?.Subtopics}</Text>
+              <Text style={{ color: "#B2B2B2", fontSize: 16, fontWeight: "400", marginHorizontal: 40 }}>{final?.revisions[0]?.Subtopics}</Text>
               : null}
           </View>
         </View>
@@ -344,13 +348,13 @@ const FacultyCourseSelection = ({ navigation, route }) => {
           <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Activity</Text>
           <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10 ,height:"30%"}}>
             {final !== '' ?
-              <Text style={{ color: "#B2B2B2", fontSize: 16, fontWeight: "400", marginHorizontal: 40 }}>{final?.lessonPlanExecutions[0]?.Activity}</Text>
+              <Text style={{ color: "#B2B2B2", fontSize: 16, fontWeight: "400", marginHorizontal: 40 }}>{final?.revisions[0]?.Activity}</Text>
               : null}
           </View>
         </View>
 
         <View style={{ marginTop: 20, marginHorizontal: 25,bottom:"20%" }}>
-          {(Status === "Completed" || Status === "In Progress" ) && final?.testResponses?.length  > 0 ? 
+          {  final?.testResponses?.length  > 0 ? 
           <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500",marginBottom:10 }}>Assignment</Text>
           : null}
           {final !== '' ?
@@ -405,12 +409,12 @@ const FacultyCourseSelection = ({ navigation, route }) => {
           ) : null}
         </View>
 
-       { final !== '' && final?.lessonPlanExecutions[0]?.Status === "Completed" ? 
+       { final !== '' && final?.revisions[0]?.Status === "Completed" ? 
           <View style={{ marginTop: 20, marginHorizontal: 25,bottom:"20%" }}>
           <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Status</Text>
           <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10 }}>
             {final !== '' ?
-              <Text style={{ color: "#B2B2B2", fontSize: 16, fontWeight: "400", marginHorizontal: 40 }}>{final?.lessonPlanExecutions[0]?.Status}</Text>
+              <Text style={{ color: "#B2B2B2", fontSize: 16, fontWeight: "400", marginHorizontal: 40 }}>{final?.revisions[0]?.Status}</Text>
               : null}
           </View>
 
@@ -465,7 +469,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
                 style={{ width: 18, height: 20, }}
                 source={require('../../assets/Calendarblack.png')} />
               {Status === "Completed" && final !== '' ?
-                <Text style={{ color: "#1B2236", fontSize: 16, fontWeight: "400", marginLeft: 5 }}>{moment(final?.lessonPlanExecutions[0]?.RevisionDate).format('DD/MM/YY')}</Text>
+                <Text style={{ color: "#1B2236", fontSize: 16, fontWeight: "400", marginLeft: 5 }}>{moment(final?.revisions[0]?.RevisionDate).format('DD/MM/YY')}</Text>
                 :
                 //  showDatePicker ?
                 <View>
@@ -517,7 +521,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
           <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Feedback</Text>
           <View style={{ width: "100%", backgroundColor: "#F5F7FB", height: 145, marginTop: 10 }}>
             {final !== '' && Status === "Completed" ?
-              <Text style={{ color: "#000000", fontSize: 16, fontWeight: "400", marginHorizontal: 40, textAlign: "justify", }}>{final?.lessonPlanExecutions[0]?.Remarks}</Text>
+              <Text style={{ color: "#000000", fontSize: 16, fontWeight: "400", marginHorizontal: 40, textAlign: "justify", }}>{final?.revisions[0]?.Remarks}</Text>
               :
               <TextInput
                 placeholder='Type Message'
@@ -546,7 +550,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     </SafeAreaView>
   )
 }
-export default FacultyCourseSelection;
+export default RevisionCourseSelection;
 
 const styles = StyleSheet.create({
   container: {

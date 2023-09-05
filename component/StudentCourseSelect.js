@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getAccessToken } from '../redux/actions';
 import LinearGradient from 'react-native-linear-gradient';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
@@ -18,7 +18,6 @@ const StudentCourseSelect = ({batchId,courseName }) => {
 
   const [final, setFinal] = useState();
   const dataFetchApi = useSelector(state => state.recordId);
-  console.log("DATAFETCH", dataFetchApi);
   
   useEffect(() => {
     StudentCourseSelection();
@@ -43,7 +42,6 @@ const StudentCourseSelect = ({batchId,courseName }) => {
     let courseresult = await response.json()
     console.log(" studentCourseSelection API RES",   courseresult);
     setFinal(courseresult);
-    console.log("final data is", final)
   }
 
   const ShowMoreText = ({ text, numberOfLinesToShow }) => {

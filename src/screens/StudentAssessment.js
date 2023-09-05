@@ -12,8 +12,8 @@ import {
 } from 'react-native';
 import moment from 'moment';
 
-const StudentMyCourses = ({ navigation }) => {
-   
+const StudentAssessment = ({ navigation }) => {
+
     const [final, setFinal] = useState();
     const dataFetchApi = useSelector(state => state.recordId);
 
@@ -38,17 +38,17 @@ const StudentMyCourses = ({ navigation }) => {
             body,
         });
         let courseresult = await response.json()
-        console.log(" student MyCOURSE API RES", courseresult);
+        console.log(" student Assessment API RES", courseresult);
         setFinal(courseresult);
         console.log("final data is", final)
     }
 
     const renderItem = ({ item }) => {
         return (
-            <View style={{height:151}}>
-                <TouchableOpacity 
-                onPress={()=> navigation.navigate('StudentCourseSelection',{batchId: item?.batchId,courseName: item?.CourseName})}
-                style={[styles.rectangle, { backgroundColor: item?.BackgroundColor,width:152 }]} >
+            <View style={{ height: 151 }}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('StudentAssessmentSelect', { batchId: item?.batchId, courseName: item?.CourseName })}
+                    style={[styles.rectangle, { backgroundColor: item?.BackgroundColor, width: 152 }]} >
                     <View >
                         <Image source={require('../../assets/langicon.png')}
                             style={styles.imageStyle} />
@@ -64,13 +64,13 @@ const StudentMyCourses = ({ navigation }) => {
         <SafeAreaView style={styles.container}>
             <View style={{ flexDirection: "row", marginTop: 20 }}>
                 <TouchableOpacity
-                onPress={()=> navigation.goBack()} 
-                style={{ width: 40, height: 40, marginLeft: 20, elevation: 3, borderRadius: 10 }}>
+                    onPress={() => navigation.goBack()}
+                    style={{ width: 40, height: 40, marginLeft: 20, elevation: 3, borderRadius: 10 }}>
                     <Image
                         source={require('../../assets/orangebackarrow.jpg')}
-                        style={{ width: 40, height: 40, alignSelf: "center"}} />
+                        style={{ width: 40, height: 40, alignSelf: "center" }} />
                 </TouchableOpacity>
-                <Text style={{ color: "#F38216", fontWeight: "600", fontSize: 16, marginLeft: 100,margin:10 }}>My Courses</Text>
+                <Text style={{ color: "#F38216", fontWeight: "600", fontSize: 16, marginLeft: 100, margin: 10 }}>Assessment</Text>
             </View>
 
 
@@ -78,7 +78,7 @@ const StudentMyCourses = ({ navigation }) => {
                 data={final}
                 renderItem={renderItem}
                 numColumns={2}
-                style={{ alignSelf: "center",margin:10, }}
+                style={{ alignSelf: "center", margin: 10, }}
             />
 
         </SafeAreaView>
@@ -96,9 +96,16 @@ const styles = StyleSheet.create({
         padding: 20,
         marginVertical: 8,
     },
-    courseNameTxt: { fontWeight: "600", color: "white", marginBottom: 20, margin: 10, marginLeft: 30,fontSize:16 },
+    courseNameTxt: {
+        fontWeight: "600",
+        color: "white",
+        marginBottom: 20,
+        margin: 10,
+        marginLeft: 30,
+        fontSize: 16
+    },
     rectangle: {
-     
+
         width: 170,
         height: 140,
         margin: 10,
@@ -106,7 +113,13 @@ const styles = StyleSheet.create({
         elevation: 5,
         justifyContent: 'center',
     },
-    dateStyle : { color: "white", marginLeft: 30 ,fontWeight:"300",fontSize:10,fontFamily:"Poppins"}, 
+    dateStyle: {
+        color: "white",
+        marginLeft: 30,
+        fontWeight: "300",
+        fontSize: 10,
+        fontFamily: "Poppins"
+    },
     image: {
         width: 50,
         height: 50,
@@ -114,11 +127,11 @@ const styles = StyleSheet.create({
         marginLeft: 8
     },
     imageStyle: {
-        width: 30, 
+        width: 30,
         height: 30,
-       marginLeft:10,
-       bottom:10
+        marginLeft: 10,
+        bottom: 10
     },
 });
 
-export default StudentMyCourses;
+export default StudentAssessment;

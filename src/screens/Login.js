@@ -191,7 +191,7 @@ const Login = ({ route }) => {
           onPress={() => handleSubmit()}
         // onPress={() => navigation.navigate('MyCourses')}
         >
-          <Text style={{ color: "white", alignSelf: "center", fontWeight: "bold", padding: 10, fontSize: 16,textAlignVertical:"center",height:50 }}>Log In</Text>
+          {/* <Text style={{ color: "white", alignSelf: "center", fontWeight: "bold", padding: 10, fontSize: 16,textAlignVertical:"center",height:50 }}>Log In</Text> */}
         </TouchableOpacity>
 
         {/* <TouchableOpacity

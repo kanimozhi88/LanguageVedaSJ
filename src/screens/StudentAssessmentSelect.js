@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
 import { useSelector } from 'react-redux';
-import { getAccessToken } from '../redux/actions';
+import { getAccessToken } from '../../redux/actions';
 import LinearGradient from 'react-native-linear-gradient';
 import PieChart from 'react-native-pie-chart';
 import { useNavigation } from '@react-navigation/native';
 
-const StudentCourseAssignment = ({ batchId, courseName }) => {
+const StudentAssessmentSelect = ({route}) => {
 
+    const {courseName, batchId} = route.params;
     const navigation = useNavigation();
     const dataFetchApi = useSelector(state => state.recordId);
     const [final, setFinal] = useState('');
@@ -34,7 +35,7 @@ const StudentCourseAssignment = ({ batchId, courseName }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/testassignmentController`, {
+        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNStudentAssessmentContollers/`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -43,10 +44,11 @@ const StudentCourseAssignment = ({ batchId, courseName }) => {
             body,
         });
         let assignmentresult = await response.json()
-        console.log("student course Assignment", assignmentresult);
+        console.log("student  Assessment select", assignmentresult);
         const { records } = assignmentresult;
         setFinal(records);
     }
+    console.log("final value", final)
 
     const statusOrder = ["Assignment Submitted", "Vetting In Progress", "Redo", "Completed"];
     if(final !== ''){
@@ -94,11 +96,6 @@ setSeriesArr({
   });
 }
 
-    
-    console.log('Completed Count:', seriesArr.completed);
-    console.log('submitted Count:', seriesArr.submitted);
-    console.log('Vetting In Progress Count:', seriesArr.InProgress);
-    console.log('redo Submitted Count:', seriesArr.Redo);
     const widthAndHeight = 145
     const series = [seriesArr.completed, seriesArr.submitted, seriesArr.InProgress, seriesArr.Redo]
     const sliceColor = ['#9B88ED', '#04BFDA', '#FB67CA', '#FFA84A']
@@ -107,26 +104,23 @@ setSeriesArr({
 
         return (
             <TouchableOpacity
-            onPress={()=>{navigation.navigate('StudentAssignmentUpload',{testId:item.id})}}
-                style={{ width: "99%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop: 10, elevation: 5, padding: 10, }}>
+            onPress={()=>{navigation.navigate('StudentCourseAssessment',{testId:item?.id})}}
+                style={{ width: "99%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop: 10, elevation: 5, padding: 20, }}>
                 <View style={{ flexDirection: "row",alignItems:"center", justifyContent:"space-around"}}>
-                    <Image
-                        style={{}}
-                        source={require('../assets/langicon.png')} />
 
                     <Text numberOfLines={2} style={{ color: "black", fontSize: 16, fontWeight: "500", margin: 10,alignSelf:"center",width:100 }}>{item.assignmentTitle}</Text>
                
                 <View
                     style={{
-                        width: 89,backgroundColor: item.status === "Vetting In Progress" ?
+                        width: 89,backgroundColor: item.status === "Yet To Start" ?
                             "#FF9533" :
                             item.status === "Completed" ?
                                 "#67CB65" :
                                 item.status === "Redo" ? "#E74444" : item.status === "Assignment Submitted" ? "#84d3f0" : "red", borderRadius: 10,
                     }}
                 >
-                    {item.status === "Vetting In Progress" ?
-                        <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>In-Progress</Text> :
+                    {item.status === "Yet To Start" ?
+                        <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Yet To Start</Text> :
                         item.status === "Completed" ?
                             <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Completed</Text> :
                             item.status === "Redo" ? <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}> Redo</Text> :
@@ -141,7 +135,17 @@ setSeriesArr({
 
     return (
         // <View></View>
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1,backgroundColor:"white" }}>
+             <View style={{ flexDirection: "row", marginTop: 20 }}>
+                <TouchableOpacity
+                onPress={()=> navigation.goBack()} 
+                style={{ width: 40, height: 40, marginLeft: 20, elevation: 3, borderRadius: 10 }}>
+                    <Image
+                        source={require('../../assets/orangebackarrow.jpg')}
+                        style={{ width: 40, height: 40, alignSelf: "center"}} />
+                </TouchableOpacity>
+                <Text style={{ color: "#F38216", fontWeight: "600", fontSize: 16, marginLeft: 100,margin:10 }}>Assessment</Text>
+            </View>
 
             <LinearGradient
                 colors={['#F38216', '#D33189']}
@@ -220,4 +224,4 @@ setSeriesArr({
         </View>
     )
 };
-export default StudentCourseAssignment;
+export default StudentAssessmentSelect;

@@ -2,7 +2,6 @@ import { act } from "react-test-renderer";
 import { GET_API, GET_LASTNAME, GET_COURSEAPIRESULT,GET_LOGINSTATUS } from "./actionType";
 
 const initialState = {
-    // counter: 0,
     recordId: '',
     status: '',
     LastName: '',

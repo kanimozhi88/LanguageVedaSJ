@@ -1,28 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getAccessToken } from '../../redux/actions';
-import { useNavigation } from '@react-navigation/native';
 import {
     StyleSheet,
     Text,
     View,
-    Linking,
     SafeAreaView,
-    FlatList,
     TouchableOpacity,
     Image,
     ScrollView,
     TextInput,
-    Alert,
     Modal,
 } from 'react-native';
 import moment from 'moment';
-import { Dropdown } from "react-native-element-dropdown";
 
 
 const TicketStatus = ({ navigation, route }) => {
 
-    const recordId = useSelector(state => state.recordId);
     const [final, setFinal] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [reopencheck, setReopenCheck] = useState(false);

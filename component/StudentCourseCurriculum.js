@@ -1,25 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, FlatList,ActivityIndicator } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { View, Text, Image, FlatList } from 'react-native';
 import { getAccessToken } from '../redux/actions';
 import * as Progress from 'react-native-progress';
-import { isDate } from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 
 const StudentCourseCurriculum = ({batchId,courseName}) => {
 
-    // console.log("batchid is", batchid);
-    // const {CourseName, batchId} = route.params;
     const [totalNum,setTotalNum] = useState(0);
-    const [average,setAverage] = useState(0);
-    const [ percentage,setPercentage] = useState(0);
     // const [count,SetCount] = useState(0);
-    const dataFetchApi = useSelector(state => state.recordId);
     const [final, setFinal] = useState('');
-    const [loading,setLoading] = useState(false);
-
 
     useEffect(() => {
         StudentCurriculumApiCall();
@@ -28,9 +19,6 @@ const StudentCourseCurriculum = ({batchId,courseName}) => {
     
     const StudentCurriculumApiCall = async () => {
       let data = {};
-      // data.CourseName = CourseName;
-      // data.CourseName = "Malayalam";
-      // data.batchId = "a0D1e000002Ip7MEAS";
       data.batchId = batchId;
 
       const body = JSON.stringify(data)
@@ -67,10 +55,6 @@ const totalProgress = (final?.lessonPlanExecutions ?? []).reduce((total, obj) =>
 const averageProgress = totalProgress / Math.max(final?.lessonPlanExecutions?.length, 1);
 const roundedAverage = Number(averageProgress.toFixed(0));
 // setPercentage(roundedAverage);
-console.log(`Total Progress in curriculum: ${totalProgress}`);
-console.log(`Average Progress in curriculum: ${averageProgress}`);
-console.log("roundedAverage in curriculum", roundedAverage);
-
 
 //Overall percentage
     const [currentStatusFill, setStatusFill] = useState(0);

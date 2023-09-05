@@ -1,18 +1,13 @@
-import React, { Component } from 'react';
-import { Linking, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
 import { WebView } from 'react-native-webview';
-
-
-
 
 const WebViewScreen = ({route}) => {
   const {link} = route.params;
 
-
     return(
-     <WebView source={{ uri: link }} style={{ flex: 1 }} />
+     <WebView source={{ uri: link }} style={{ flex: 1}} />
     
   )
 }
 
-  export default WebViewScreen;
+export default WebViewScreen;

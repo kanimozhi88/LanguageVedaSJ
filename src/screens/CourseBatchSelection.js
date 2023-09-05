@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, TextInput, Button, StyleSheet, Text, TouchableOpacity, Image, Alert, alert, FlatList, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getAccessToken } from '../../redux/actions';
 import { useDispatch, useSelector } from 'react-redux';

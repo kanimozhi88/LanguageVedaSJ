@@ -365,13 +365,15 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
             </View>
 
             <View style={{ marginTop: 20, marginHorizontal: 25 }}>
+              {final?.Attachments?.length > 0 ?
                 <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>File</Text>
+                : null}
                 {final !== '' ?
                 final?.Attachments.map((item, index) => {
                     if (item.Type.includes("pdf")) {
                         return (
                          
-                            <View style={{ width: "100%",flexDirection:"row",backgroundColor: "#F5F7FB",}}>
+                            <View key={item.id} style={{ width: "100%",flexDirection:"row",backgroundColor: "#F5F7FB",}}>
                             <Image
                                     source={require('../../assets/PDF.png')}
                                     style={{ width: 16, height: 16, margin: 5 }} />
@@ -404,7 +406,7 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
                 }
                 )
                 : null}
-                {Status === "Completed" || Status === "Submited" ?
+                {/* {Status === "Completed" || Status === "Submited" ?
                 <View 
                 style={{ width: "100%", flexDirection:"row",backgroundColor: "#F5F7FB"}}>
                  <TouchableOpacity
@@ -412,7 +414,7 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
                     <Text style={{color:"#FFFFFF",fontSize:18,fontWeight:"600"}}>Download</Text>
                  </TouchableOpacity>
                  </View>
-                 : null}
+                 : null} */}
               
             </View>
 

@@ -9,33 +9,27 @@ import MyComponent from '../screens/MyCourses';
 import CourseCurriculum from '../screens/CourseCurriculum';
 import SpecificCurriculum from '../screens/SpecificCurriculum';
 import MyCoursesPage from '../screens/MycoursesPage';
-import Assignment from '../screens/Assignment';
-import Attendance from '../screens/Attendance';
 import StudentMyCourses from '../screens/StudentMyCourses';
 import FacultyBatchScreen from '../screens/FacultyBatchScreen';
 import FacultyLessonPlanExe from '../screens/FacultyLessonPlanExe';
 import FacultyLessonPlan from '../screens/FaultyLessonPlan';
 import FacultyMyCoursesPage from '../screens/FacultyMyCoursesPage';
-import ViewBatch from '../screens/ViewBatch';
 import CourseBatchSelection from '../screens/CourseBatchSelection';
 import ViewAssign from '../screens/ViewAssign';
 import ScheduleAssign from '../screens/ScheduleAssign';
 import DocumentScreen from '../screens/DocumentScreen';
 // import FacultyAssignment from '../screens/FacultyAsssignment';
 import WebViewScreen from '../screens/WebViewScreen';
-import ChartsandDashboard from '../screens/ChartsandDashboard';
 import ScheduleCalendar from '../screens/Calender';
 import FacultyCalendar from '../screens/FacultyCalendar';
 import FacultyBatches from '../screens/FacultyBatches';
 import MyCourses from '../screens/MyCourses';
-import ScheduleScreen from './ScheduleScreen';
 import HelpCenterScreen from './HelpCenterScreen';
 import MyProfileScreen from './MyProfileScreen';
 import StudentCourseSelection from '../screens/StudentCourseSelection';
 import StudentAssignmentUpload from '../screens/StudentAssignmentUpload';
 import NewTicket from '../screens/NewTicket';
 import TicketStatus from '../screens/TicketStatus';
-// import downloader from '../screens/Downloader';
 import Profile from '../screens/Profile';
 import ProfilePasswordChange from '../screens/ProfilePasswordChange';
 import ProfileOtpValidation from '../screens/ProfileOtpValidation';
@@ -50,6 +44,13 @@ import FacultyAssignment from '../../component/FacultyAssignment';
 import FacultyAssignmentSelect from '../screens/FacultyAssignmentSelect';
 import SpecificStudentTestDetails from '../screens/SpecificStudentTestDetails';
 import FacultyRevision from '../screens/FacultyRevision';
+import RevisionCourseSelection from '../screens/RevisionCourseSelection';
+import VideoAssets from '../screens/VideoAssets';
+import ViewVideoAssets from '../screens/ViewVideoAssets';
+import StudentAssessment from '../screens/StudentAssessment';
+import StudentAssessmentSelect from '../screens/StudentAssessmentSelect';
+import StudentCourseAssessment from '../screens/StudentCourseAssessment';
+import StudentTakeAssessment from '../screens/StudentTakeAssessment';
 
 
 const Stack = createNativeStackNavigator();
@@ -85,33 +86,7 @@ const StackNavigation=()=>{
      
     return(
       <Stack.Navigator initialRouteName="MyCourses">
-  {/*  
-          {!isFirstLaunch ? 
-    <Stack.Screen
-        name="OnboardingScreen"
-        component={OnboardingScreen}
-        options={{
-         headerShown: false
-        }}
-      />
-       : <></>}
-    <Stack.Screen
-        name="LoginScreen"
-        component={LoginScreen}
-        options={{
-         headerShown:false
-        }}
-      />
-        
-      <Stack.Screen
-        name="CommunityScreen"
-        component={CommunityScreen}
-        options={{
-          title: 'Welcome',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      /> */}
+  
       <Stack.Screen
         name="MyCourses"
         component={MyCourses}
@@ -119,13 +94,6 @@ const StackNavigation=()=>{
           headerShown:false
          }}
       />
-       {/* <Stack.Screen
-        name="downloader"
-        component={downloader}
-        options={{
-          headerShown:false
-         }}
-      /> */}
        <Stack.Screen
         name="WebViewDownload"
         component={WebViewDownload}
@@ -162,24 +130,6 @@ const StackNavigation=()=>{
         }}
       />
       <Stack.Screen
-        name="Assignment"
-        component={Assignment}
-        options={{
-          title: 'Assignment',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      />
-      <Stack.Screen
-        name="Attendance"
-        component={Attendance}
-        options={{
-          title: 'Attendance',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      />
-      <Stack.Screen
         name="Calender"
         component={ScheduleCalendar}
         options={{
@@ -211,23 +161,11 @@ const StackNavigation=()=>{
       />
   
       <Stack.Screen
-        name="ChartsandDashboard"
-        component={ChartsandDashboard}
-        options={{
-          title: 'Charts and Dashboards',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      />
-  
-      <Stack.Screen
         name="WebViewScreen"
         component={WebViewScreen}
         options={{
-          title: 'WebViewScreen',
-          headerStyle,
-          headerTitleStyle,
-        }}
+          headerShown:false    
+          }}
       />
       {/* <Stack.Screen
         name="FacultyAssignment"
@@ -242,10 +180,8 @@ const StackNavigation=()=>{
         name="DocumentScreen"
         component={DocumentScreen}
         options={{
-          title: 'Documents Details',
-          headerStyle,
-          headerTitleStyle,
-        }}
+          headerShown:false    
+          }}
       />
       <Stack.Screen
         name="ScheduleAssign"
@@ -268,15 +204,6 @@ const StackNavigation=()=>{
       <Stack.Screen
         name="CourseBatchSelection"
         component={CourseBatchSelection}
-        options={{
-          title: 'Assignment',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      />
-      <Stack.Screen
-        name="ViewBatch"
-        component={ViewBatch}
         options={{
           title: 'Assignment',
           headerStyle,
@@ -333,8 +260,57 @@ const StackNavigation=()=>{
         }}
       />
       <Stack.Screen
+      name="RevisionCourseSelection"
+      component={RevisionCourseSelection}
+      options={{
+        headerShown:false    
+        }}
+      />
+      <Stack.Screen
+      name="VideoAssets"
+      component={VideoAssets}
+      options={{
+        headerShown:false    
+        }}
+      />
+      <Stack.Screen
+      name="ViewVideoAssets"
+      component={ViewVideoAssets}
+      options={{
+        headerShown:false    
+        }}
+      />
+      <Stack.Screen
       name="SpecificStudentTestDetails"
       component={SpecificStudentTestDetails}
+      options={{
+        headerShown:false    
+        }}
+      />
+      <Stack.Screen
+      name="StudentAssessment"
+      component={StudentAssessment}
+      options={{
+        headerShown:false    
+        }}
+      />
+        <Stack.Screen
+      name="StudentAssessmentSelect"
+      component={StudentAssessmentSelect}
+      options={{
+        headerShown:false    
+        }}
+      />
+       <Stack.Screen
+      name="StudentCourseAssessment"
+      component={StudentCourseAssessment}
+      options={{
+        headerShown:false    
+        }}
+      />
+       <Stack.Screen
+      name="StudentTakeAssessment"
+      component={StudentTakeAssessment}
       options={{
         headerShown:false    
         }}

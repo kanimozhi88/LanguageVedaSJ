@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Image, SafeAreaView, Text, TouchableOpacity, FlatList, Button } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, View, Image, SafeAreaView, Text, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 // import RNFetchBlob from 'react-native-fetch-blob';
 import WebView from 'react-native-webview';
-import { CommonActions } from '@react-navigation/native';
 import { getDataMethod } from '../../redux/actions';
-import { getLoginStatus } from '../../redux/actions';
-
 
 const MyProfileScreen = ({ navigation }) => {
 
@@ -15,7 +11,6 @@ const MyProfileScreen = ({ navigation }) => {
 
   const LastName = useSelector(state => state.LastName);
   const Email = useSelector(state => state.Email);
-  const Phone = useSelector(state => state.Phone);
   const [imagePath, setImagePath] = useState('');
   const userrecordId = useSelector(state => state.recordId);
   const Status = useSelector(state => state.status);
@@ -110,7 +105,7 @@ const MyProfileScreen = ({ navigation }) => {
 
       <TouchableOpacity
         onPress={() => [
-          //   dispatch(getDataMethod('')),
+            dispatch(getDataMethod('')),
           // dispatch(getLoginStatus('')),
           console.log("recordId profile", userrecordId, Status)]}
         // onPress={() => {
