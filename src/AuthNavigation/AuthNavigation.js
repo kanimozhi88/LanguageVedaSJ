@@ -9,6 +9,7 @@ import PasswordSet from '../screens/PasswordSet';
 import OtpValidation from '../screens/OtpValidation';
 import TabNavigation from '../TabNavigation/TabNavigation';
 import SplashScreen from 'react-native-splash-screen';
+import WebViewScreen from '../screens/WebViewScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -72,6 +73,7 @@ const AuthNavigation = () => {
                     headerShown: false
                 }}
             />
+            
             {/* {recordId !== '' : <></> :<></>} */}
         </Stack.Navigator>
        

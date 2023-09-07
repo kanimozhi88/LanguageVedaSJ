@@ -128,9 +128,11 @@ const StudentCourseAssessment = ({ navigation, route }) => {
           </View>
         </View> : null}
 
-        {final !== '' && final?.Status === "Yet To Start" ?
+        {final !== '' && final?.Status !== "Completed" ?
           <TouchableOpacity
-            onPress={() => navigation.navigate('StudentTakeAssessment', {testId: testId})}
+            onPress={() => 
+              navigation.navigate('StudentTakeAssessment', {testId: testId})
+            }
             style={{ backgroundColor: "#F38216", width: "60%", alignSelf: "center", alignItems: "center", borderRadius: 5, padding: 10, marginTop: 25 }}>
             <Text style={{ color: "white", fontSize: 18, fontWeight: "500" }}>Take Assessment</Text>
           </TouchableOpacity> : <></>}

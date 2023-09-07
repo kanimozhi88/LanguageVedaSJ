@@ -85,26 +85,46 @@ const StudentTakeAssessment = ({ navigation, route }) => {
   }
   const [selectedOption, setSelectedOption] = useState(Array(final.length).fill(null));
   const [selectedAns, setSelectedAns] = useState(Array(final.length).fill(null));
+  const [uploadedImages, setUploadedImages] = useState(Array(final.length).fill([]));
+ console.log(">>>>>>>>>>",selectedOption)
+
+  const StudentQuesAnsUpdate = async () => {
+    let data = {};
+    data.questionUpdates = selectedOption
+
+    const body = JSON.stringify(data);
+    const token = await getAccessToken();
+    const bearer = 'Bearer ' + token;
+    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNStudentQuesAnswerUpdate`, {
+      method: 'PATCH',
+      headers: new Headers({
+        "Content-Type": "application/json",
+        "Authorization": bearer
+      }),
+      body,
+    });
+    let StudentQuesAnsUpdate = await response.json()
+    console.log("StudentQuesAnsUpdate ",StudentQuesAnsUpdate );
+Alert.alert("Success");    
+  }
 
 
-console.log("selectedvalu",selectedOption)
-
-const uploadImageApi = async (fileName, base64, imageType) => {
+const uploadImageApi = async (fileName, base64, imageType, questId) => {
   console.log("upload api inside", fileName, imageType, recordId);
   let data = {};
-  data.contactId = recordId;
+  // data.contactId = recordId;
   // data.contactId = "0031e00000LYW28AAH";
   data.fileName = fileName;
   // data.fileName = "istockphoto-1158907706-124x1024.jpg";
   // data.TestName = selectedValue;
   data.fileData = base64;
   data.Type = imageType;
-  data.testId = testId;
+  data.QuesId = questId;
 
   const body = JSON.stringify(data)
   const token = await getAccessToken();
   const bearer = 'Bearer ' + token;
-  const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/Testfileupload/`, {
+  const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNStudentAssessmentAttachmentService`, {
     method: 'POST',
     headers: new Headers({
       "Content-Type": "application/json",
@@ -120,7 +140,7 @@ const uploadImageApi = async (fileName, base64, imageType) => {
     Alert.alert(
       'Uploaded Successfully',
       'OK',
-      [{text: 'OK',onPress: () => {[setShowSubmit(true), setImages([])]}}
+      [{text: 'OK',onPress: () => {[ setImages([])]}}
       ],
       { cancelable: false }
     );
@@ -129,12 +149,15 @@ const uploadImageApi = async (fileName, base64, imageType) => {
 
 const callUploadApi = () => {
   for (let i = 0; i < images.length; i++) {
-    uploadImageApi(images[i]?.name, images[i]?.base64, images[i].type);
+    uploadImageApi(images[i]?.name, images[i]?.base64, images[i]?.type, images[i]?.QuesId);
 
   }
 }
-
-
+ const onSubmitClick = () =>{
+  StudentQuesAnsUpdate();
+  callUploadApi();
+ }
+console.log("curenntindex>>>>>>>>>",currentIndex);
 const launchGallery = () => {
   const options = {
     noData: true,
@@ -148,12 +171,14 @@ const launchGallery = () => {
       let BaseURL = 'data:image/png;base64,';
       let CompleteURL = BaseURL + SelectedImage;
       let obj = [];
+      const itemAtIndex1 = final[currentIndex];
       
       obj.push({
         name: response?.assets[0]?.fileName,
         base64: SelectedImage,
         url: CompleteURL,
         type: 'image',
+        QuesId : itemAtIndex1?.QuesId,
       });
 
       // Get file size
@@ -201,6 +226,8 @@ const launchCamera = async () => {
       obj["base64"] = SelectedImage;
       obj["url"] = CompleteURL;
       obj["type"] = 'image';
+      const itemAtIndex1 = final[currentIndex];
+      obj["QuesId"] = itemAtIndex1?.QuesId;
 
       // Get file size
       let fileSize = response.assets[0].fileSize; // in bytes
@@ -227,7 +254,7 @@ const launchCamera = async () => {
     }
   });
 };
-
+console.log("images is>>>>>",images);
 
 const PickDocument = async () => {
   try {
@@ -263,6 +290,8 @@ const PickDocument = async () => {
       obj["name"] = result[i].name;
       obj["base64"] = base64;
       obj["type"] = 'pdf';
+      const itemAtIndex1 = final[currentIndex];
+      obj["QuesId"] = itemAtIndex1?.QuesId;
 
       newImages.push(obj);
       // uploadImageApi(result[i].name, base64, 'pdf', selectedTestRecordId);
@@ -299,11 +328,33 @@ const onClickFrontDoc = () => {
   actionSheetRef.current?.show();
 };
 
-  const QuestionScreen = ({ questionData, onNextPress , onPrevPress, selectedOption}) => {
+const handleFileUpload = (fileName, base64, imageType, questionIndex) => {
+  // Create a copy of the uploaded images state
+  const updatedUploadedImages = [...uploadedImages];
+  
+  // Check if there are uploaded images for the current question
+  if (!updatedUploadedImages[questionIndex]) {
+    updatedUploadedImages[questionIndex] = [];
+  }
+
+  // Add the uploaded image to the current question
+  updatedUploadedImages[questionIndex].push({
+    fileName,
+    base64,
+    imageType,
+  });
+
+  // Update the state with the modified uploaded images
+  setUploadedImages(updatedUploadedImages);
+};
+
+  const QuestionScreen = ({ questionData, onNextPress , onPrevPress, selectedOption,  uploadedImages, handleFileUpload}) => {
+    const filteredImages = images.filter(item => item.QuesId === questionData?.QuesId);
 
    
     return (
-      <View style={[styles.container,{margin:10}]}>
+      <View style={[styles.container,{margin:10,}]}>
+        
         <Text style={{color:"#696F79", fontSize:16,fontWeight:"600",marginTop:20,marginHorizontal:20}}>Question{currentIndex+1}/{final?.length}</Text>
         <Text style={{color:"#696F79", fontSize:15,fontWeight:"400",marginTop:20,marginHorizontal:20}}>{questionData?.Que}</Text>
        {(currentIndex+1) == final?.length ? setSubmitShow(true) : null}
@@ -331,7 +382,7 @@ const onClickFrontDoc = () => {
           </RadioButton.Group>
         </>
         : 
-        <View style={{width:"65%",height:"40%",borderWidth:1,borderStyle: "dashed", borderColor:"gray",alignSelf:"center",marginTop:30,borderRadius:20}}>
+        <View style={{width:"65%",padding:10,borderWidth:1,borderStyle: "dashed", borderColor:"gray",alignSelf:"center",marginTop:30,borderRadius:20}}>
           <ActionSheet
           ref={actionSheetRef}
           title={
@@ -353,12 +404,13 @@ const onClickFrontDoc = () => {
         />
           <Text style={{alignSelf:"center",marginTop:"20%"}}>Upload Your files</Text>
           <TouchableOpacity
-          onPress={()=> validateUpload()}
+          onPress={()=> validateUpload(questionData?.QuesId)}
            style={{alignSelf:"center",marginTop:"5%",backgroundColor:"#F38216",padding:10,borderRadius:5,width:"40%"}}
            >
             <Text style={{color:"#FFFFFF",fontSize:15,fontWeight:"700",alignSelf:"center"}}>Upload</Text>
           </TouchableOpacity>
         </View>
+
         }
 
 
@@ -369,17 +421,54 @@ const onClickFrontDoc = () => {
             <Text style={{color:"#FFFFFF",fontSize:15,fontWeight:"700",alignSelf:"center"}}>Previous</Text>
           </TouchableOpacity>
           <TouchableOpacity 
-          style={{backgroundColor:"#F38216",width:"30%",padding:10,borderRadius:5}}
+          disabled={(currentIndex + 1) === final?.length}
+          style={{backgroundColor: (currentIndex + 1) === final?.length? "gray": "#F38216",width:"30%",padding:10,borderRadius:5}}
           onPress={handleNextPress}>
             <Text style={{color:"#FFFFFF",fontSize:15,fontWeight:"700",alignSelf:"center"}}>Next</Text>
           </TouchableOpacity>
         </View>
-               {/* <Button title="Previous" onPress={handlePrevPress} disabled={currentIndex === 0} />
-        <Button title="Next" onPress={handleNextPress} /> */}
+         {/* <ScrollView style={{flex:1}}> */}
+        {filteredImages.map((item, index) => {
+          if (item.name.includes(".pdf")) {
+            return (
+              <View style={{marginTop:10, marginBottom:30, backgroundColor: "white", width: "90%", elevation: 5, flexDirection: "row", paddingBottom: 5, justifyContent: "space-evenly", alignItems: "center", alignSelf: "center" }}>
+                <Image
+                  source={require('../../assets/PDF.png')}
+                  style={{ width: 16, height: 16, margin: 5 }} />
+                <Text style={{ margin: 5 }}>{item.name.length > 25 ? item?.name.substring(0, 25) + "..." : item?.name}</Text>
+                <Text style={{ padding: 4, borderColor: "#CDD3D8", borderWidth: 1, color: "#242634", fontSize: 11, fontWeight: "900", margin: 5 }}> {item?.size}</Text>
+                <MenuProvider>
+                  <View style={{ height: 75, top: 15, }}>
+                    <PopupMenuExample base64={item?.base64} type='pdf' index={-1} />
+                  </View>
+                </MenuProvider>
+
+              </View>
+            )
+          } else {
+            return (
+              <View style={{ marginTop:10,backgroundColor: "white", width: "90%", elevation: 5, flexDirection: "row", paddingBottom: 5, justifyContent: "space-evenly", alignItems: "center", alignSelf: "center" }}>
+                <Image
+                  source={require('../../assets/Image.png')}
+                  style={{ width: 16, height: 16, margin: 5 }} />
+                <Text style={{ margin: 5 }}>{item.name.length > 25 ? item?.name.substring(0, 25) + "..." : item?.name}</Text>
+                <Text style={{ padding: 4, borderColor: "#CDD3D8", borderWidth: 1, color: "#242634", fontSize: 11, fontWeight: "900", margin: 5 }}> {item?.size}</Text>
+                <MenuProvider>
+                  <View style={{ height: 55, top: 15, }}>
+                    <PopupMenuExample base64={item?.base64} type='image' index={-1} />
+                  </View>
+                </MenuProvider>
+
+              </View>
+            )
+          }
+        }
+        )}
+        {/* </ScrollView> */}
       </View>
     );
   };
-
+console.log("uploaded>>>>>>>>>>>>>",uploadedImages)
   const handleNextPress = () => {
     if (currentIndex < final?.length - 1) {
       setCurrentIndex(currentIndex + 1);
@@ -462,48 +551,14 @@ const onClickFrontDoc = () => {
 
   <ScrollView >
     
-      <QuestionScreen questionData={final[currentIndex]} onNextPress={handleNextPress} onPrevPress={handlePrevPress} selectedOption={selectedAns[currentIndex]}  />
+      <QuestionScreen questionData={final[currentIndex]} onNextPress={handleNextPress} onPrevPress={handlePrevPress} selectedOption={selectedAns[currentIndex]} handleFileUpload={handleFileUpload} />
 
-      {images.map((item, index) => {
-          if (item.name.includes(".pdf")) {
-            return (
-              <View style={{marginTop:10, marginBottom:30, backgroundColor: "white", width: "90%", elevation: 5, flexDirection: "row", paddingBottom: 5, justifyContent: "space-evenly", alignItems: "center", alignSelf: "center" }}>
-                <Image
-                  source={require('../../assets/PDF.png')}
-                  style={{ width: 16, height: 16, margin: 5 }} />
-                <Text style={{ margin: 5 }}>{item.name.length > 25 ? item?.name.substring(0, 25) + "..." : item?.name}</Text>
-                <Text style={{ padding: 4, borderColor: "#CDD3D8", borderWidth: 1, color: "#242634", fontSize: 11, fontWeight: "900", margin: 5 }}> {item?.size}</Text>
-                <MenuProvider>
-                  <View style={{ height: 75, top: 15, }}>
-                    <PopupMenuExample base64={item?.base64} type='pdf' index={-1} />
-                  </View>
-                </MenuProvider>
-
-              </View>
-            )
-          } else {
-            return (
-              <View style={{ marginTop:10,backgroundColor: "white", width: "90%", elevation: 5, flexDirection: "row", paddingBottom: 5, justifyContent: "space-evenly", alignItems: "center", alignSelf: "center" }}>
-                <Image
-                  source={require('../../assets/Image.png')}
-                  style={{ width: 16, height: 16, margin: 5 }} />
-                <Text style={{ margin: 5 }}>{item.name.length > 25 ? item?.name.substring(0, 25) + "..." : item?.name}</Text>
-                <Text style={{ padding: 4, borderColor: "#CDD3D8", borderWidth: 1, color: "#242634", fontSize: 11, fontWeight: "900", margin: 5 }}> {item?.size}</Text>
-                <MenuProvider>
-                  <View style={{ height: 55, top: 15, }}>
-                    <PopupMenuExample base64={item?.base64} type='image' index={-1} />
-                  </View>
-                </MenuProvider>
-
-              </View>
-            )
-          }
-        }
-        )}
+    
 
         {submitShow ?
           <TouchableOpacity
-          style={{backgroundColor:"#F38216",width:"30%",padding:10,borderRadius:5,marginTop:20,alignSelf:"center"}}
+          onPress={ () => onSubmitClick()}
+          style={{backgroundColor:"#F38216",width:"30%",padding:10,borderRadius:5,alignSelf:"center",marginBottom:"40%"}}
           >
             <Text style={{color:"#FFFFFF",fontSize:15,fontWeight:"700",alignSelf:"center"}}>Submit</Text>
           </TouchableOpacity>

@@ -192,6 +192,7 @@ const FacultyRevision = ({ route, navigation }) => {
                       <View>
                     <Text style={{ color: "#B9B9B9", fontSize: 16, fontWeight: "500", margin: 10 }}>{item?.topicName}</Text>
                     <Text style={{ color: "#B9B9B9", fontSize: 16, fontWeight: "500", marginLeft:14 }}>{item?.revisionName}</Text>
+                    <Text style={{ color: "#B9B9B9", fontSize: 16, fontWeight: "500", marginLeft:14 }}>{item?.courseName}</Text>
                     </View>
                     <View style={{flexDirection:"row",margin:12}}>
                     <Text style={{ color: "#B9B9B9", fontSize: 13, fontWeight: "700", }}>Status: </Text>

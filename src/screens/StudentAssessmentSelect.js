@@ -104,7 +104,13 @@ setSeriesArr({
 
         return (
             <TouchableOpacity
-            onPress={()=>{navigation.navigate('StudentCourseAssessment',{testId:item?.id})}}
+            onPress={()=>{
+                if( item.status === "Completed"){
+                    navigation.navigate('AssessmentReport',{testId:item?.id})
+                }else{
+                    navigation.navigate('StudentCourseAssessment',{testId:item?.id})
+                }
+            }}
                 style={{ width: "99%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop: 10, elevation: 5, padding: 20, }}>
                 <View style={{ flexDirection: "row",alignItems:"center", justifyContent:"space-around"}}>
 
@@ -112,15 +118,15 @@ setSeriesArr({
                
                 <View
                     style={{
-                        width: 89,backgroundColor: item.status === "Yet To Start" ?
+                        width: 89,backgroundColor: item.status === "In Progress" ?
                             "#FF9533" :
                             item.status === "Completed" ?
                                 "#67CB65" :
                                 item.status === "Redo" ? "#E74444" : item.status === "Assignment Submitted" ? "#84d3f0" : "red", borderRadius: 10,
                     }}
                 >
-                    {item.status === "Yet To Start" ?
-                        <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Yet To Start</Text> :
+                    {item.status === "In Progress" ?
+                        <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>In Progress</Text> :
                         item.status === "Completed" ?
                             <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Completed</Text> :
                             item.status === "Redo" ? <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}> Redo</Text> :
