@@ -3,15 +3,12 @@ import { View, Text,Platform,PermissionsAndroid, StyleSheet, SafeAreaView, Image
 import { getAccessToken } from "../../redux/actions";
 import { useDispatch, useSelector } from 'react-redux';
 import HTML from 'react-native-render-html';
-import HTMLRender from 'react-native-render-html';
 import { ActionSheetCustom as ActionSheet } from 'react-native-actionsheet';
 import * as ImagePicker from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import { Menu, MenuOptions, MenuOption, MenuTrigger, MenuProvider } from 'react-native-popup-menu';
 import TruncatedText from '../../component/TruncatedText';
-import RNFS, { downloadFile } from 'react-native-fs';
-import WebView from 'react-native-webview';
 // import RNFetchBlob from 'react-native-fetch-blob';
 
 
