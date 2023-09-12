@@ -234,17 +234,22 @@ const Timmer = ({ recordId }) => {
                 </View>
                 <View>
 
+{  final[0]?.startTimestamp !=='' && final[0]?.endTimestamp !=='' && final[0] !=='' && final[0]?.length > 0 ? 
                     <View style={{ height: 90, width: 90, borderRadius: 45, borderWidth: 2, borderColor: recordType ==="Faculty" ? "#F38216" :"white",marginLeft:"40%" }}>
 
-                        { final[0]?.startTimestamp !=='' && final[0]?.endTimestamp !=='' && final[0] !=='' ?
+                        { final[0]?.startTimestamp !=='' && final[0]?.endTimestamp !=='' && final[0] !==''  ?
                             <View style={{top:30,marginLeft:15}}>
 
                                 <CountdownTimer  startTimestamp={final[0]?.startTimestamp} recordType={recordType} endTimestamp={final[0]?.endTimestamp} link={final[0]?.zoomLink !== null ? final[0]?.zoomLink : null} />
                                 
                             </View>
-                            : <Text style={{ alignSelf: "center", top:50 }}>No events</Text>}
-                        {/* {console.log("userRecordId", userRecordId, Status)} */}
+                            : <Text style={{ alignSelf: "center", top:50 }}>No Events</Text>}
                     </View>
+                    : 
+                    <View style={{marginLeft:"50%",bottom:"90%"}}>
+                    <Text style={{ color:"white",alignSelf: "center", top:50 }}>No Events</Text>
+                    </View>
+                    }
 
 
                 </View>

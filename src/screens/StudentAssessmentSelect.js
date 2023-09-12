@@ -120,6 +120,7 @@ setSeriesArr({
                     style={{
                         width: 89,backgroundColor: item.status === "In Progress" ?
                             "#FF9533" :
+                            item.status === "Yet To Start" ?   "#FF9533" :
                             item.status === "Completed" ?
                                 "#67CB65" :
                                 item.status === "Redo" ? "#E74444" : item.status === "Assignment Submitted" ? "#84d3f0" : "red", borderRadius: 10,
@@ -127,6 +128,8 @@ setSeriesArr({
                 >
                     {item.status === "In Progress" ?
                         <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>In Progress</Text> :
+                        item.status === "Yet To Start" ?
+                        <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Yet To Starts</Text> :                       
                         item.status === "Completed" ?
                             <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Completed</Text> :
                             item.status === "Redo" ? <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}> Redo</Text> :

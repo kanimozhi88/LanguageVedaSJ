@@ -100,18 +100,14 @@ const StudentTakeAssessment = ({ navigation, route }) => {
     });
     let StudentQuesAnsUpdate = await response.json()
     console.log("StudentQuesAnsUpdate ",StudentQuesAnsUpdate );
-Alert.alert("Success");    
+// Alert.alert("Success");    
   }
 
 
 const uploadImageApi = async (fileName, base64, imageType, questId) => {
   console.log("upload api inside", fileName, imageType, recordId);
   let data = {};
-  // data.contactId = recordId;
-  // data.contactId = "0031e00000LYW28AAH";
   data.fileName = fileName;
-  // data.fileName = "istockphoto-1158907706-124x1024.jpg";
-  // data.TestName = selectedValue;
   data.fileData = base64;
   data.Type = imageType;
   data.QuesId = questId;
@@ -133,7 +129,7 @@ const uploadImageApi = async (fileName, base64, imageType, questId) => {
   if (jsonUploadApiRes.Status === 'Success') {
     // Alert.alert("Uploaded Successfully")
     Alert.alert(
-      'Uploaded Successfully',
+      'Assessment Test Uploaded Successfully',
       'OK',
       [{text: 'OK',onPress: () => {[ setImages([])]}}
       ],
@@ -545,9 +541,9 @@ console.log("uploaded>>>>>>>>>>>>>",uploadedImages)
       </View>
 
   <ScrollView >
-    
+    {final !== '' ? 
       <QuestionScreen questionData={final[currentIndex]} onNextPress={handleNextPress} onPrevPress={handlePrevPress} selectedOption={selectedAns[currentIndex]} handleFileUpload={handleFileUpload} />
-
+      : null}
     
 
         {submitShow ?
