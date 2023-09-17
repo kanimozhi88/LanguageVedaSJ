@@ -53,6 +53,8 @@ import StudentCourseAssessment from '../screens/StudentCourseAssessment';
 import StudentTakeAssessment from '../screens/StudentTakeAssessment';
 import AsssessmentReport from '../screens/AssessmentReport';
 import AssessmentReport from '../screens/AssessmentReport';
+import Scrutinize from '../screens/Scrutinize';
+import FacultyStudentDetails from '../screens/FacultyStudentDetails';
 
 
 const Stack = createNativeStackNavigator();
@@ -264,6 +266,20 @@ const StackNavigation=()=>{
       <Stack.Screen
       name="RevisionCourseSelection"
       component={RevisionCourseSelection}
+      options={{
+        headerShown:false    
+        }}
+      />
+       <Stack.Screen
+      name="Scrutinize"
+      component={Scrutinize}
+      options={{
+        headerShown:false    
+        }}
+      />
+      <Stack.Screen
+      name="FacultyStudentDetails"
+      component={FacultyStudentDetails}
       options={{
         headerShown:false    
         }}

@@ -77,6 +77,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     const newArray = FacultyCourseSelecRes?.testResponses.map((item) => ({
       testId: item.testId,
       IsActive: true,
+      status: "In Progress"
     }))
     setTestArray(newArray);
 

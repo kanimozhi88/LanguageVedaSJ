@@ -2,6 +2,7 @@ import React, { useEffect, useState, } from 'react';
 import { useSelector } from 'react-redux';
 import { getAccessToken } from '../redux/actions';
 import { useNavigation } from '@react-navigation/native';
+import { Alert } from 'react-native';
 
 import {
   StyleSheet,
@@ -27,7 +28,8 @@ const FacultyAssessment = ({ batchid }) => {
 
   const FacultyAssessemntApi = async () => {
     let data = {};
-    data.batchid = batchid;
+    data.batchId = batchid;
+    // data.batchId = "a0D1e000002MS5BEAW"
 
     const body = JSON.stringify(data)
     const token = await getAccessToken();
@@ -45,55 +47,91 @@ const FacultyAssessment = ({ batchid }) => {
     setFinal(FacultyAssessment);
   }
 
+    
+  const FacultyTestActive = async (testId,status) => {
+   console.log("tesid>>>>>>>>>>>>>>",testId,status)
+   const existingArray = [];
+    const testArray = {
+      testId : testId,
+      isActive : true,
+      status : status
+    }
+    existingArray.push(testArray);
+    console.log("testArrat>>>>>>>>>>>>>>>",existingArray);
+    let data = {};
+    data.patchDataList = existingArray;
+
+    const body = JSON.stringify(data)
+    const token = await getAccessToken();
+    const bearer = 'Bearer ' + token;
+    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyTestActive`, {
+      method: 'PATCH',
+      headers: new Headers({
+        "Content-Type": "application/json",
+        "Authorization": bearer
+      }),
+      body,
+    });
+    let FacultyTestActive = await response.json()
+    console.log("faculty TestActive", FacultyTestActive);
+   if(Array.isArray(FacultyTestActive)){
+    Alert.alert(" Test Assigned successfully")
+   }
+  }
 
 
 
   const renderlist = ({ item, index }) => {
     return (
-      <TouchableOpacity
+      <View
         // onPress={() => navigation.navigate('FacultyAssignmentSelect', { LPExecutionId: item?.lpExecutionId, assignmentTitle: item?.assignmentTitle })}
         style={{ width: "90%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop: 10, elevation: 5 }}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <View style={{ flexDirection: "row" }}>
-            <Text style={{ color: "black", fontSize: 16, fontWeight: "500", margin: 10 }}>LN {index + 1}-</Text>
-            <Text style={{ color: "black", fontSize: 16, fontWeight: "500", margin: 10 }}>{item?.assignmentTitle}</Text>
+            <Text style={{ color: "#130F26", fontSize: 15, fontWeight: "500", marginTop: 10, marginLeft: 10 }}>LN {index + 1}-</Text>
+            <Text style={{ color: "#130F26", fontSize: 15, fontWeight: "500", marginTop: 10 }}>{item?.assignmentTitle}</Text>
           </View>
-          <View style={{ flexDirection: "row", marginRight: 20 }}>
-            <Text style={{ fontSize: 16, fontWeight: "500", color: "#B2B2B2" }}>Status:</Text>
-            <Text style={{ fontSize: 16, fontWeight: "500", color: "#F38216" }}>{item?.status}</Text>
-          </View>
-
-
-        </View>
-        <View style={{ flexDirection: "row", margin: 10 }}>
-            <View style={{ flexDirection: "row", margin: 10 }}>
-          <Text style={{ fontSize: 14, fontWeight: "500", color: "black" }}>Planned Date</Text>
-          <Text style={{ fontSize: 14, fontWeight: "500", color: "#F38216" }}>{item?.testDate}</Text>
+          <View style={{ flexDirection: "row", marginRight: "5%", width: "25%" }}>
+            <Text style={{ fontSize: 12, fontWeight: "500", color: "#F38216", marginTop: 10 }}>Status:</Text>
+            <Text style={{ fontSize: 10, fontWeight: "500", color: "#B9B9B9", marginTop: 12 }}>{item?.status !== null ? item?.status : `----`}</Text>
           </View>
 
-          <View style={{ flexDirection: "row", margin: 10 }}>
-          <Text style={{ fontSize: 14, fontWeight: "500", color: "black" }}>Execution Date</Text>
-          <Text style={{ fontSize: 14, fontWeight: "500", color: "#F38216" }}>{item?.startDate}</Text>
-          </View>
 
         </View>
-        <View style={{ flexDirection: "row", margin: 5 }}>
-          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View style={{ flexDirection: "row", marginTop: 10, marginLeft: 10 }}>
+          <View style={{ flexDirection: "row", }}>
+            <Text style={{ fontSize: 10, fontWeight: "500", color: "#130F26", marginTop: 3 }}>Planned Date:</Text>
+            <Text style={{ fontSize: 13, fontWeight: "500", color: "#B9B9B9", }}> {item?.testDate}</Text>
+          </View>
+
+          <View style={{ flexDirection: "row", marginLeft: "10%" }}>
+            <Text style={{ fontSize: 10, fontWeight: "500", color: "#130F26", marginTop: 3 }}>Execution Date:</Text>
+            <Text style={{ fontSize: 13, fontWeight: "500", color: "#B9B9B9" }}> {item?.startDate !== null ? item?.startDate : null}</Text>
+          </View>
+
+        </View>
+        <View style={{ flexDirection: "row", marginTop: 20, }}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between", margin: 10 }}>
             <Image
-              style={{ width: 18, height: 18 }}
-              source={require('../assets/Profile.png')} />
-            <Text style={[{ fontWeight: "400", fontSize: 12 }]}>{item?.enrolledStudents} Students</Text>
+              style={{ width: 18, height: 25, marginTop: 8 }}
+              source={require('../assets/studentCountActive.png')} />
+            <Text style={[{ fontWeight: "400", fontSize: 12, color: "#F38216", alignSelf: "center", marginLeft: 5, }]}>{item?.totalStudents} Student</Text>
           </View>
 
-<TouchableOpacity>
-    <Text>Publish</Text>
-</TouchableOpacity>
-<TouchableOpacity>
-    <Text>Scrutinize</Text>
-</TouchableOpacity>
+          <TouchableOpacity
+          onPress={()=> FacultyTestActive(item?.testId, item?.Status)}
+            disabled={item?.status === "In Progress" || item?.status === "Completed"}
+            style={{ backgroundColor: (item?.status === "In Progress" || item?.status === "Completed") ? "gray" : "#F38216", width: "25%", borderRadius: 3, alignItems: "center", marginLeft: 40, marginTop: 10, margin: 10, padding: 10 }}>
+            <Text style={{ color: "#FFFFFF", fontSize: 14, fontWeight: "600" }}>Publish</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+          onPress={() =>  navigation.navigate('Scrutinize',{LPExecutionId: item?.lessonPlanExId, assignmentTitle: item?.assignmentTitle,courseName : item?.courseName })}
+            style={{ backgroundColor: "#F38216", width: "25%", borderRadius: 3, alignItems: "center", marginLeft: 15, marginTop: 10, margin: 10, padding: 5 }}>
+            <Text style={{ color: "#FFFFFF", fontSize: 14, fontWeight: "600",marginTop:3 }}>Scrutinize</Text>
+          </TouchableOpacity>
 
         </View>
-      </TouchableOpacity>
+      </View>
     )
   }
   return (

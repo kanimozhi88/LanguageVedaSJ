@@ -476,6 +476,9 @@ console.log("uploaded>>>>>>>>>>>>>",uploadedImages)
   
 
   const handleOptionSelect = (option, questId) => {
+    // const selectedKey = options.find((option) => option.label === selectedValue)?.key;
+    console.log('Selected Key:', selectedKey);
+    console.log('Selected Value:', selectedValue);
     const updatedOptions = [...selectedOption];
     const updatedAnsOptions = [...selectedOption];
     const existingOptionIndex = updatedOptions.findIndex((item) => item.questionId === questId);
