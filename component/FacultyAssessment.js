@@ -57,7 +57,6 @@ const FacultyAssessment = ({ batchid }) => {
       status : status
     }
     existingArray.push(testArray);
-    console.log("testArrat>>>>>>>>>>>>>>>",existingArray);
     let data = {};
     data.patchDataList = existingArray;
 
