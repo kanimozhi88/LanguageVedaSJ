@@ -79,7 +79,7 @@ const FacultyAssignment = ({ batchid }) => {
             <Text style={[{ fontWeight: "400", fontSize: 12 }]}>{item?.enrolledStudents} Students</Text>
           </View>
           <Text style={{ color: "black", fontSize: 14, fontWeight: "400", marginLeft: "40%" }}>Subject:</Text>
-          <Text style={{ color: "#B2B2B2", fontWeight: "500", fontSize: 12, fontFamily: "Poppins", marginLeft: 10 }}>{item?.courseName}</Text>
+          <Text numberOfLines={2} style={{ color: "#B2B2B2", fontWeight: "500", fontSize: 12, fontFamily: "Poppins", marginLeft: 10,width:"20%" }}>{item?.courseName}</Text>
         </View>
       </TouchableOpacity>
     )

@@ -40,10 +40,10 @@ const FacultyAssignmentSelect = ({ route,navigation }) => {
 <TouchableOpacity 
 onPress={()=> navigation.navigate('SpecificStudentTestDetails',{Id: item?.Id,assignmentTitle:assignmentTitle,Status:item?.Status})}
 style={{flexDirection:"row",padding:10,backgroundColor: (index+1)%2 === 0 ? "#F5F7FB" : "white"}}>
-    <Text style={{width:"15%",marginLeft:40,color:"black"}}>{index+1}</Text>
-    <Text style={{width:"25%",marginLeft:15,color:"black"}}>{moment(item?.TestDate).format('DD/MM/YYYY')}</Text>
-    <Text numberOfLines={2} style={{width:"25%",color:"black"}}>{item?.ContactName}</Text>
-    <Text style={{width:"25%",marginLeft:5,color: item?.Status == "Redo" ? "red" : item?.Status == "Completed" ? "green" :"black"}}>{item?.Status}</Text>
+    <Text style={{width:"15%",marginLeft:25,color:"black"}}>{index+1}</Text>
+    <Text style={{width:"25%",marginRight:15,color:"black"}}>{moment(item?.TestDate).format('DD/MM/YYYY')}</Text>
+    <Text numberOfLines={2} style={{width:"25%",color:"black",right:10}}>{item?.ContactName}</Text>
+    <Text style={{width:"25%",right:5,color: item?.Status == "Redo" ? "red" : item?.Status == "Completed" ? "green" :"black"}}>{item?.Status}</Text>
 </TouchableOpacity>
         )
     }
