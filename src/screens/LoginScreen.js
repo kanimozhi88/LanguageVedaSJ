@@ -1,19 +1,28 @@
 import React, { useState } from 'react';
 import { View, TextInput, StyleSheet, Text, TouchableOpacity, Image, KeyboardAvoidingView, Dimensions, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { getAccessToken, getLoginStatus, getProfilePhotoMethod } from '../../redux/actions';
+import { getAccessToken, getLoginOtpStatus, getLoginStatus, getProfilePhotoMethod } from '../../redux/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDataMethod, getLastNameMethod, getCourseApiResult, getEmailMethod, getPhoneMethod, getRecordType } from '../../redux/actions';
+import { useSafeAreaFrame } from 'react-native-safe-area-context';
+import OTPTextView from 'react-native-otp-textinput';
+import BASE_URL from '../../apiConfig';
 
 const LoginScreen = ({ route }) => {
 
   const dispatch = useDispatch();
   const recordType = useSelector(state => state.recordType);
+
   console.log("RecordType is::::", recordType);
   const [Phone, setMobileNumber] = useState('');
   const [Password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigation = useNavigation();
+  const [recordId, setRecordId] = useState('');
+  const [errors, setErrors] = useState('');
+  const [inputOtp, setInputOtp] = useState('');
+  const [showOtp, setShowOtp] = useState(false);
+  const [showResend,setShowResend] = useState(false);
 
   const restrictedPattern = /^[a-zA-Z0-9]*$/;
 
@@ -25,6 +34,20 @@ const LoginScreen = ({ route }) => {
     setPassword(text);
   };
 
+  const handleError = error => {
+    setErrors(error);
+  };
+  const storeIntoNumeric = () => {
+    const codeFormatted = parseInt(`${one}${two}${Three}${four}${five}${six}`);
+    console.log("SAVED OTP IS", inputOtp);
+    if (inputOtp !== '' && inputOtp.length >= 4) {
+      navigation.navigate('PasswordSet', { email: email, code: inputOtp })
+    }
+    else {
+      setErrorMessage("Please Enter OTP")
+    }
+  }
+
 
   const OTPApiRequest = async (email) => {
     let data = {};
@@ -34,7 +57,7 @@ const LoginScreen = ({ route }) => {
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
     console.log("token needed is::", token);
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/updateContactOTPByEmail`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/updateContactOTPByEmail`, {
       method: 'PATCH',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -51,7 +74,8 @@ const LoginScreen = ({ route }) => {
         [
           {
             text: 'OK',
-            onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
+            // onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
+            onPress: () => handleOTP()
           },
         ]
       );
@@ -71,7 +95,7 @@ const LoginScreen = ({ route }) => {
     const bearer = 'Bearer ' + token;
     console.log('bearer------>' + bearer);
     console.log(JSON.stringify(token));
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/v1/search-records/`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/v1/search-records/`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -99,6 +123,102 @@ const LoginScreen = ({ route }) => {
     }
   }
 
+  const handleSubmitForOtp = async () => {
+    let data = {};
+    data.Email = Phone;
+    data.Password = Password;
+
+    const body = JSON.stringify(data)
+    const token = await getAccessToken();
+    console.log('token........>' + token);
+    console.log('body...>' + JSON.stringify(body));
+    const bearer = 'Bearer ' + token;
+    console.log('bearer------>' + bearer);
+    console.log(JSON.stringify(token));
+    const response = await fetch(`${BASE_URL}/services/apexrest/v1/search-records/`, {
+      method: 'POST',
+      headers: new Headers({
+        "Content-Type": "application/json",
+        "Authorization": bearer
+      }),
+      body,
+    });
+    let result = await response.json()
+    setRecordId(result?.Result?.recordId);
+    if (result.Result.status === "Success" && result) {
+      Alert.alert(
+        'OTP sent successfully',
+        'OTP sent successfully to registered Mail Id',
+        [
+          {
+            text: 'OK',
+            // onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
+            onPress: () => setShowOtp(true)
+          },
+        ]
+      );
+    }
+    else {
+      alert('if you are not registered  please do sign up');
+    }
+
+    console.log("login api response is", result);
+    dispatch(getDataMethod(result?.Result?.recordId));
+    dispatch(getLoginStatus(result?.Result?.status));
+    dispatch(getRecordType(result?.Result?.recordType));
+    dispatch(getLastNameMethod(result?.Result?.LastName));
+    dispatch(getEmailMethod(result?.Result?.Email));
+    dispatch(getPhoneMethod(result?.Result?.Phone));
+    dispatch(getProfilePhotoMethod(result?.Result?.profilePhoto));
+
+    console.log(JSON.stringify(result));
+    
+
+
+  }
+
+
+
+  const handleOTP = async () => {
+    let data = {};
+    data.contactId = recordId;
+    data.otp = Password;
+
+
+    const body = JSON.stringify(data)
+    const token = await getAccessToken();
+    console.log('token........>' + token);
+    console.log('body...>' + JSON.stringify(body));
+    const bearer = 'Bearer ' + token;
+    console.log('bearer------>' + bearer);
+    console.log(JSON.stringify(token));
+    const response = await fetch(`${BASE_URL}/services/apexrest/verifyotp`, {
+      method: 'POST',
+      headers: new Headers({
+        "Content-Type": "application/json",
+        "Authorization": bearer
+      }),
+      body,
+    });
+    let result = await response.json()
+
+    console.log("OTP api response is", result);
+    dispatch(getLoginOtpStatus(result?.status));
+    if (result.status === "Error" && result) {
+      Alert.alert(
+        'Invaldi OTP',
+        'Entered OTP is not valid, Please try again',
+        [
+          {
+            text: 'OK',
+            // onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
+            onPress: () => setShowResend(true)
+          },
+        ]
+      );
+    }
+  }
+
   return (
 
     <View style={styles.container}>
@@ -123,24 +243,53 @@ const LoginScreen = ({ route }) => {
             <Text style={styles.userIdTxt}>User Id</Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter mail address"
+              placeholder="Enter User name"
               onChangeText={text => handleMobileNumberChange(text)}
               value={Phone}
             />
 
             {error !== '' && <Text>{error}</Text>}
+            <TouchableOpacity
+              style={{ alignSelf: "center", borderBottomColor: "#F38216", borderBottomWidth: 1 }}
+              onPress={() => handleSubmitForOtp()}>
+              <Text  style={{color:"#F38216",fontSize:12}}>Send OTP</Text>
+            </TouchableOpacity>
+            {/* <Text style={styles.passwordTxt}>Enter OTP</Text> */}
+            {showOtp ?
+              <TextInput
+                style={styles.input}
+                placeholder="Enter OTP"
+                secureTextEntry
+                onChangeText={text => handlePasswordChange(text)}
+                value={Password}
+              />
+              : null}
 
-            <Text style={styles.passwordTxt}>Password</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              secureTextEntry
-              onChangeText={text => handlePasswordChange(text)}
-              value={Password}
-            />
+              {showResend ?
+               <TouchableOpacity
+               style={{ alignSelf: "center", borderBottomColor: "#F38216", borderBottomWidth: 1 }}
+               onPress={() => handleSubmitForOtp()}>
+               <Text  style={{color:"#F38216",fontSize:12}}>Resend OTP</Text>
+             </TouchableOpacity>
+             : null}
+
+            {/* <Text style={{ marginTop: 15, fontSize: 12, marginHorizontal:5}}>Enter Your 4 Digit Number That send to +91******</Text>
+            <OTPTextView
+            //  style={{width:"80%"}}
+              inputCount={4}
+              tintColor="orange"
+              offTintColor="orange"
+              // ref={e => (this.otpInput = e)}
+              onFocus={() => handleError(null)}
+              textInputStyle={styles.roundedTextInput}
+              handleTextChange={text => {
+                setInputOtp(text);
+              }}
+              inputCellLength={1}
+            /> */}
           </View>
         </KeyboardAvoidingView>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             if (Phone !== '') {
               OTPApiRequest(Phone);
@@ -149,12 +298,13 @@ const LoginScreen = ({ route }) => {
           }}
         >
           <Text style={styles.forgotPwd}>Forgot password? </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
 
         <TouchableOpacity
-          style={styles.logInView}
-          onPress={() => handleSubmit()}
+          disabled={Password ? false : true}
+          style={[styles.logInView, {backgroundColor: Password ? "orange" : "gray"}]}
+          onPress={() => handleOTP()}
         >
           <Text style={styles.logInTxt}>Log In</Text>
         </TouchableOpacity>
@@ -244,7 +394,7 @@ const styles = StyleSheet.create({
     width: '90%',
     height: 50,
     backgroundColor: "white",
-    borderColor: 'gray',
+    borderColor: '#999999',
     borderWidth: 1,
     borderRadius: 10,
     margin: 10,

@@ -13,26 +13,37 @@ const App = () => {
    SplashScreen.hide();
   },[])
 
-  const [isFirstLaunch,setIsFirstLaunch] = useState(false);
+  const [isFirstLaunch,setIsFirstLaunch] = useState(true);
   useEffect(()=>{
     getAppLaunchStatus();
   },[])
-  console.log("isfirstlaucn", isFirstLaunch);
+  // console.log("isfirstlaucn at app.js", isFirstLaunch);
 
   const getAppLaunchStatus = async () => {
     const appLaunched = await AsyncStorage.getItem("isLaunched");
-    console.log("applunach status", appLaunched);
-    if(appLaunched === null){
-      setIsFirstLaunch(true)
-      AsyncStorage.setItem("isLaunched", "true");
+    console.log("applunach status inapp", appLaunched);
+    if(appLaunched == null){
+      setIsFirstLaunch(true);
+      await AsyncStorage.setItem("isLaunched", "true");
       
+    }else{
+      setIsFirstLaunch(false)
     }
+    
   }
 
   return (
     <Provider store={store}>
       
-       <AuthNavigation/>
+       {/* <AuthNavigation/> */}
+
+       {isFirstLaunch ? (
+        // Show onboarding screens if it's the first launch
+        <AuthNavigation isFirstLaunch={isFirstLaunch} />
+      ) : (
+        // Otherwise, navigate to the main content
+        <AuthNavigation />
+      )}
 
     </Provider>
   );

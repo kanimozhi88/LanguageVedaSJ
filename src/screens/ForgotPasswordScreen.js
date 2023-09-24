@@ -5,6 +5,7 @@ import { getAccessToken } from '../../redux/actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { getDataMethod, getLastNameMethod, getCourseApiResult } from '../../redux/actions';
 import OtpValidation from './OtpValidation';
+import BASE_URL from '../../apiConfig';
 
 
 //import CloudImg from '../../assets/cloudImg.png'
@@ -45,7 +46,7 @@ const ForgotPasswordScreen = () => {
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
     console.log("token needed is::", token);
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/updateContactOTPByEmail`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/updateContactOTPByEmail`, {
       method: 'PATCH',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -81,12 +82,12 @@ const ForgotPasswordScreen = () => {
 
     //   <View style={{ margin: 15 }}>
     //     <Text style={{ color: "#b8328f", fontSize: 25, fontWeight: "bold", }}>Verification</Text>
-    //     <Text style={{ fontSize: 22, color: "gray", marginTop: 5 }}>Please Enter A Email or Mobile Number</Text>
+    //     <Text style={{ fontSize: 22, color: "#999999", marginTop: 5 }}>Please Enter A Email or Mobile Number</Text>
 
     //     <Text style={{ color: "black", marginTop: 40 }}>E-mail/Phone Number</Text>
     //     <TextInput
     //       style={{
-    //         width: '80%', height: 50, backgroundColor: "white", borderColor: 'gray', borderWidth: 1, borderRadius: 10,
+    //         width: '80%', height: 50, backgroundColor: "white", borderColor: '#999999', borderWidth: 1, borderRadius: 10,
     //         margin: 5,
     //         padding: 10,
     //       }}
@@ -104,7 +105,7 @@ const ForgotPasswordScreen = () => {
     //     // onPress={()=>OTPApiRequest(email)}
     //     // onPress={ ()=> navigation.navigate('OtpValidation',{email:email})}
     //     onPress={() => ValidateInput()}
-    //     style={{ backgroundColor: emailError && email === '' ? "lightgray" : "orange", width: "80%", borderRadius: 10, marginTop: 40, alignSelf: "center" }}>
+    //     style={{ backgroundColor: emailError && email === '' ? "#999999" : "orange", width: "80%", borderRadius: 10, marginTop: 40, alignSelf: "center" }}>
     //     <Text style={{ alignSelf: "center", padding: 10, color: "white", fontSize: 19, fontWeight: "600" }}>Get OTP</Text>
     //   </TouchableOpacity>
 
@@ -169,7 +170,7 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#999999',
     borderWidth: 1,
     margin: 10,
     padding: 10,

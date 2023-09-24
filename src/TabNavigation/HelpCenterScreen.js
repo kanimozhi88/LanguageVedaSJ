@@ -5,7 +5,7 @@ import { getAccessToken } from '../../redux/actions';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import PieChart from 'react-native-pie-chart';
-
+import BASE_URL from '../../apiConfig';
 
 const HelpCenterScreen = ({ navigation }) => {
     const recordId = useSelector(state => state.recordId);
@@ -37,7 +37,7 @@ const HelpCenterScreen = ({ navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/Lvcases`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/Lvcases`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -142,9 +142,11 @@ const HelpCenterScreen = ({ navigation }) => {
                 </View>
 
             </LinearGradient>
+            {/* <View style={{elevation: 10 }}> */}
+
             <TouchableOpacity
                 onPress={() => navigation.navigate('NewTicket')}
-                style={{ height: 92, borderRadius: 5, marginTop: 30, }}>
+                style={{ height: 92, borderRadius: 5, marginTop: 30,}}>
                 <Text style={{ color: "#F38216", fontSize: 16, fontWeight: "600", marginHorizontal: 26 }}>Help Center</Text>
                 <View style={{ flexDirection: "row", marginTop: 20, marginHorizontal: 26 }}>
                     <Text style={{ color: "#4D4C4B", fontSize: 16, fontWeight: "600" }}>New Tickets</Text>
@@ -153,6 +155,7 @@ const HelpCenterScreen = ({ navigation }) => {
                         source={require('../../assets/sidearrow.png')} />
                 </View>
             </TouchableOpacity>
+            {/* </View> */}
             <View style={{ marginTop: 15 }}>
                 <Text style={{ color: "#F38216", fontSize: 16, fontWeight: "600", marginHorizontal: 26 }}>Ticket Status</Text>
                 <FlatList

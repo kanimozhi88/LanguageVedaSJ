@@ -5,6 +5,7 @@ import { getAccessToken } from '../redux/actions';
 import LinearGradient from 'react-native-linear-gradient';
 import PieChart from 'react-native-pie-chart';
 import { useNavigation } from '@react-navigation/native';
+import BASE_URL from '../apiConfig';
 
 const StudentCourseAssignment = ({ batchId, courseName }) => {
 
@@ -34,7 +35,7 @@ const StudentCourseAssignment = ({ batchId, courseName }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/testassignmentController`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/testassignmentController`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -122,7 +123,8 @@ setSeriesArr({
                             "#FF9533" :
                             item.status === "Completed" ?
                                 "#67CB65" :
-                                item.status === "Redo" ? "#E74444" : item.status === "Assignment Submitted" ? "#84d3f0" : "red", borderRadius: 10,
+                                item.status === "Redo" ? "#E74444" : item.status === "Assignment Submitted" ? "#84d3f0" : item.status === "Yet_To_Submit" ?
+                                "#FF9533" :"red", borderRadius: 10,
                     }}
                 >
                     {item.status === "Vetting In Progress" ?
@@ -131,7 +133,11 @@ setSeriesArr({
                             <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Completed</Text> :
                             item.status === "Redo" ? <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}> Redo</Text> :
                                 item.status === "Assignment Submitted" ?
-                                    <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Submitted</Text> : <></>}
+                                    <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Submitted</Text> :
+                                    item.status === "Yet_To_Submit" ? 
+                                    <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Yet To Start</Text> :
+
+                                    <></>}
 
                 </View>
                 </View>

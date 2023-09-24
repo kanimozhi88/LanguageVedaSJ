@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet,SafeAreaView, FlatList } from 'react-native';
 import { getAccessToken } from '../../redux/actions';
 import moment from 'moment';
+import BASE_URL from '../../apiConfig';
 
 
 const FacultyAssignmentSelect = ({ route,navigation }) => {
@@ -20,7 +21,7 @@ const FacultyAssignmentSelect = ({ route,navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RnFacultyTestStatusofStudent`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RnFacultyTestStatusofStudent`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",

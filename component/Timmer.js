@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Linking } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { getAccessToken } from '../redux/actions';
 import { useSelector } from 'react-redux';
+import BASE_URL from '../apiConfig';
 
 
 
@@ -60,7 +61,7 @@ import { useSelector } from 'react-redux';
 //        : null} */}
 //         {/* {isJoinButtonEnabled && ( */}
 //         <TouchableOpacity
-//         style={{width:"95%",borderRadius:5, backgroundColor:isJoinButtonEnabled ? "#F38216": "lightgray",top:45}}
+//         style={{width:"95%",borderRadius:5, backgroundColor:isJoinButtonEnabled ? "#F38216": "#999999",top:45}}
 //          onPress={() => Linking.openURL(link)} disabled={!isJoinButtonEnabled}>
 //           <Text style={{color:"white",alignSelf:"center"}}>Join Now</Text>
 //         </TouchableOpacity>
@@ -114,7 +115,7 @@ const Timmer = ({ recordId }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNStudentTimerController`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RNStudentTimerController`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -141,7 +142,7 @@ const Timmer = ({ recordId }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyTimerController`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyTimerController`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -211,7 +212,7 @@ const Timmer = ({ recordId }) => {
            : null} */}
             {/* {isJoinButtonEnabled && ( */}
             <TouchableOpacity
-            style={{width:"95%",borderRadius:5, backgroundColor:isJoinButtonEnabled ? "#F38216": "lightgray",top:45}}
+            style={{width:"95%",borderRadius:5, backgroundColor:isJoinButtonEnabled ? "#F38216": "#999999",top:45}}
              onPress={() => Linking.openURL(link)} disabled={!isJoinButtonEnabled}>
               <Text style={{color:"white",alignSelf:"center"}}>Join Now</Text>
             </TouchableOpacity>
@@ -234,16 +235,14 @@ const Timmer = ({ recordId }) => {
                 </View>
                 <View>
 
-{  final[0]?.startTimestamp !=='' && final[0]?.endTimestamp !=='' && final[0] !=='' && final[0]?.length > 0 ? 
+{  final[0]?.startTimestamp !=='' && final[0]?.endTimestamp !=='' && final[0] !=='' && final?.length !== 0  ? 
                     <View style={{ height: 90, width: 90, borderRadius: 45, borderWidth: 2, borderColor: recordType ==="Faculty" ? "#F38216" :"white",marginLeft:"40%" }}>
 
-                        { final[0]?.startTimestamp !=='' && final[0]?.endTimestamp !=='' && final[0] !==''  ?
                             <View style={{top:30,marginLeft:15}}>
 
                                 <CountdownTimer  startTimestamp={final[0]?.startTimestamp} recordType={recordType} endTimestamp={final[0]?.endTimestamp} link={final[0]?.zoomLink !== null ? final[0]?.zoomLink : null} />
                                 
                             </View>
-                            : <Text style={{ alignSelf: "center", top:50 }}>No Events</Text>}
                     </View>
                     : 
                     <View style={{marginLeft:"50%",bottom:"90%"}}>

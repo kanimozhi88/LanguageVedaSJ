@@ -5,6 +5,7 @@ import { getAccessToken } from '../../redux/actions';
 import LinearGradient from 'react-native-linear-gradient';
 import PieChart from 'react-native-pie-chart';
 import { useNavigation } from '@react-navigation/native';
+import BASE_URL from '../../apiConfig';
 
 const StudentAssessmentSelect = ({route}) => {
 
@@ -35,7 +36,7 @@ const StudentAssessmentSelect = ({route}) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNStudentAssessmentContollers/`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RNStudentAssessmentContollers/`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",

@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import BASE_URL from '../../apiConfig';
 
 
 const AssessmentReport = ({ navigation, route }) => {
@@ -21,10 +22,11 @@ const AssessmentReport = ({ navigation, route }) => {
     const [final, setFinal] = useState();
     const [percentageVal, setPercentageVal] = useState();
     const dataFetchApi = useSelector(state => state.recordId);
+    // const [statusTargetFill,setStatusTargetFill] = useState('');
 
     useEffect(() => {
         AsssessmentReportApi();
-    }, []);
+    }, [percentageVal]);
 
     const AsssessmentReportApi = async () => {
         let data = {};
@@ -34,7 +36,7 @@ const AssessmentReport = ({ navigation, route }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNStudentAssessmentScore`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RNStudentAssessmentScore`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -43,21 +45,22 @@ const AssessmentReport = ({ navigation, route }) => {
             body,
         });
         let AsssessmentReportApi = await response.json()
-        console.log(" student AsssessmentReportApi  RES", AsssessmentReportApi);
-        setFinal(AsssessmentReportApi?.records);
+        console.log(" student AsssessmentReportApi  RES",   AsssessmentReportApi);
+        setFinal(AsssessmentReportApi?.records[0]);
         console.log("final data is", final)
-        const totalMarks = final[0]?.totalMarks;
-        const totalMarksObtained = final[0]?.totalMarksObtained;
+        const totalMarks = final?.totalMarks;
+        const totalMarksObtained = final?.totalMarksObtained;
 
         let percentage = 0;
 
         if (totalMarksObtained !== 0) {
             percentage = (totalMarksObtained / totalMarks) * 100;
             setPercentageVal(percentage)
+            console.log("inside call>>>>>>>>",percentage)
         }
     }
 
-
+  console.log("percentage:::::::::",percentageVal)
     const [currentStatusFill, setStatusFill] = useState(0);
     const statusTargetFill = percentageVal;
     const statusDuration = 500; // Animation duration in milliseconds
@@ -77,24 +80,8 @@ const AssessmentReport = ({ navigation, route }) => {
         }
 
         return () => clearInterval(animationInterval);
-    }, [currentStatusFill, statusTargetFill]);
+    }, [currentStatusFill, statusTargetFill,percentageVal]);
 
-    const renderItem = ({ item }) => {
-        return (
-            <View style={{ height: 151 }}>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('StudentCourseSelection', { batchId: item?.batchId, courseName: item?.CourseName })}
-                    style={[styles.rectangle, { backgroundColor: item?.BackgroundColor, width: 152 }]} >
-                    <View >
-                        <Image source={require('../../assets/langicon.png')}
-                            style={styles.imageStyle} />
-                    </View>
-                    <Text style={styles.courseNameTxt}>{item?.CourseName}</Text>
-                    <Text style={styles.dateStyle}>{moment(item?.startDate).format('MMMM DD, YYYY')}</Text>
-                </TouchableOpacity>
-            </View>
-        )
-    }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -111,29 +98,38 @@ const AssessmentReport = ({ navigation, route }) => {
 
 
             <View>
-
+            <Text style={{ color: "black", fontSize: 18, fontWeight: "400", marginHorizontal: 25,marginTop:30 }}>Score</Text>
+{final !== '' ?
+<View>
                 <AnimatedCircularProgress
                     style={{ alignSelf: "center", margin: 5, color: "orange" }}
-                    size={90}
-                    width={20}
-                    // duration={1000}
+                    size={100}
+                    width={10}
+                    duration={1000}
                     fill={currentStatusFill}
                     rotation={0}
                     lineCap="round"
-                    tintColor="orange"
-                    backgroundColor="lightgray">
+                    tintColor="#6ef5fa"
+                    backgroundColor="#f0f7f7">
                     {(fill) => (
-                        <Text style={{ fontSize: 13, color: "#D6387F", fontWeight: "700" }}>{`${Math.round(fill)}%`}</Text>
+                        <View style={{alignSelf:"center"}}>
+                        <Text style={{ fontSize: 13, color: "#D6387F", fontWeight: "700",textAlign:"center" }}>{`${Math.round(fill)}%`}</Text>
+                       <Text style={{fontSize:12,textAlign:"center",color:"#b0aeae"}}>Total Marks: {final?.totalMarks}</Text>
+                       </View>
                     )}
                 </AnimatedCircularProgress>
-                <View>
-                    <Text>{final?.totalMarksObtained} / {final?.totalMarks}</Text>
+                <View style={{alignSelf:"center",marginTop:10}}>
+                   {final?.totalMarksObtained ?
+                    <Text style={{marginLeft:20,color:"black",fontSize:14,fontWeight:"700"}}>{final?.totalMarksObtained} / {final?.totalMarks}</Text>
+                   : null}
+                    <Text style={{ color: "#b0aeae", fontSize: 16, fontWeight: "400" }}>Total Score</Text>
                 </View>
-
+</View>
+: null}
 
                 {final !== '' ?
                     <View style={{ marginHorizontal: 25, marginTop: 20 }}>
-                        <Text style={{ color: "black", fontSize: 16, fontWeight: "400" }}>Score</Text>
+                        <Text style={{ color: "#b0aeae", fontSize: 16, fontWeight: "400" }}>Assessment</Text>
                         <View style={{ padding: 15, marginTop: 5, borderRadius: 5, width: 296 }}>
 
                             {final !== '' ?
@@ -145,7 +141,7 @@ const AssessmentReport = ({ navigation, route }) => {
 
                 {final !== '' ?
                     <View style={{ marginHorizontal: 25, marginTop: 20 }}>
-                        <Text style={{ color: "black", fontSize: 16, fontWeight: "400" }}>Assessment Date</Text>
+                        <Text style={{ color: "#b0aeae", fontSize: 16, fontWeight: "400" }}>Assessment Date</Text>
                         <View style={{ padding: 15, marginTop: 5, borderRadius: 5, width: 296 }}>
                             <Text style={{ color: "#000000", fontSize: 14, fontWeight: "500" }}>{final?.testDate}</Text>
                         </View>

@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAccessToken } from '../../redux/actions';
 import moment from 'moment';
 import { Dropdown } from "react-native-element-dropdown";
-import DatePicker from 'react-native-date-picker'
+import DatePicker from 'react-native-date-picker';
+import BASE_URL from '../../apiConfig';
 
 
 
@@ -67,7 +68,7 @@ const FacultyRevision = ({ route, navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/rnRevisionStatusDisplay`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/rnRevisionStatusDisplay`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -88,7 +89,7 @@ const FacultyRevision = ({ route, navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyBatchDisplay`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyBatchDisplay`, {
           method: 'POST',
           headers: new Headers({
             "Content-Type": "application/json",
@@ -120,7 +121,7 @@ const FacultyRevision = ({ route, navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyCourseAttendanceLessonPlans`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyCourseAttendanceLessonPlans`, {
           method: 'POST',
           headers: new Headers({
             "Content-Type": "application/json",
@@ -145,7 +146,7 @@ const FacultyRevision = ({ route, navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/facultyRevisions`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/facultyRevisions`, {
           method: 'POST',
           headers: new Headers({
             "Content-Type": "application/json",
@@ -220,7 +221,7 @@ const FacultyRevision = ({ route, navigation }) => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        style={{ justifyContent: "center",backgroundColor: "lightgray" }}
+        style={{ justifyContent: "center",backgroundColor: "#999999" }}
       >
         <View style={{ width: "100%", height: "100%", marginTop:"19%",backgroundColor: "white",lignSelf: "center",bottom:50 }}>
          <Text style={{color:"#000000",fontSize:16,fontWeight:"500",margin:15}}>Create Revision</Text>
@@ -472,7 +473,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
       },
       disabledButton: {
-        backgroundColor: 'gray',
+        backgroundColor: '#999999',
         width: "35%", alignSelf: "center", alignItems: "center", marginBottom: "20%", padding: 10, borderRadius: 5
         // Add a different style for the disabled button
       },

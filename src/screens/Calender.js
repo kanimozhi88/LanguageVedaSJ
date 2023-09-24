@@ -12,6 +12,7 @@ import {
   Linking,
   Dimensions
 } from 'react-native';
+import BASE_URL from '../../apiConfig';
 
 const ScheduleCalendar = ({route}) => {
   const recordId = useSelector(state => state.recordId);
@@ -130,7 +131,7 @@ const ScheduleCalendar = ({route}) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyCalendar`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyCalendar`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -150,7 +151,7 @@ const ScheduleCalendar = ({route}) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNCalendar`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNCalendar`, {
         method: 'POST',
         headers: new Headers({
             "Content-Type": "application/json",
@@ -248,7 +249,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     width:30,
     height:30,borderRadius:8,
-    borderWidth:1,borderColor:"lightgray",
+    borderWidth:1,borderColor:"#999999",
     elevation:4,backgroundColor:"white",textAlign:"center"
   },
   monthText: {
@@ -259,7 +260,7 @@ const styles = StyleSheet.create({
   },
   yearText: {
     fontSize: 16,
-    color: 'gray',
+    color: '#999999',
     alignSelf:"center"
   },
   item: {
@@ -283,7 +284,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: '#999999',
     justifyContent: 'center',
     alignItems: 'center',
   },

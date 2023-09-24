@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { getAccessToken } from '../../redux/actions';
 import WebView from "react-native-webview";
 import VideoPlayer from 'react-native-video-player';
+import BASE_URL from '../../apiConfig';
+
 import {
     StyleSheet,
     Text,
@@ -31,7 +33,7 @@ const ViewVideoAssets = ({ navigation, route }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/VideoAssetDisplay`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/VideoAssetDisplay`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -53,13 +55,12 @@ const ViewVideoAssets = ({ navigation, route }) => {
                     videoWidth={1600}
                     videoHeight={900}
                     onError={(error) => console.error('VideoPlayer Error:', error)}
-                    thumbnail ={require("../../assets/Play.png")}
+                    thumbnail ={require("../../assets/thumbnail.jpg")}
                     autoPlay ={true}
                 />
                 
                 <TouchableOpacity
                     onPress={() => navigation.navigate('WebViewScreen', { link: item?.videoLink })}
-                    // onPress={() => handleWebViewPress(item?.videoLink)}
                     style={{ marginLeft: 10, marginTop: 40, width: "40%" }}>
                     <Text numberOfLines={2}
                         style={{ textDecorationLine: 'underline', color: "#000000", fontSize: 10, fontWeight: "500", lineHeight: 24 }} >

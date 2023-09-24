@@ -4,6 +4,7 @@ import { getAccessToken } from '../redux/actions';
 import LinearGradient from 'react-native-linear-gradient';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { useNavigation } from '@react-navigation/native';
+import BASE_URL from '../apiConfig';
 
 import {
   StyleSheet,
@@ -33,7 +34,7 @@ const FacultyBatchSelect = ({ batchId, courseName }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyCourseAttendanceLessonPlans`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyCourseAttendanceLessonPlans`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -154,7 +155,7 @@ const FacultyBatchSelect = ({ batchId, courseName }) => {
               rotation={0}
               lineCap="round"
               tintColor="orange"
-              backgroundColor="lightgray">
+              backgroundColor="#999999">
               {(fill) => (
                 <Text style={{ fontSize: 13, color: "#D6387F", fontWeight: "700" }}>{`${Math.round(fill)}%`}</Text>
               )}
@@ -164,7 +165,7 @@ const FacultyBatchSelect = ({ batchId, courseName }) => {
         </View>
 
         <View>
-          <View style={{ width: 130, height: 130, borderRadius: 65, borderColor: "lightgray", borderWidth: 1 }}>
+          <View style={{ width: 130, height: 130, borderRadius: 65, borderColor: "#999999", borderWidth: 1 }}>
             <AnimatedCircularProgress
               style={{ alignSelf: "center", margin: 4, color: "orange" }}
               size={120}

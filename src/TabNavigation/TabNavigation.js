@@ -1,27 +1,12 @@
-import React,{useState,useEffect} from 'react';
-import { View,Text,Image } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import React from 'react';
+import { Image } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import SettingsScreen from './ScheduleScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import MyComponent from '../screens/MyCourses';
-import CourseCurriculum from '../screens/CourseCurriculum';
-import SpecificCurriculum from '../screens/SpecificCurriculum';
-import MyCoursesPage from '../screens/MycoursesPage';
+
 import StudentMyCourses from '../screens/StudentMyCourses';
-import FacultyBatchScreen from '../screens/FacultyBatchScreen';
-import FacultyLessonPlanExe from '../screens/FacultyLessonPlanExe';
-import FacultyLessonPlan from '../screens/FaultyLessonPlan';
-import FacultyMyCoursesPage from '../screens/FacultyMyCoursesPage';
-import CourseBatchSelection from '../screens/CourseBatchSelection';
-import ViewAssign from '../screens/ViewAssign';
-import ScheduleAssign from '../screens/ScheduleAssign';
 import DocumentScreen from '../screens/DocumentScreen';
-// import FacultyAssignment from '../screens/FacultyAsssignment';
 import WebViewScreen from '../screens/WebViewScreen';
 import ScheduleCalendar from '../screens/Calender';
-import FacultyCalendar from '../screens/FacultyCalendar';
 import FacultyBatches from '../screens/FacultyBatches';
 import MyCourses from '../screens/MyCourses';
 import HelpCenterScreen from './HelpCenterScreen';
@@ -34,12 +19,10 @@ import Profile from '../screens/Profile';
 import ProfilePasswordChange from '../screens/ProfilePasswordChange';
 import ProfileOtpValidation from '../screens/ProfileOtpValidation';
 import ProfilePasswordSet from '../screens/ProfilePasswordSet';
-import Login from '../screens/Login';
 import WebViewDownload from '../screens/WebViewDownload';
 import FacultyCourseBatch from '../screens/FacultyCourseBatch';
 import FacultyBatchSelect from '../../component/FacultyBatchSelect';
 import FacultyCourseSelection from '../screens/FacultyCourseSelection';
-import FacultyAssessment from '../../component/FacultyAssignment';
 import FacultyAssignment from '../../component/FacultyAssignment';
 import FacultyAssignmentSelect from '../screens/FacultyAssignmentSelect';
 import SpecificStudentTestDetails from '../screens/SpecificStudentTestDetails';
@@ -51,10 +34,10 @@ import StudentAssessment from '../screens/StudentAssessment';
 import StudentAssessmentSelect from '../screens/StudentAssessmentSelect';
 import StudentCourseAssessment from '../screens/StudentCourseAssessment';
 import StudentTakeAssessment from '../screens/StudentTakeAssessment';
-import AsssessmentReport from '../screens/AssessmentReport';
 import AssessmentReport from '../screens/AssessmentReport';
 import Scrutinize from '../screens/Scrutinize';
 import FacultyStudentDetails from '../screens/FacultyStudentDetails';
+import Notifications from '../screens/Notifications';
 
 
 const Stack = createNativeStackNavigator();
@@ -62,31 +45,6 @@ const Tab = createBottomTabNavigator();
 
 const StackNavigation=()=>{
     
-     
-    //    const [isFirstLaunch,setIsFirstLaunch] = useState(false);
-    //    useEffect(()=>{
-    //      getAppLaunchStatus();
-    //    },[])
-    //    console.log("isfirstlaucn", isFirstLaunch);
-     
-    //    const getAppLaunchStatus = async () => {
-    //      const appLaunched = await AsyncStorage.getItem("isLaunched");
-    //      console.log("applunach status", appLaunched);
-    //      if(appLaunched === null){
-    //        setIsFirstLaunch(true)
-    //        AsyncStorage.setItem("isLaunched", "true");
-           
-    //      }
-    //    }
-       const headerStyle = {
-        // backgroundColor: '#0066CC',
-        backgroundColor:"#A22451",
-      };
-    
-      const headerTitleStyle = {
-        color: 'white',
-        fontWeight: 'bold',
-      };
      
     return(
       <Stack.Navigator initialRouteName="MyCourses">
@@ -106,33 +64,6 @@ const StackNavigation=()=>{
          }}
       />
      
-       <Stack.Screen
-        name="CourseCurriculum"
-        component={CourseCurriculum}
-        options={{
-          title: 'Curriculum',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      />
-      <Stack.Screen
-        name="SpecificCurriculum"
-        component={SpecificCurriculum}
-        options={{
-          title: 'Curriculum',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      />
-      <Stack.Screen
-        name="MycoursesPage"
-        component={MyCoursesPage}
-        options={{
-          title: 'My Courses',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      />
       <Stack.Screen
         name="Calender"
         component={ScheduleCalendar}
@@ -154,32 +85,16 @@ const StackNavigation=()=>{
           headerShown:false
          }}
       />
-      <Stack.Screen
-        name="FacultyCalendar"
-        component={FacultyCalendar}
-        options={{
-          title: 'FacultyCalendar',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      />
   
       <Stack.Screen
         name="WebViewScreen"
         component={WebViewScreen}
         options={{
-          headerShown:false    
+          headerShown:false ,
+          tabBarStyle:{display:'none'}
           }}
+        
       />
-      {/* <Stack.Screen
-        name="FacultyAssignment"
-        component={FacultyAssignment}
-        options={{
-          title: 'Assignment',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      /> */}
       <Stack.Screen
         name="DocumentScreen"
         component={DocumentScreen}
@@ -187,33 +102,7 @@ const StackNavigation=()=>{
           headerShown:false    
           }}
       />
-      <Stack.Screen
-        name="ScheduleAssign"
-        component={ScheduleAssign}
-        options={{
-          title: 'Assignment',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      />
-      <Stack.Screen
-        name="ViewAssign"
-        component={ViewAssign}
-        options={{
-          title: 'Assignment',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      />
-      <Stack.Screen
-        name="CourseBatchSelection"
-        component={CourseBatchSelection}
-        options={{
-          title: 'Assignment',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      />
+
       <Stack.Screen
       name="FacultyBatches"
       component={FacultyBatches}
@@ -341,41 +230,13 @@ const StackNavigation=()=>{
         }}
       />
       <Stack.Screen
-        name="FacultyMyCoursesPage"
-        component={FacultyMyCoursesPage}
-        options={{
-          title: 'FacultyCourses',
-          headerStyle,
-          headerTitleStyle,
+      name="Notifications"
+      component={Notifications}
+      options={{
+        headerShown:false    
         }}
       />
-         <Stack.Screen
-        name="FacultyLessonPlan"
-        component={FacultyLessonPlan}
-        options={{
-          title: 'FacultyLessonplan',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      />
-       <Stack.Screen
-        name="FacultyLessonPlanExe"
-        component={FacultyLessonPlanExe}
-        options={{
-          title: 'FacultyLessonplanExe',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      />
-      <Stack.Screen
-        name="FacultyBatchScreen"
-        component={FacultyBatchScreen}
-        options={{
-          title: 'Faculty Batchview',
-          headerStyle,
-          headerTitleStyle,
-        }}
-      />
+     
       <Stack.Screen
         name="StudentMyCourses"
         component={StudentMyCourses}
@@ -405,15 +266,7 @@ const StackNavigation=()=>{
 
   const StackTabHelpNavigation=()=>{
     
-       const headerStyle = {
-        // backgroundColor: '#0066CC',
-        backgroundColor:"#A22451",
-      };
-    
-      const headerTitleStyle = {
-        color: 'white',
-        fontWeight: 'bold',
-      };
+     
      
     return(
       <Stack.Navigator initialRouteName="HelpCenterScreen">
@@ -446,16 +299,7 @@ const StackNavigation=()=>{
   }
 
   const ProfileTabNavigation=()=>{
-    
-    const headerStyle = {
-     // backgroundColor: '#0066CC',
-     backgroundColor:"#A22451",
-   };
- 
-   const headerTitleStyle = {
-     color: 'white',
-     fontWeight: 'bold',
-   };
+  
   
  return(
    <Stack.Navigator initialRouteName="MyProfileScreen">
@@ -496,13 +340,7 @@ const StackNavigation=()=>{
        headerShown:false
       }}
    />
-   <Stack.Screen
-     name="Login"
-     component={Login}
-     options={{
-       headerShown:false
-      }}
-   />
+ 
     
  </Stack.Navigator>
  

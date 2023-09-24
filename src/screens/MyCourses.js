@@ -1,9 +1,12 @@
-import React , {useState,useEffect}from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import 'moment-timezone'
 import Timmer from '../../component/Timmer';
+import { getAccessToken } from '../../redux/actions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import BASE_URL from '../../apiConfig';
 
 const MyCourses = () => {
 
@@ -12,8 +15,12 @@ const MyCourses = () => {
   const recordId = useSelector(state => state.recordId);
   const recordType = useSelector(state => state.recordType);
   const [refreshCount, setRefreshCount] = useState(0);
+  const [notificationcount, setNotificationCount] = useState('');
+  const [announcementCount, setAnnouncementCount] = useState('');
+  const [toggleVal, setToggleVal] = useState('');
+  const [notifyClick,setNotifyClick] = useState(false);
 
-  
+
   useEffect(() => {
     const timer = setTimeout(() => {
       // Increment the refreshCount to trigger a re-render
@@ -25,11 +32,111 @@ const MyCourses = () => {
   }, [refreshCount]); // Re-run the effect whenever refreshCount changes
 
 
+  useEffect(() => {
+    NotificationsApi();
+    NotificationsAnnouncementApi();
 
+  }, [])
+
+  useEffect(() => {
+    const fetchToggleSwitchValue = async () => {
+      const value = await getToggleSwitchValue();
+      setToggleVal(value);
+    };
+    const fetchNotifyClickValue = async () => {
+      const value = await getNotifyClickValue();
+      setNotifyClick(value);
+    };
+
+    fetchToggleSwitchValue();
+    getNotifyClickValue();
+  },);
+
+  const getToggleSwitchValue = async () => {
+    try {
+      const value = await AsyncStorage.getItem('toggleSwitchValue');
+      if (value !== null) {
+        return JSON.parse(value);
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const getNotifyClickValue = async () => {
+    try {
+      const value = await AsyncStorage.getItem('notificationClick');
+      if (value !== null) {
+        return JSON.parse(value);
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
+  };
+
+
+  const NotificationsApi = async () => {
+    let data = {};
+    data.contactId = recordId;
+
+    const body = JSON.stringify(data)
+    const token = await getAccessToken();
+    const bearer = 'Bearer ' + token;
+    const response = await fetch(`${BASE_URL}/services/apexrest/rnStudentNotification`, {
+      method: 'POST',
+      headers: new Headers({
+        "Content-Type": "application/json",
+        "Authorization": bearer
+      }),
+      body,
+    });
+    let NotificationsApi = await response.json()
+    console.log("NotificationsApi", typeof NotificationsApi);
+    const currentDate = new Date().toISOString();
+    let count = 0;
+
+    JSON.parse(NotificationsApi).forEach(announcement => {
+      if (announcement.CreatedDate === currentDate) {
+        count++;
+      }
+    });
+    setNotificationCount(count)
+  }
+
+  const NotificationsAnnouncementApi = async () => {
+
+    const token = await getAccessToken();
+    const bearer = 'Bearer ' + token;
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNAnnouncement`, {
+      method: 'GET',
+      headers: new Headers({
+        "Content-Type": "application/json",
+        "Authorization": bearer
+      }),
+
+    });
+    let NotificationsAnnounceApi = await response.json()
+    console.log("NotificationsAnnounceApi", NotificationsAnnounceApi);
+    const currentDate = new Date().toISOString();
+    let count = 0;
+
+    NotificationsAnnounceApi.forEach(announcement => {
+      if (announcement.CreatedDateTime === currentDate) {
+        count++;
+      }
+    });
+    setAnnouncementCount(count)
+  }
+
+  const notification = notificationcount + announcementCount;
 
   const handleMycoursesPress = () => {
     navigation.navigate('StudentMyCourses');
   };
+
+
 
 
   return (
@@ -38,17 +145,35 @@ const MyCourses = () => {
 
       <View style={styles.nameViewStyle}>
         <Text style={{ fontSize: 18 }}>Hello,<Text style={styles.nameStyle}>{LastName}</Text></Text>
-        <TouchableOpacity>
-          <Image source={require('../../assets/Notification.png')}
-            style={styles.notificationImage} />
-        </TouchableOpacity>
+        <View style={{ flexDirection: "row" }}>
+          <TouchableOpacity
+            disabled={!toggleVal}
+            onPress={() => navigation.navigate('Notifications')}
+            style={{ marginRight: 5 }}>
+            <View style={{ flexDirection: "row" }}>
+              {toggleVal ?
+                <Image source={require('../../assets/Notification.png')}
+                  style={styles.notificationImage} />
+                :
+                <Image source={require('../../assets/notificationDisable.png')}
+                  style={styles.notificationImage} />
+              }
+
+              {notification   && notifyClick ?
+                <Text style={{ right: 15, bottom: 15, backgroundColor: "#e01d85", fontWeight: "500", color: "white", width: 22, height: 22, borderRadius: 12.5, alignSelf: "center", textAlign: "center" }}>{notification}</Text>
+                : null} 
+            </View>
+          </TouchableOpacity>
+
+        </View>
+
       </View>
 
       {recordType == "Student" ?
         <Timmer recordId={recordId} />
         : recordType == "Faculty" ?
-        <Timmer recordId={recordId} />
-        : null
+          <Timmer recordId={recordId} />
+          : null
       }
 
       {recordType == "Student" ?
@@ -75,7 +200,7 @@ const MyCourses = () => {
 
           <View style={styles.row}>
 
-            <TouchableOpacity style={styles.rectNew}  onPress={()=> navigation.navigate('VideoAssets')}>
+            <TouchableOpacity style={styles.rectNew} onPress={() => navigation.navigate('VideoAssets')}>
               <View style={[styles.image, { backgroundColor: "#e01d85" }]}>
                 <Image source={require('../../assets/Videoassets.png')}
                   style={styles.imageStyle} />
@@ -84,7 +209,7 @@ const MyCourses = () => {
             </TouchableOpacity>
 
             <TouchableOpacity
-            onPress={() => navigation.navigate('StudentAssessment')}
+              onPress={() => navigation.navigate('StudentAssessment')}
               style={[styles.rectangle, { marginLeft: 20 }]}
             >
               <View style={[styles.image, { backgroundColor: "#e01d85", marginBottom: 10 }]}>
@@ -111,9 +236,9 @@ const MyCourses = () => {
                 <Text style={[styles.text, { fontWeight: "700" }]}>My Class</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity 
-              onPress={()=> navigation.navigate('VideoAssets')}
-              style={styles.square} >
+              <TouchableOpacity
+                onPress={() => navigation.navigate('VideoAssets')}
+                style={styles.square} >
                 <View style={[styles.rectimage, { backgroundColor: "#e01d85" }]}>
                   <Image source={require('../../assets/billing.png')}
                     style={styles.imageStyle} />
@@ -148,52 +273,52 @@ const MyCourses = () => {
           </View>
 
           : recordType == "Parent" ?
-          <View style={styles.container}>
-          <View style={styles.row}>
+            <View style={styles.container}>
+              <View style={styles.row}>
 
-            <TouchableOpacity style={styles.rectangle} >
-              <View style={[styles.image, { backgroundColor: "#e01d85" }]}>
-                <Image source={require('../../assets/mycourses.png')}
-                  style={styles.imageStyle} />
+                <TouchableOpacity style={styles.rectangle} >
+                  <View style={[styles.image, { backgroundColor: "#e01d85" }]}>
+                    <Image source={require('../../assets/mycourses.png')}
+                      style={styles.imageStyle} />
+                  </View>
+                  <Text style={[styles.text, { fontWeight: "700" }]}>Courses</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.rectangle} >
+                  <View style={[styles.image, { backgroundColor: "#e01d85" }]}>
+                    <Image source={require('../../assets/billing.png')}
+                      style={styles.imageStyle} />
+                  </View>
+                  <Text style={[styles.text, { fontWeight: "500", }]}>Schedule</Text>
+                </TouchableOpacity>
+
               </View>
-              <Text style={[styles.text, { fontWeight: "700" }]}>Courses</Text>
-            </TouchableOpacity>
 
-            <TouchableOpacity 
-            style={styles.rectangle} >
-              <View style={[styles.image, { backgroundColor: "#e01d85" }]}>
-                <Image source={require('../../assets/billing.png')}
-                  style={styles.imageStyle} />
+              <View style={styles.row}>
+
+                <TouchableOpacity style={styles.rectangle} >
+                  <View style={[styles.image, { backgroundColor: "#e01d85" }]}>
+                    <Image source={require('../../assets/Videoassets.png')}
+                      style={styles.imageStyle} />
+                  </View>
+                  <Text style={[styles.text, { fontWeight: "600" }]}>Billing</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={[styles.rectangle, { marginLeft: 20 }]}
+                >
+                  <View style={[styles.image, { backgroundColor: "#e01d85", marginBottom: 10 }]}>
+                    <Image source={require('../../assets/Schedule.png')}
+                      style={styles.imageStyle} />
+                  </View>
+                  <Text style={[styles.text, { fontWeight: "700" }]}>Help Center</Text>
+                </TouchableOpacity>
+
               </View>
-              <Text style={[styles.text, { fontWeight: "500", }]}>Schedule</Text>
-            </TouchableOpacity>
 
-          </View>
-
-          <View style={styles.row}>
-
-            <TouchableOpacity style={styles.rectangle} >
-              <View style={[styles.image, { backgroundColor: "#e01d85" }]}>
-                <Image source={require('../../assets/Videoassets.png')}
-                  style={styles.imageStyle} />
-              </View>
-              <Text style={[styles.text, { fontWeight: "600" }]}>Billing</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.rectangle, { marginLeft: 20 }]}
-                    >
-              <View style={[styles.image, { backgroundColor: "#e01d85", marginBottom: 10 }]}>
-                <Image source={require('../../assets/Schedule.png')}
-                  style={styles.imageStyle} />
-              </View>
-              <Text style={[styles.text, { fontWeight: "700" }]}>Help Center</Text>
-            </TouchableOpacity>
-
-          </View>
-
-        </View>
-             : <View></View>
+            </View>
+            : <View></View>
       }
     </View>
   );
@@ -226,7 +351,7 @@ const styles = StyleSheet.create({
   separator: {
     height: 1,
     width: '100%',
-    backgroundColor: 'gray',
+    backgroundColor: '#999999',
     marginVertical: 10,
   },
   square: {

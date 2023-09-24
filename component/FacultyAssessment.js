@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { getAccessToken } from '../redux/actions';
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
+import BASE_URL from '../apiConfig';
 
 import {
   StyleSheet,
@@ -34,7 +35,7 @@ const FacultyAssessment = ({ batchid }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyAssignAssessmentContollers`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyAssignAssessmentContollers`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -63,7 +64,7 @@ const FacultyAssessment = ({ batchid }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyTestActive`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyTestActive`, {
       method: 'PATCH',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -120,7 +121,7 @@ const FacultyAssessment = ({ batchid }) => {
           <TouchableOpacity
           onPress={()=> FacultyTestActive(item?.testId, item?.Status)}
             disabled={item?.status === "In Progress" || item?.status === "Completed"}
-            style={{ backgroundColor: (item?.status === "In Progress" || item?.status === "Completed") ? "gray" : "#F38216", width: "25%", borderRadius: 3, alignItems: "center", marginLeft: 40, marginTop: 10, margin: 10, padding: 10 }}>
+            style={{ backgroundColor: (item?.status === "In Progress" || item?.status === "Completed") ? "#999999" : "#F38216", width: "25%", borderRadius: 3, alignItems: "center", marginLeft: 40, marginTop: 10, margin: 10, padding: 10 }}>
             <Text style={{ color: "#FFFFFF", fontSize: 14, fontWeight: "600" }}>Publish</Text>
           </TouchableOpacity>
           <TouchableOpacity

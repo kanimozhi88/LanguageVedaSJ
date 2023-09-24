@@ -14,36 +14,36 @@ import WebViewScreen from '../screens/WebViewScreen';
 
 const Stack = createNativeStackNavigator();
 
-const AuthNavigation = () => {
+const AuthNavigation = ({isFirstLaunch}) => {
     const recordId = useSelector(state => state.recordId);
     const Status = useSelector(state => state.status);
+    const statusOtp = useSelector(state => state.statusOtp);
 
     console.log("recordId is ", recordId,Status);
     useEffect(() => {
         SplashScreen.hide();
     }, [])
 
-    const [isFirstLaunch, setIsFirstLaunch] = useState(false);
-    useEffect(() => {
-        getAppLaunchStatus();
-    }, [])
-    console.log("isfirstlaucn", isFirstLaunch);
+    // const [isFirstLaunch, setIsFirstLaunch] = useState(true);
+    // useEffect(() => {
+    //     getAppLaunchStatus();
+    // }, [])
 
-    const getAppLaunchStatus = async () => {
-        const appLaunched = await AsyncStorage.getItem("isLaunched");
-        console.log("applunach status", appLaunched);
-        if (appLaunched === null) {
-            setIsFirstLaunch(true)
-            AsyncStorage.setItem("isLaunched", "true");
+    // const getAppLaunchStatus = async () => {
+    //     const appLaunched = await AsyncStorage.getItem("isLaunched");
+    //     console.log("applunach status", appLaunched);
+    //     if (appLaunched == null) {
+    //         setIsFirstLaunch(true)
+    //         AsyncStorage.setItem("isLaunched", "true");
 
-        }
-    }
+    //     }
+    // }
    
     return (
      <NavigationContainer>
-         {recordId === '' || recordId === null || Status !== 'Success'  ?(
+         {(recordId !== '' || recordId !== null || Status === 'Success') && statusOtp !== 'Success' ?(
         <Stack.Navigator>
-            {!isFirstLaunch ?
+            { isFirstLaunch ?
                 <Stack.Screen
                     name="OnboardingScreen"
                     component={OnboardingScreen}

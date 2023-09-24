@@ -10,6 +10,7 @@ import {
     TouchableOpacity,
     Image,
 } from 'react-native';
+import BASE_URL from '../../apiConfig';
 
 const VideoAssets = ({ navigation }) => {
 
@@ -36,7 +37,7 @@ const VideoAssets = ({ navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNCourseDisplay`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RNCourseDisplay`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -57,7 +58,7 @@ const VideoAssets = ({ navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyBatchDisplay`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyBatchDisplay`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",

@@ -6,6 +6,7 @@ import { Menu, MenuOptions, MenuOption, MenuTrigger, MenuProvider } from 'react-
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DatePicker from 'react-native-date-picker'
 import { Dropdown } from "react-native-element-dropdown";
+import BASE_URL from '../../apiConfig';
 
 
 import {
@@ -63,7 +64,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultylessonPlanExecutionsAndTests`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultylessonPlanExecutionsAndTests`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -122,7 +123,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyTestActive`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyTestActive`, {
       method: 'PATCH',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -145,7 +146,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyLessonPlanFileContent`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyLessonPlanFileContent`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -200,15 +201,12 @@ const FacultyCourseSelection = ({ navigation, route }) => {
               style={{ alignSelf: "center" }}
             />
           </MenuTrigger>
-          <MenuOptions style={{ borderWidth: 1, borderColor: "lightgray", borderRadius: 5 }} >
-            {/* <MenuOption onSelect={() => navigation.navigate('DocumentScreen', { base64: base64, type: type })}>
-                  <Text>View</Text>
-                </MenuOption> */}
+          <MenuOptions style={{ borderWidth: 1, borderColor: "#999999", borderRadius: 5 }} >
+          
             <MenuOption onSelect={() => {
               if (PublicDownloadUrl.PublicDownloadUrl !== undefined) {
                 const updatedUrl = PublicDownloadUrl.PublicDownloadUrl.replace("/", "");
                 navigation.navigate('WebViewDownload', { uri: updatedUrl })
-                // requestStoragePermission(updatedUrl,type)
               }
             }
             }>
@@ -218,7 +216,6 @@ const FacultyCourseSelection = ({ navigation, route }) => {
               if (PublicDownloadUrl.PublicDownloadUrl !== undefined) {
                 const updatedUrl = PublicDownloadUrl.PublicDownloadUrl.replace("/", "");
                 navigation.navigate('WebViewDownload', { uri: updatedUrl })
-                // requestStoragePermission(updatedUrl,type)
               }
             }
             }>
@@ -231,7 +228,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
   };
 
   const PopupMenuSecond = ({ PublicDownloadUrl, base64, type, index }) => {
-
+    
     return (
       <View style={{ flex: 1 }}>
         <Menu >
@@ -241,8 +238,18 @@ const FacultyCourseSelection = ({ navigation, route }) => {
               style={{ alignSelf: "center" }}
             />
           </MenuTrigger>
-          <MenuOptions style={{ borderWidth: 1, borderColor: "lightgray", borderRadius: 5 }} >
-            <MenuOption onSelect={() => navigation.navigate('DocumentScreen', { base64: base64, type: type })}>
+          <MenuOptions style={{ borderWidth: 1, borderColor: "#999999", borderRadius: 5 }} >
+            <MenuOption onSelect={() => {
+               if(PublicDownloadUrl !== undefined){
+                const updatedUrl = PublicDownloadUrl.replace("/", "");
+                console.log("PUBLIC URL>>>>>",updatedUrl);
+              navigation.navigate('WebViewDownload',{uri:updatedUrl})
+              // requestStoragePermission(updatedUrl,type)
+              }
+            } }
+            
+              // navigation.navigate('DocumentScreen', { base64: base64, type: type })}
+              >
               <Text>View</Text>
             </MenuOption>
           </MenuOptions>
@@ -281,7 +288,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyLpExecutionDateUpdate`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyLpExecutionDateUpdate`, {
       method: 'PATCH',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -381,7 +388,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
               <TouchableOpacity
                disabled={!assignEnable}
                 onPress={() => validateTest()}
-                style={{ backgroundColor: assignEnable ? "#F38216" : "gray", width: "40%", padding: 10, alignSelf: "center", alignItems: "center", borderRadius: 5, marginTop: 20, margin: 10 }}>
+                style={{ backgroundColor: assignEnable ? "#F38216" : "#999999", width: "40%", padding: 10, alignSelf: "center", alignItems: "center", borderRadius: 5, marginTop: 20, margin: 10 }}>
                 <Text style={{ color: "#FFFFFF", fontSize: 18, fontWeight: "600" }}>Assign</Text>
               </TouchableOpacity>
 
@@ -403,7 +410,9 @@ const FacultyCourseSelection = ({ navigation, route }) => {
                 </MenuProvider>
               </View>
             ))
-          ) : null}
+          ) : 
+          <Text> No Content Available</Text>
+          }
         </View>
 
        { final !== '' && final?.lessonPlanExecutions[0]?.Status === "Completed" ? 
@@ -453,7 +462,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
         {/* <TouchableOpacity
           onPress={touchableEnable ? handleTouchableOpacity : null}
           disabled={!touchableEnable}
-          style={{ backgroundColor: touchableEnable ? "#F38216" : "gray", width: "35%", alignSelf: "center", alignItems: "center", marginBottom: "20%", padding: 10, borderRadius: 5 }}
+          style={{ backgroundColor: touchableEnable ? "#F38216" : "#999999y", width: "35%", alignSelf: "center", alignItems: "center", marginBottom: "20%", padding: 10, borderRadius: 5 }}
         >
           <Text style={{ color: "#FFFFFF", fontSize: 18, fontWeight: "600" }}>Join Now</Text>
         </TouchableOpacity> */}
@@ -564,7 +573,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   disabledButton: {
-    backgroundColor: 'gray',
+    backgroundColor: '#999999',
     width: "35%", alignSelf: "center", alignItems: "center", marginBottom: "20%", padding: 10, borderRadius: 5
     // Add a different style for the disabled button
   },

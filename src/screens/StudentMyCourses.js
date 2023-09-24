@@ -11,6 +11,7 @@ import {
     Image,
 } from 'react-native';
 import moment from 'moment';
+import BASE_URL from '../../apiConfig';
 
 const StudentMyCourses = ({ navigation }) => {
    
@@ -29,7 +30,7 @@ const StudentMyCourses = ({ navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNCourseDisplay`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RNCourseDisplay`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -49,10 +50,10 @@ const StudentMyCourses = ({ navigation }) => {
                 <TouchableOpacity 
                 onPress={()=> navigation.navigate('StudentCourseSelection',{batchId: item?.batchId,courseName: item?.CourseName})}
                 style={[styles.rectangle, { backgroundColor: item?.BackgroundColor,width:152 }]} >
-                    <View >
+                    {/* <View >
                         <Image source={require('../../assets/langicon.png')}
                             style={styles.imageStyle} />
-                    </View>
+                    </View> */}
                     <Text style={styles.courseNameTxt}>{item?.CourseName}</Text>
                     <Text style={styles.dateStyle}>{moment(item?.startDate).format('MMMM DD, YYYY')}</Text>
                 </TouchableOpacity>
@@ -96,7 +97,14 @@ const styles = StyleSheet.create({
         padding: 20,
         marginVertical: 8,
     },
-    courseNameTxt: { fontWeight: "600", color: "white", marginBottom: 20, margin: 10, marginLeft: 30,fontSize:16 },
+    courseNameTxt: {
+        fontWeight: "600",
+        color: "white",
+        marginBottom: 40,
+        margin: 10,
+        marginLeft: 10,
+        fontSize: 16
+    },
     rectangle: {
      
         width: 170,

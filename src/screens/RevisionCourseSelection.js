@@ -6,6 +6,7 @@ import { Menu, MenuOptions, MenuOption, MenuTrigger, MenuProvider } from 'react-
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DatePicker from 'react-native-date-picker'
 import { Dropdown } from "react-native-element-dropdown";
+import BASE_URL from '../../apiConfig';
 
 
 import {
@@ -67,7 +68,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
     console.log("payload bodyis", body)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyRevisionlessonPlanExecutionsAndTests`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyRevisionlessonPlanExecutionsAndTests`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -125,7 +126,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyTestActive`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyTestActive`, {
       method: 'PATCH',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -148,7 +149,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyRevisionLessonPlanExContent`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyRevisionLessonPlanExContent`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -203,7 +204,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
               style={{ alignSelf: "center" }}
             />
           </MenuTrigger>
-          <MenuOptions style={{ borderWidth: 1, borderColor: "lightgray", borderRadius: 5 }} >
+          <MenuOptions style={{ borderWidth: 1, borderColor: "#999999", borderRadius: 5 }} >
             {/* <MenuOption onSelect={() => navigation.navigate('DocumentScreen', { base64: base64, type: type })}>
                   <Text>View</Text>
                 </MenuOption> */}
@@ -244,7 +245,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
               style={{ alignSelf: "center" }}
             />
           </MenuTrigger>
-          <MenuOptions style={{ borderWidth: 1, borderColor: "lightgray", borderRadius: 5 }} >
+          <MenuOptions style={{ borderWidth: 1, borderColor: "#999999", borderRadius: 5 }} >
             <MenuOption onSelect={() => navigation.navigate('DocumentScreen', { base64: base64, type: type })}>
               <Text>View</Text>
             </MenuOption>
@@ -284,7 +285,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyRevisionStatusDateUpdate`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyRevisionStatusDateUpdate`, {
       method: 'PATCH',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -384,7 +385,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
               <TouchableOpacity
                disabled={!assignEnable}
                 onPress={() => validateTest()}
-                style={{ backgroundColor: assignEnable ? "#F38216" : "gray", width: "40%", padding: 10, alignSelf: "center", alignItems: "center", borderRadius: 5, marginTop: 20, margin: 10 }}>
+                style={{ backgroundColor: assignEnable ? "#F38216" : "#999999", width: "40%", padding: 10, alignSelf: "center", alignItems: "center", borderRadius: 5, marginTop: 20, margin: 10 }}>
                 <Text style={{ color: "#FFFFFF", fontSize: 18, fontWeight: "600" }}>Assign</Text>
               </TouchableOpacity>
 
@@ -456,7 +457,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
         {/* <TouchableOpacity
           onPress={touchableEnable ? handleTouchableOpacity : null}
           disabled={!touchableEnable}
-          style={{ backgroundColor: touchableEnable ? "#F38216" : "gray", width: "35%", alignSelf: "center", alignItems: "center", marginBottom: "20%", padding: 10, borderRadius: 5 }}
+          style={{ backgroundColor: touchableEnable ? "#F38216" : "#999999", width: "35%", alignSelf: "center", alignItems: "center", marginBottom: "20%", padding: 10, borderRadius: 5 }}
         >
           <Text style={{ color: "#FFFFFF", fontSize: 18, fontWeight: "600" }}>Join Now</Text>
         </TouchableOpacity> */}
@@ -567,7 +568,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   disabledButton: {
-    backgroundColor: 'gray',
+    backgroundColor: '#999999',
     width: "35%", alignSelf: "center", alignItems: "center", marginBottom: "20%", padding: 10, borderRadius: 5
     // Add a different style for the disabled button
   },

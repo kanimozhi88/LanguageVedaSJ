@@ -4,6 +4,7 @@ import { getAccessToken } from "../../redux/actions";
 import { useDispatch, useSelector } from 'react-redux';
 import HTML from 'react-native-render-html';
 import TruncatedText from '../../component/TruncatedText';
+import BASE_URL from '../../apiConfig';
 
 // import RNFetchBlob from 'react-native-fetch-blob';
 
@@ -50,7 +51,7 @@ const StudentCourseAssessment = ({ navigation, route }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNStudentSpecificTestDetails`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNStudentSpecificTestDetails`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",

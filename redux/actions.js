@@ -1,5 +1,5 @@
 import { firebase } from "@react-native-firebase/analytics";
-import { GET_API,GET_LASTNAME,GET_COURSEAPIRESULT,GET_CHARTSAPIRESULT,GET_LOGINSTATUS,GET_CALENDERAPIRESULT,GET_ASSIGNMENTAPIRESULT, GET_EMAIL,GET_PHONE, GET_RECORD_TYPE, GET_PROFILEPHOTO} from "./actionType";
+import { GET_API,GET_LASTNAME,GET_COURSEAPIRESULT,GET_CHARTSAPIRESULT,GET_LOGINSTATUS,GET_CALENDERAPIRESULT,GET_ASSIGNMENTAPIRESULT, GET_EMAIL,GET_PHONE, GET_RECORD_TYPE, GET_PROFILEPHOTO,GET_TOGGLERESPONSE,GET_LOGINOTPSTATUS} from "./actionType";
 import remoteConfig from '@react-native-firebase/remote-config';
 import { correctFloat } from "highcharts";
 export async function connectedApp(){
@@ -50,6 +50,11 @@ export const getLoginStatus = result =>({
     type: GET_LOGINSTATUS,
     payload: result
 });
+export const getLoginOtpStatus = result =>({
+
+    type: GET_LOGINOTPSTATUS,
+    payload: result
+});
 export const getLastNameMethod = result =>({
 
     type: GET_LASTNAME ,
@@ -88,6 +93,11 @@ export const getAssignmentApiResult= response =>({
 export const getChartApiResult = result =>({
 
     type: GET_CHARTSAPIRESULT,
+    payload: result
+});
+export const getToggleResponse = result =>({
+
+    type: GET_TOGGLERESPONSE,
     payload: result
 });
 

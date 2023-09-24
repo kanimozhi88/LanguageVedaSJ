@@ -8,6 +8,7 @@ import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import { Menu, MenuOptions, MenuOption, MenuTrigger, MenuProvider } from 'react-native-popup-menu';
 import { RadioButton } from 'react-native-paper';
+import BASE_URL from '../../apiConfig';
 
 // import RNFetchBlob from 'react-native-fetch-blob';
 
@@ -33,6 +34,8 @@ const StudentTakeAssessment = ({ navigation, route }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [submitShow,setSubmitShow] = useState(false)
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [selectedOptionState, setSelectedOptionState] = useState(null); 
+
 
 
 //  const [selectedOption, setSelectedOption] = useState(null);
@@ -65,7 +68,7 @@ const StudentTakeAssessment = ({ navigation, route }) => {
     const body = JSON.stringify(data);
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNStudentAssessmentQuestions`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNStudentAssessmentQuestions`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -83,14 +86,25 @@ const StudentTakeAssessment = ({ navigation, route }) => {
   const [uploadedImages, setUploadedImages] = useState(Array(final.length).fill([]));
  console.log(">>>>>>>>>>",selectedOption)
 
-  const StudentQuesAnsUpdate = async () => {
+  const StudentQuesAnsUpdate = async (quesid) => {
+    console.log("slected option", selectedOption)
+
+    const existingArray = [];
+    const testArray = {
+      questionId: quesid,
+      newUserAnswer: selectedOptionState === "Option1" ? "Choice 1" : selectedOptionState === "Option2" ? "Choice 2" : selectedOptionState === "Option3" ? "Choice 3" : selectedOptionState === "Option4" ? "Choice 4" : null,
+     
+    }
+    existingArray.push(testArray);
+
     let data = {};
-    data.questionUpdates = selectedOption
+    data.questionUpdates = existingArray;
 
     const body = JSON.stringify(data);
+    console.log("PARAMS BODY::::::::",body)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNStudentQuesAnswerUpdate`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNStudentQuesAnswerUpdate`, {
       method: 'PATCH',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -100,7 +114,7 @@ const StudentTakeAssessment = ({ navigation, route }) => {
     });
     let StudentQuesAnsUpdate = await response.json()
     console.log("StudentQuesAnsUpdate ",StudentQuesAnsUpdate );
-// Alert.alert("Success");    
+   Alert.alert("Success");    
   }
 
 
@@ -115,7 +129,7 @@ const uploadImageApi = async (fileName, base64, imageType, questId) => {
   const body = JSON.stringify(data)
   const token = await getAccessToken();
   const bearer = 'Bearer ' + token;
-  const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNStudentAssessmentAttachmentService`, {
+  const response = await fetch(`${BASE_URL}/services/apexrest/RNStudentAssessmentAttachmentService`, {
     method: 'POST',
     headers: new Headers({
       "Content-Type": "application/json",
@@ -144,8 +158,8 @@ const callUploadApi = () => {
 
   }
 }
- const onSubmitClick = () =>{
-  StudentQuesAnsUpdate();
+ const onSubmitClick = (quesid) =>{
+  StudentQuesAnsUpdate(quesid);
   callUploadApi();
  }
 console.log("curenntindex>>>>>>>>>",currentIndex);
@@ -342,6 +356,10 @@ const handleFileUpload = (fileName, base64, imageType, questionIndex) => {
   const QuestionScreen = ({ questionData, onNextPress , onPrevPress, selectedOption,  uploadedImages, handleFileUpload}) => {
     const filteredImages = images.filter(item => item.QuesId === questionData?.QuesId);
 
+    const handleOptionSelect = (value) => {
+      setSelectedOptionState(value); // Update the selected option
+      console.log("selectedOPtions::::::::",value);
+    };
    
     return (
       <View style={[styles.container,{margin:10,}]}>
@@ -352,28 +370,24 @@ const handleFileUpload = (fileName, base64, imageType, questionIndex) => {
         {/* Render options for MCQ or textarea for Essay Question */}
         {questionData?.Type === 'MCQ' ? 
           <>
-          <Text style={{color:"#696F79", fontSize:16,fontWeight:"600",marginTop:20,marginHorizontal:20}}>Choose Answer</Text>
-          <RadioButton.Group onValueChange={(value) => handleOptionSelect(value, questionData?.QuesId)} value={selectedOption}>
-            <View style={{marginHorizontal:15,flexDirection:"row"}}>
-            <RadioButton value={questionData?.Option1} />
-              <Text style={{alignSelf:"center"}}>{questionData?.Option1}</Text> 
-            </View>
-            <View style={{marginHorizontal:15,flexDirection:"row"}}>
-            <RadioButton value={questionData?.Option2} />
-              <Text style={{alignSelf:"center"}}>{questionData?.Option2}</Text>  
-            </View>
-            <View style={{marginHorizontal:15,flexDirection:"row"}}>
-            <RadioButton value={questionData?.Option3} />
-              <Text style={{alignSelf:"center"}}>{questionData?.Option3}</Text>
-            </View>
-            <View style={{marginHorizontal:15,flexDirection:"row"}}>
-            <RadioButton value={questionData?.Option4} />
-              <Text style={{alignSelf:"center"}}>{questionData?.Option4}</Text>
-            </View>
+          <Text style={{ color: '#696F79', fontSize: 16, fontWeight: '600', marginTop: 20, marginHorizontal: 20 }}>Choose Answer</Text>
+          <RadioButton.Group onValueChange={handleOptionSelect} value={selectedOptionState}>
+            {Object.keys(questionData).map((key) => {
+              if (key.startsWith('Option') && questionData[key]) {
+                const optionNumber = key.replace('Option', '');
+                return (
+                  <View key={key} style={{ marginHorizontal: 15, flexDirection: 'row' }}>
+                    <RadioButton value={key} />
+                    <Text style={{ alignSelf: 'center' }}>{questionData[key]}</Text>
+                  </View>
+                );
+              }
+              return null;
+            })}
           </RadioButton.Group>
         </>
         : 
-        <View style={{width:"65%",padding:10,borderWidth:1,borderStyle: "dashed", borderColor:"gray",alignSelf:"center",marginTop:30,borderRadius:20}}>
+        <View style={{width:"65%",padding:10,borderWidth:1,borderStyle: "dashed", borderColor:"#999999",alignSelf:"center",marginTop:30,borderRadius:20}}>
           <ActionSheet
           ref={actionSheetRef}
           title={
@@ -407,13 +421,13 @@ const handleFileUpload = (fileName, base64, imageType, questionIndex) => {
 
         <View style={{flexDirection:"row",width:"90%",justifyContent:"space-around",marginTop:"15%"}}>
           <TouchableOpacity
-          style={{backgroundColor: currentIndex === 0 ? "gray":"#F38216",width:"30%",padding:10,borderRadius:5}}
+          style={{backgroundColor: currentIndex === 0 ? "#999999":"#F38216",width:"30%",padding:10,borderRadius:5}}
           onPress={handlePrevPress} disabled={currentIndex === 0} >
             <Text style={{color:"#FFFFFF",fontSize:15,fontWeight:"700",alignSelf:"center"}}>Previous</Text>
           </TouchableOpacity>
           <TouchableOpacity 
           disabled={(currentIndex + 1) === final?.length}
-          style={{backgroundColor: (currentIndex + 1) === final?.length? "gray": "#F38216",width:"30%",padding:10,borderRadius:5}}
+          style={{backgroundColor: (currentIndex + 1) === final?.length? "#999999": "#F38216",width:"30%",padding:10,borderRadius:5}}
           onPress={handleNextPress}>
             <Text style={{color:"#FFFFFF",fontSize:15,fontWeight:"700",alignSelf:"center"}}>Next</Text>
           </TouchableOpacity>
@@ -477,8 +491,8 @@ console.log("uploaded>>>>>>>>>>>>>",uploadedImages)
 
   const handleOptionSelect = (option, questId) => {
     // const selectedKey = options.find((option) => option.label === selectedValue)?.key;
-    console.log('Selected Key:', selectedKey);
-    console.log('Selected Value:', selectedValue);
+    // console.log('Selected Key:', selectedKey);
+    // console.log('Selected Value:', selectedValue);
     const updatedOptions = [...selectedOption];
     const updatedAnsOptions = [...selectedOption];
     const existingOptionIndex = updatedOptions.findIndex((item) => item.questionId === questId);
@@ -511,8 +525,18 @@ console.log("uploaded>>>>>>>>>>>>>",uploadedImages)
               style={{ alignSelf: "center" }}
             />
           </MenuTrigger>
-          <MenuOptions style={{ borderWidth: 1, borderColor: "lightgray", borderRadius: 5 }} >
-            <MenuOption onSelect={() => navigation.navigate('DocumentScreen', { base64: base64, type: type })}>
+          <MenuOptions style={{ borderWidth: 1, borderColor: "#999999", borderRadius: 5 }} >
+            <MenuOption onSelect={() => 
+            // {
+            //    if(PublicDownloadUrl !== undefined){
+            //     const updatedUrl = PublicDownloadUrl.replace("/", "");
+            //   navigation.navigate('WebViewDownload',{uri:updatedUrl})
+            //   // requestStoragePermission(updatedUrl,type)
+            //   }
+            // }}
+              
+               navigation.navigate('DocumentScreen', { base64: base64, type: type })}
+               >
               <Text>Preview</Text>
             </MenuOption>
             <MenuOption onSelect={() => {
@@ -528,6 +552,7 @@ console.log("uploaded>>>>>>>>>>>>>",uploadedImages)
     );
   };
 
+  console.log("current quesid::::::",final[currentIndex]?.QuesId)
 
   return (
     <SafeAreaView style={styles.container}>
@@ -551,7 +576,7 @@ console.log("uploaded>>>>>>>>>>>>>",uploadedImages)
 
         {submitShow ?
           <TouchableOpacity
-          onPress={ () => onSubmitClick()}
+          onPress={ () => onSubmitClick(final[currentIndex]?.QuesId)}
           style={{backgroundColor:"#F38216",width:"30%",padding:10,borderRadius:5,alignSelf:"center",marginBottom:"40%"}}
           >
             <Text style={{color:"#FFFFFF",fontSize:15,fontWeight:"700",alignSelf:"center"}}>Submit</Text>

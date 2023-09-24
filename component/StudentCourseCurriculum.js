@@ -4,6 +4,7 @@ import { getAccessToken } from '../redux/actions';
 import * as Progress from 'react-native-progress';
 import LinearGradient from 'react-native-linear-gradient';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import BASE_URL from '../apiConfig';
 
 
 const StudentCourseCurriculum = ({batchId,courseName}) => {
@@ -24,7 +25,7 @@ const StudentCourseCurriculum = ({batchId,courseName}) => {
       const body = JSON.stringify(data)
       const token = await getAccessToken();
       const bearer = 'Bearer ' + token;
-      const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/lessonPlanExecutions`, {
+      const response = await fetch(`${BASE_URL}/services/apexrest/lessonPlanExecutions`, {
           method: 'POST',
           headers: new Headers({
               "Content-Type": "application/json",
@@ -136,7 +137,7 @@ console.log("sum is", totalNum)
                 rotation={0}
                 lineCap="round"
                 tintColor="orange"
-                backgroundColor="lightgray">
+                backgroundColor="#999999">
                 {(fill) => (
                   <Text style={{ fontSize: 13 ,color:"#D6387F",fontWeight:"700"}}>{`${Math.round(fill)}%`}</Text>
                 )}
