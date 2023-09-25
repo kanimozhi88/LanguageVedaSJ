@@ -2,14 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Image, SafeAreaView, Text, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import WebView from 'react-native-webview';
-import { getDataMethod } from '../../redux/actions';
+import { getDataMethod,getLoginOtpStatus } from '../../redux/actions';
 import ToggleSwitch from 'toggle-switch-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const MyProfileScreen = ({ navigation }) => {
 
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   // const ToggleSwitch = useSelector(state => state.toggleSwitch);
   // console.log("dispatched value",toggleSwitch)
   const LastName = useSelector(state => state.LastName);
@@ -132,6 +132,8 @@ const MyProfileScreen = ({ navigation }) => {
       <TouchableOpacity
         onPress={() => [
           dispatch(getDataMethod('')),
+          dispatch(getLoginOtpStatus('')),
+
           // dispatch(getLoginStatus('')),
           console.log("recordId profile", userrecordId, Status)]}
         style={{ flexDirection: "row", alignSelf: "center", marginTop: "15%" }}>

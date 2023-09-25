@@ -83,45 +83,7 @@ const LoginScreen = ({ route }) => {
   }
 
 
-  const handleSubmit = async () => {
-    let data = {};
-    data.Email = Phone;
-    data.Password = Password;
-
-    const body = JSON.stringify(data)
-    const token = await getAccessToken();
-    console.log('token........>' + token);
-    console.log('body...>' + JSON.stringify(body));
-    const bearer = 'Bearer ' + token;
-    console.log('bearer------>' + bearer);
-    console.log(JSON.stringify(token));
-    const response = await fetch(`${BASE_URL}/services/apexrest/v1/search-records/`, {
-      method: 'POST',
-      headers: new Headers({
-        "Content-Type": "application/json",
-        "Authorization": bearer
-      }),
-      body,
-    });
-    let result = await response.json()
-
-    console.log("login api response is", result);
-    dispatch(getDataMethod(result?.Result?.recordId));
-    dispatch(getLoginStatus(result?.Result?.status));
-    dispatch(getRecordType(result?.Result?.recordType));
-    dispatch(getLastNameMethod(result?.Result?.LastName));
-    dispatch(getEmailMethod(result?.Result?.Email));
-    dispatch(getPhoneMethod(result?.Result?.Phone));
-    dispatch(getProfilePhotoMethod(result?.Result?.profilePhoto));
-
-    console.log(JSON.stringify(result));
-    if (result.Result.status === "Success" && result) {
-      console.log('SUCCESS');
-    }
-    else {
-      alert('if you are not registered  please do sign up');
-    }
-  }
+ 
 
   const handleSubmitForOtp = async () => {
     let data = {};
