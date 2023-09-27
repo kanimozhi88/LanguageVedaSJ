@@ -1,38 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, TouchableOpacity, FlatList, ActivityIndicator } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { View, Text, Image, TouchableOpacity, FlatList } from 'react-native';
+import { useSelector } from 'react-redux';
 import { getAccessToken } from '../redux/actions';
-import * as Progress from 'react-native-progress';
-import { isDate } from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import PieChart from 'react-native-pie-chart';
 import { useNavigation } from '@react-navigation/native';
-
-
-
+import BASE_URL from '../apiConfig';
 
 const StudentCourseAssignment = ({ batchId, courseName }) => {
 
-    // console.log("batchid is", batchid);
-    // const {CourseName, batchId} = route.params;
     const navigation = useNavigation();
-
-    const [totalNum, setTotalNum] = useState(0);
-    const [average, setAverage] = useState(0);
-    const [percentage, setPercentage] = useState(0);
-    // const [count,SetCount] = useState(0);
     const dataFetchApi = useSelector(state => state.recordId);
     const [final, setFinal] = useState('');
-    const [loading, setLoading] = useState(false);
     const [seriesArr,setSeriesArr] = useState({
         completed:1,
         submitted:1,
         InProgress:1,
         Redo:1
     });
-
-
 
     useEffect(() => {
         StudentCurriculumApiCall();
@@ -50,7 +35,7 @@ const StudentCourseAssignment = ({ batchId, courseName }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/testassignmentController`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/testassignmentController`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -61,12 +46,8 @@ const StudentCourseAssignment = ({ batchId, courseName }) => {
         let assignmentresult = await response.json()
         console.log("student course Assignment", assignmentresult);
         const { records } = assignmentresult;
-        //   setFinal(assignmentresult.records);
-        // const records = assignmentresult.records;
-        console.log("student course Assignment records", records);
         setFinal(records);
     }
-    console.log("final value", final)
 
     const statusOrder = ["Assignment Submitted", "Vetting In Progress", "Redo", "Completed"];
     if(final !== ''){
@@ -121,13 +102,11 @@ setSeriesArr({
     console.log('redo Submitted Count:', seriesArr.Redo);
     const widthAndHeight = 145
     const series = [seriesArr.completed, seriesArr.submitted, seriesArr.InProgress, seriesArr.Redo]
-    // const series = [1,0,0,0]
     const sliceColor = ['#9B88ED', '#04BFDA', '#FB67CA', '#FFA84A']
 
     const renderItem = ({ item, index }) => {
 
         return (
-            // <View></View>
             <TouchableOpacity
             onPress={()=>{navigation.navigate('StudentAssignmentUpload',{testId:item.id})}}
                 style={{ width: "99%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop: 10, elevation: 5, padding: 10, }}>
@@ -144,7 +123,8 @@ setSeriesArr({
                             "#FF9533" :
                             item.status === "Completed" ?
                                 "#67CB65" :
-                                item.status === "Redo" ? "#E74444" : item.status === "Assignment Submitted" ? "#84d3f0" : "red", borderRadius: 10,
+                                item.status === "Redo" ? "#E74444" : item.status === "Assignment Submitted" ? "#84d3f0" : item.status === "Yet_To_Submit" ?
+                                "#FF9533" :"red", borderRadius: 10,
                     }}
                 >
                     {item.status === "Vetting In Progress" ?
@@ -153,7 +133,11 @@ setSeriesArr({
                             <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Completed</Text> :
                             item.status === "Redo" ? <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}> Redo</Text> :
                                 item.status === "Assignment Submitted" ?
-                                    <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Submitted</Text> : <></>}
+                                    <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Submitted</Text> :
+                                    item.status === "Yet_To_Submit" ? 
+                                    <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Yet To Start</Text> :
+
+                                    <></>}
 
                 </View>
                 </View>

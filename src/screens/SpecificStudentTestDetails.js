@@ -7,6 +7,7 @@ import { ActionSheetCustom as ActionSheet } from 'react-native-actionsheet';
 import * as ImagePicker from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
+import BASE_URL from "../../apiConfig";
 
 const SpecificStudentTestDetails = ({ route, navigation }) => {
 
@@ -31,7 +32,7 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultySpecificStudentTestDetails`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultySpecificStudentTestDetails`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -55,7 +56,7 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyupdateStudentTestStatus`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyupdateStudentTestStatus`, {
             method: 'PATCH',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -261,7 +262,7 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyAnswerPaperAttachment`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyAnswerPaperAttachment`, {
           method: 'POST',
           headers: new Headers({
             "Content-Type": "application/json",
@@ -296,7 +297,7 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
                             style={{ alignSelf: "center" }}
                         />
                     </MenuTrigger>
-                    <MenuOptions style={{ borderWidth: 1, borderColor: "lightgray", borderRadius: 5 }} >
+                    <MenuOptions style={{ borderWidth: 1, borderColor: "#999999", borderRadius: 5 }} >
                         <MenuOption onSelect={() => {
                                 if (PublicDownloadUrl !== undefined) {
                                     const updatedUrl = PublicDownloadUrl.replace("/", "");
@@ -365,13 +366,15 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
             </View>
 
             <View style={{ marginTop: 20, marginHorizontal: 25 }}>
+              {final?.Attachments?.length > 0 ?
                 <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>File</Text>
+                : null}
                 {final !== '' ?
                 final?.Attachments.map((item, index) => {
                     if (item.Type.includes("pdf")) {
                         return (
                          
-                            <View style={{ width: "100%",flexDirection:"row",backgroundColor: "#F5F7FB",}}>
+                            <View key={item.id} style={{ width: "100%",flexDirection:"row",backgroundColor: "#F5F7FB",}}>
                             <Image
                                     source={require('../../assets/PDF.png')}
                                     style={{ width: 16, height: 16, margin: 5 }} />
@@ -404,7 +407,7 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
                 }
                 )
                 : null}
-                {Status === "Completed" || Status === "Submited" ?
+                {/* {Status === "Completed" || Status === "Submited" ?
                 <View 
                 style={{ width: "100%", flexDirection:"row",backgroundColor: "#F5F7FB"}}>
                  <TouchableOpacity
@@ -412,7 +415,7 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
                     <Text style={{color:"#FFFFFF",fontSize:18,fontWeight:"600"}}>Download</Text>
                  </TouchableOpacity>
                  </View>
-                 : null}
+                 : null} */}
               
             </View>
 

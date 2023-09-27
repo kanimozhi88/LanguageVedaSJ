@@ -17,7 +17,7 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import moment from 'moment';
+import BASE_URL from '../../apiConfig';
 
 const FacultyBatches = ({navigation}) => {
   
@@ -55,7 +55,7 @@ const FacultyBatches = ({navigation}) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyBatchDisplay`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyBatchDisplay`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",

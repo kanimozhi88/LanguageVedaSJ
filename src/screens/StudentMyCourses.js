@@ -1,28 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getAccessToken } from '../../redux/actions';
 import {
     StyleSheet,
     Text,
     View,
-    Linking,
     SafeAreaView,
     FlatList,
     TouchableOpacity,
     Image,
-    ScrollView,
 } from 'react-native';
 import moment from 'moment';
+import BASE_URL from '../../apiConfig';
 
 const StudentMyCourses = ({ navigation }) => {
    
-    const dispatch = useDispatch();
-    const courseApiResult = useSelector(state => state.Result)
-    console.log("stored course api result is", courseApiResult);
-
     const [final, setFinal] = useState();
     const dataFetchApi = useSelector(state => state.recordId);
-    console.log("DATAFETCH", dataFetchApi);
 
     useEffect(() => {
         CourseApiCall();
@@ -36,7 +30,7 @@ const StudentMyCourses = ({ navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNCourseDisplay`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RNCourseDisplay`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -48,21 +42,20 @@ const StudentMyCourses = ({ navigation }) => {
         console.log(" student MyCOURSE API RES", courseresult);
         setFinal(courseresult);
         console.log("final data is", final)
-        // dispatch(getCourseApiResult(courseresult?.Result));
-
     }
+
     const renderItem = ({ item }) => {
         return (
             <View style={{height:151}}>
                 <TouchableOpacity 
                 onPress={()=> navigation.navigate('StudentCourseSelection',{batchId: item?.batchId,courseName: item?.CourseName})}
                 style={[styles.rectangle, { backgroundColor: item?.BackgroundColor,width:152 }]} >
-                    <View >
+                    {/* <View >
                         <Image source={require('../../assets/langicon.png')}
                             style={styles.imageStyle} />
-                    </View>
-                    <Text style={[{ fontWeight: "600", color: "white", marginBottom: 20, margin: 10, marginLeft: 30,fontSize:16 }]}>{item?.CourseName}</Text>
-                    <Text style={{ color: "white", marginLeft: 30 ,fontWeight:"300",fontSize:10,fontFamily:"Poppins"}}>{moment(item?.startDate).format('MMMM DD, YYYY')}</Text>
+                    </View> */}
+                    <Text style={styles.courseNameTxt}>{item?.CourseName}</Text>
+                    <Text style={styles.dateStyle}>{moment(item?.startDate).format('MMMM DD, YYYY')}</Text>
                 </TouchableOpacity>
             </View>
         )
@@ -104,6 +97,14 @@ const styles = StyleSheet.create({
         padding: 20,
         marginVertical: 8,
     },
+    courseNameTxt: {
+        fontWeight: "600",
+        color: "white",
+        marginBottom: 40,
+        margin: 10,
+        marginLeft: 10,
+        fontSize: 16
+    },
     rectangle: {
      
         width: 170,
@@ -113,11 +114,11 @@ const styles = StyleSheet.create({
         elevation: 5,
         justifyContent: 'center',
     },
+    dateStyle : { color: "white", marginLeft: 30 ,fontWeight:"300",fontSize:10,fontFamily:"Poppins"}, 
     image: {
         width: 50,
         height: 50,
         borderRadius: 25,
-        // marginBottom: 40,
         marginLeft: 8
     },
     imageStyle: {

@@ -3,6 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, alert, Alert, Imag
 import { getAccessToken } from '../../redux/actions';
 import { useNavigation } from '@react-navigation/native';
 import OTPTextView from 'react-native-otp-textinput';
+import BASE_URL from "../../apiConfig";
+
 const ProfileOtpValidation = ({ navigation, route }) => {
 
   const [one, setOne] = useState('');
@@ -50,7 +52,7 @@ const ProfileOtpValidation = ({ navigation, route }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/updateContactOTPByEmail`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/updateContactOTPByEmail`, {
       method: 'PATCH',
       headers: new Headers({
         "Content-Type": "application/json",

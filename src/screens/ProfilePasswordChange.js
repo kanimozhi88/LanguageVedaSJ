@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, StyleSheet, Text, TouchableOpacity, Image, ImageBackground ,KeyboardAvoidingView,Dimensions,Alert} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getAccessToken } from '../../redux/actions';
+import BASE_URL from '../../apiConfig';
 
 const ProfilePasswordChange = ({ navigation }) => {
     const [Phone, setMobileNumber] = useState('');
@@ -36,7 +37,7 @@ const ProfilePasswordChange = ({ navigation }) => {
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
     console.log("token needed is::", token);
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/updateContactOTPByEmail`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/updateContactOTPByEmail`, {
       method: 'PATCH',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
       width: '90%',
       height: 50,
       backgroundColor: "white",
-      borderColor: 'gray',
+      borderColor: '#999999',
       borderWidth: 1,
       borderRadius: 10,
       margin: 10,

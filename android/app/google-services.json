@@ -29,6 +29,13 @@
             {
               "client_id": "682670575534-thumv9m4ubd0qjfubmi6eqjt9s2uhsl0.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "682670575534-2vrai7fbtk0rs0obh8fmq4j9djagejp9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.LanguageVedaS"
+              }
             }
           ]
         }

@@ -1,41 +1,41 @@
 import { firebase } from "@react-native-firebase/analytics";
-import { GET_API,GET_LASTNAME,GET_COURSEAPIRESULT,GET_CHARTSAPIRESULT,GET_LOGINSTATUS,GET_CALENDERAPIRESULT,GET_ASSIGNMENTAPIRESULT, GET_EMAIL,GET_PHONE, GET_RECORD_TYPE, GET_PROFILEPHOTO} from "./actionType";
-import remoteConfig from '@react-native-firebase/remote-config';
+import { GET_API,GET_LASTNAME,GET_COURSEAPIRESULT,GET_LOGINOTPSTATUS,GET_CHARTSAPIRESULT,GET_LOGINSTATUS,GET_CALENDERAPIRESULT,GET_ASSIGNMENTAPIRESULT, GET_EMAIL,GET_PHONE, GET_RECORD_TYPE, GET_PROFILEPHOTO} from "./actionType";
+//import remoteConfig from '@react-native-firebase/remote-config';
 import { correctFloat } from "highcharts";
-export async function connectedApp(){
-    return new Promise((resolve,reject)=>{
-        let details={};
-        try{
-            remoteConfig().setConfigSettings({
-                minimumFetchIntervalMillis: 3600000, // 1 hour
-              });
-              remoteConfig().setDefaults({
-                myParam: 'default value',
-              });
-              // Fetch the latest parameter values from Firebase Remote Config
-              remoteConfig()
-            .fetch()
-            .then(() => {
-              // Activate the fetched values
-              remoteConfig().fetchAndActivate();
-              //remoteConfig().activate();
-              // Get the new parameter value
-              details.grant_type = remoteConfig().getValue('grant_type').asString();
-              details.client_id = remoteConfig().getValue('client_id').asString();
-              details.client_secret = remoteConfig().getValue('client_secret').asString();
-              details.username = remoteConfig().getValue('username').asString();
-              details.password = remoteConfig().getValue('password').asString();
-              console.log('myParam value: ', JSON.stringify(details));
-              resolve(details);
-            });
-        } catch(error){
-            console.log('Identified error---->',error);
-            resolve(details);
+// export async function connectedApp(){
+//     return new Promise((resolve,reject)=>{
+//         let details={};
+//         try{
+//             remoteConfig().setConfigSettings({
+//                 minimumFetchIntervalMillis: 3600000, // 1 hour
+//               });
+//               remoteConfig().setDefaults({
+//                 myParam: 'default value',
+//               });
+//               // Fetch the latest parameter values from Firebase Remote Config
+//               remoteConfig()
+//             .fetch()
+//             .then(() => {
+//               // Activate the fetched values
+//               remoteConfig().fetchAndActivate();
+//               //remoteConfig().activate();
+//               // Get the new parameter value
+//               details.grant_type = remoteConfig().getValue('grant_type').asString();
+//               details.client_id = remoteConfig().getValue('client_id').asString();
+//               details.client_secret = remoteConfig().getValue('client_secret').asString();
+//               details.username = remoteConfig().getValue('username').asString();
+//               details.password = remoteConfig().getValue('password').asString();
+//               console.log('myParam value: ', JSON.stringify(details));
+//               resolve(details);
+//             });
+//         } catch(error){
+//             console.log('Identified error---->',error);
+//             resolve(details);
     
-        }
-    })
+//         }
+//     })
     
-}
+// }
 export const getRecordType = result =>({
     type : GET_RECORD_TYPE,
     payload: result
@@ -48,6 +48,11 @@ export const getDataMethod = result =>({
 export const getLoginStatus = result =>({
 
     type: GET_LOGINSTATUS,
+    payload: result
+});
+export const getLoginOtpStatus = result =>({
+
+    type: GET_LOGINOTPSTATUS,
     payload: result
 });
 export const getLastNameMethod = result =>({
@@ -93,46 +98,15 @@ export const getChartApiResult = result =>({
 
 export async function getAccessToken() {
     try {
-        // Set the new parameter value
-        let details=await connectedApp();
-        // var details = {
-        //     'grant_type': '',
-        //     'client_id': '',
-        //     'client_secret': '',
-        //     'username':  '',
-        //     'password': ''
-        // };
-// remoteConfig().setConfigSettings({
-//     minimumFetchIntervalMillis: 3600000, // 1 hour
-//   });
-//   remoteConfig().setDefaults({
-//     myParam: 'default value',
-//   });
-//   // Fetch the latest parameter values from Firebase Remote Config
-// await remoteConfig()
-// .fetch()
-// .then(() => {
-//   // Activate the fetched values
-//   remoteConfig().fetchAndActivate();
-//   //remoteConfig().activate();
-//   // Get the new parameter value
-//   details.grant_type = remoteConfig().getValue('grant_type').asString();
-//   details.client_id = remoteConfig().getValue('client_id').asString();
-//   details.client_secret = remoteConfig().getValue('client_secret').asString();
-//   details.username = remoteConfig().getValue('username').asString();
-//   details.password = remoteConfig().getValue('Password').asString();
-//   console.log('myParam value: ', grant_type);
-// });
-console.log('details--->',JSON.stringify(details));
-        // var details = {
-        //     'grant_type': password,
-        //     'client_id': client_id,
-        //     'client_secret': client_secret,
-        //     'username':  username,
-        //     'password': password
-        // };
+        var details = {
+            'grant_type': 'password',
+            'client_id': '3MVG9ZUGg10Hh224dLrl9wXsHAMsIEMCA2YdbSy4TTWzag18glt0P9h3gNxmBvrXfnFE4LPkJ6I.Z8KjVEafI',
+            'client_secret': '1F72B06A4D12E374B8B4857F60BC02BB2C9536E9CB6BD210C2C72AE2405E6066',
+            'username': 'santhosh-d1y1@force.com.developer',
+            'password': 'Lv@12345'
+        };
         const calloutURL = "https://test.salesforce.com/services/oauth2/token";
-        //const calloutURL="https://languageveda--developer.sandbox.lightning.force.com/services/oauth2/token";
+        //const calloutURL="https://https://languageveda--uat\.sandbox\.my\.salesforce\.com/services/oauth2/token";
         var formBody = [];
         for (var property in details) {
             var encodedKey = encodeURIComponent(property);
@@ -140,7 +114,6 @@ console.log('details--->',JSON.stringify(details));
             formBody.push(encodedKey + "=" + encodedValue);
         }
         formBody = formBody.join("&");
-        console.log('formbody---->',formBody);
         const response = await fetch(calloutURL, {
             method: "POST",
             headers: {

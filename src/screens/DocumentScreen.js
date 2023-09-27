@@ -19,7 +19,7 @@ const DocumentScreen = ({ props, route }) => {
                     source={{ uri: `data:application/pdf;base64,${route.params.base64}` }}
                     style={{ width: "100%", height: "100%" }}
                 />
-            }
+             } 
         </View>
     )
 };

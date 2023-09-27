@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, alert, Image, ImageBackground,Dimensions } from "react-native";
 import { getAccessToken } from '../../redux/actions';
 import { useNavigation } from '@react-navigation/native';
+import BASE_URL from "../../apiConfig";
 
 
 
@@ -51,7 +52,7 @@ const ProfilePasswordSet = ({ route }) => {
     const token = await getAccessToken();
     console.log("TOKEN IS", token);
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/updateContactPasswordByEmail`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/updateContactPasswordByEmail`, {
       method: 'PATCH',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -90,7 +91,7 @@ const ProfilePasswordSet = ({ route }) => {
         <Text style={{ color: "#b8328f", fontSize: 25, fontWeight: "bold",marginHorizontal:20 }}>Create Password!</Text>
 
         <Text style={{ color: "black", marginTop: 15,marginHorizontal:20 }}>New password</Text>
-        <View style={{ alignSelf:"center",marginLeft:5,flexDirection: "row", backgroundColor: "white", marginTop: 5, borderWidth: 1, borderColor: "lightgray", width: "90%", borderRadius: 10 }} >
+        <View style={{ alignSelf:"center",marginLeft:5,flexDirection: "row", backgroundColor: "white", marginTop: 5, borderWidth: 1, borderColor: "#999999", width: "90%", borderRadius: 10 }} >
 
           <TextInput
             value={password}
@@ -110,7 +111,7 @@ const ProfilePasswordSet = ({ route }) => {
         ) : null}
 
         <Text style={{ marginTop: 20, color: "black", marginHorizontal:20 }}>Confirm password</Text>
-        <View style={{alignSelf:"center", marginLeft:5,flexDirection: "row", backgroundColor: "white", marginTop: 5, borderWidth: 1, borderColor: "lightgray", width: "90%",  borderRadius: 10 }} >
+        <View style={{alignSelf:"center", marginLeft:5,flexDirection: "row", backgroundColor: "white", marginTop: 5, borderWidth: 1, borderColor: "#999999", width: "90%",  borderRadius: 10 }} >
 
           <TextInput
             value={confirmPassword}
@@ -130,7 +131,7 @@ const ProfilePasswordSet = ({ route }) => {
       </View>
       <TouchableOpacity
         onPress={() => validateRes()}
-        style={{backgroundColor: error !== '' && confirmPassword === '' && password == '' ? "lightgray":"orange", width: "90%",height:50, borderRadius: 10, alignSelf:"center" }}>
+        style={{backgroundColor: error !== '' && confirmPassword === '' && password == '' ? "#999999":"orange", width: "90%",height:50, borderRadius: 10, alignSelf:"center" }}>
         <Text style={{ alignSelf: "center", padding: 10, color: "white", fontWeight: "600", fontSize: 19 }}>
           Log In
         </Text>

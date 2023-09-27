@@ -9,7 +9,7 @@ const OnboardingScreen = () => {
     const navigation = useNavigation();
     const DotComponent =({selected})=>{
         return(
-            <View style={{width:selected ? 40 :10,height:10,borderColor: selected? "red" : "lightgray",borderWidth:1,borderRadius:selected? 15: 5,backgroundColor:selected? "red": "gray",margin:5}}>
+            <View style={{width:selected ? 40 :10,height:10,borderColor: selected? "red" : "#999999",borderWidth:1,borderRadius:selected? 15: 5,backgroundColor:selected? "red": "#999999",margin:5}}>
                 {/* <View style={{width:8,height:8,borderColor: selected? "red" : "#f57c6c",backgroundColor:selected? "red": "#f57c6c"}}></View> */}
             </View>
         )

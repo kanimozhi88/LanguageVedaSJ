@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, TouchableOpacity ,ScrollView, View} from 'react-native';
+import { Text ,ScrollView, View} from 'react-native';
 import HTML from 'react-native-render-html';
 
 

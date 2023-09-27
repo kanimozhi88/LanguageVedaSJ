@@ -5,6 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 import { Menu, MenuOptions, MenuOption, MenuTrigger, MenuProvider } from 'react-native-popup-menu';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DatePicker from 'react-native-date-picker'
+import { Dropdown } from "react-native-element-dropdown";
+import BASE_URL from '../../apiConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import {
@@ -42,15 +45,19 @@ const FacultyCourseSelection = ({ navigation, route }) => {
   const [touchableEnable, setTouchableEnable] = useState(false);
   const [testArray,setTestArray] = useState('');
   const [assignEnable,setAssignEnable] = useState(true);
-
+  const [status,setStatus] = useState('');
   const [reopenStatus, setReopenStatus] = useState(false);
   const [reopenRes, setReopenRes] = useState('');
+  const testTypeValues = [{Type:"In Progress"},{Type:"Yet To Start"},{Type:"Completed"}]
+  const [assignBtnActive,setAssignBtnActive] = useState(true);
+
 
   const { LPExecutionId, Status } = route.params;
 
   useEffect(() => {
     FacultyCourseSelection();
     FacultyCourseRetrieval();
+    getAssignBtnValue();
   }, [])
 
   const FacultyCourseSelection = async () => {
@@ -60,7 +67,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultylessonPlanExecutionsAndTests`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultylessonPlanExecutionsAndTests`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -71,6 +78,13 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     let FacultyCourseSelecRes = await response.json()
     console.log("FacultyCourseSelection", FacultyCourseSelecRes);
     setFinal(FacultyCourseSelecRes);
+    const newArray = FacultyCourseSelecRes?.testResponses.map((item) => ({
+      testId: item.testId,
+      IsActive: true,
+      status: "In Progress"
+    }))
+    setTestArray(newArray);
+
     if (final?.lessonPlanExecutions?.StartTime !== null && final?.lessonPlanExecutions?.EndTime
       !== null) {
       const startTime = new Date(final?.lessonPlanExecutions?.StartTime);
@@ -102,15 +116,32 @@ const FacultyCourseSelection = ({ navigation, route }) => {
   };
 
   console.log("selecteditems", selectedItems);
+  const getAssignBtnValue = async () => {
+    try {
+      const value = await AsyncStorage.getItem('assignBtn');
+      console.log("get assignbtn val::::::",value)
+      if (value !== null) {
+        setAssignBtnActive(false)
+        return JSON.parse(value);
+      }else{
+        setAssignBtnActive(true)
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
+  };
 
   const FacultyTestActive = async () => {
+
+    console.log("testArray>>>>>>>>>>>>",testArray);
     let data = {};
     data.patchDataList = testArray;
 
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyTestActive`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyTestActive`, {
       method: 'PATCH',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -121,10 +152,20 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     let FacultyTestActive = await response.json()
     console.log("faculty TestActive", FacultyTestActive);
    if(Array.isArray(FacultyTestActive)){
-    Alert.alert("Assigment Uploaded successfully")
+    Alert.alert(" Test Assigned To Student successfully")
+    savAssignBtnValueToAsyncStorage()
    }
    setAssignEnable(false)
   }
+
+  const savAssignBtnValueToAsyncStorage = async () => {
+    try {
+      await AsyncStorage.setItem('assignBtn', "true");
+      console.log('assignBtn switch value saved to AsyncStorage: ', true);
+    } catch (error) {
+      console.error('Error saving toggle switch value: ', error);
+    }
+  };
 
   const FacultyCourseRetrieval = async () => {
     let data = {};
@@ -133,7 +174,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyLessonPlanFileContent`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyLessonPlanFileContent`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -188,15 +229,12 @@ const FacultyCourseSelection = ({ navigation, route }) => {
               style={{ alignSelf: "center" }}
             />
           </MenuTrigger>
-          <MenuOptions style={{ borderWidth: 1, borderColor: "lightgray", borderRadius: 5 }} >
-            {/* <MenuOption onSelect={() => navigation.navigate('DocumentScreen', { base64: base64, type: type })}>
-                  <Text>View</Text>
-                </MenuOption> */}
+          <MenuOptions style={{ borderWidth: 1, borderColor: "#999999", borderRadius: 5 }} >
+          
             <MenuOption onSelect={() => {
               if (PublicDownloadUrl.PublicDownloadUrl !== undefined) {
                 const updatedUrl = PublicDownloadUrl.PublicDownloadUrl.replace("/", "");
                 navigation.navigate('WebViewDownload', { uri: updatedUrl })
-                // requestStoragePermission(updatedUrl,type)
               }
             }
             }>
@@ -206,7 +244,6 @@ const FacultyCourseSelection = ({ navigation, route }) => {
               if (PublicDownloadUrl.PublicDownloadUrl !== undefined) {
                 const updatedUrl = PublicDownloadUrl.PublicDownloadUrl.replace("/", "");
                 navigation.navigate('WebViewDownload', { uri: updatedUrl })
-                // requestStoragePermission(updatedUrl,type)
               }
             }
             }>
@@ -219,7 +256,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
   };
 
   const PopupMenuSecond = ({ PublicDownloadUrl, base64, type, index }) => {
-
+    
     return (
       <View style={{ flex: 1 }}>
         <Menu >
@@ -229,8 +266,18 @@ const FacultyCourseSelection = ({ navigation, route }) => {
               style={{ alignSelf: "center" }}
             />
           </MenuTrigger>
-          <MenuOptions style={{ borderWidth: 1, borderColor: "lightgray", borderRadius: 5 }} >
-            <MenuOption onSelect={() => navigation.navigate('DocumentScreen', { base64: base64, type: type })}>
+          <MenuOptions style={{ borderWidth: 1, borderColor: "#999999", borderRadius: 5 }} >
+            <MenuOption onSelect={() => {
+               if(PublicDownloadUrl !== undefined){
+                const updatedUrl = PublicDownloadUrl.replace("/", "");
+                console.log("PUBLIC URL>>>>>",updatedUrl);
+              navigation.navigate('WebViewDownload',{uri:updatedUrl})
+              // requestStoragePermission(updatedUrl,type)
+              }
+            } }
+            
+              // navigation.navigate('DocumentScreen', { base64: base64, type: type })}
+              >
               <Text>View</Text>
             </MenuOption>
           </MenuOptions>
@@ -250,10 +297,10 @@ const FacultyCourseSelection = ({ navigation, route }) => {
 
 
   const validateInput = () => {
-    if (date !== '' && revisionDate !== null && description !== "") {
+    if (date !== '' && revisionDate !== null && description !== "" && status !== '') {
       ExeDateUpdate();
     } else {
-      Alert.alert("select test type and enter description")
+      Alert.alert("select Status type and enter description")
     }
   }
 
@@ -263,13 +310,13 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     let data = {};
     data.LessonPlanExecutionId = LPExecutionId;
     data.TeacherExecutionDate = formatDate(date);
-    data.Status = "Completed";
+    data.Status = status;
     data.Remarks = description
 
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyLpExecutionDateUpdate`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyLpExecutionDateUpdate`, {
       method: 'PATCH',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -281,27 +328,21 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     console.log("ExeDateUpdate", ExeDateUpdate);
  Alert.alert(
           "Successful",
-      "Uploaded sucessfully",
+         "Data Updated Successfully",
        [{text: 'OK', onPress: () => setDescription('')}]
        )
 
   }
 
-  const handleTouchableOpacity = () => {
-    Linking.openURL(final?.lessonPlanExecutions?.ZoomLink);
-  };
+
 
   const validateTest = () => {
-    if(final !== ''){
-      const newArray = final?.testResponses.map((item) => ({
-        testId: item.testId,
-        IsActive: true,
-      }))
-      setTestArray(newArray);
+    if(testArray){
       FacultyTestActive()
     }
-    
   }
+
+  // console.log("testArray>>>>>>>>>>>>",testArray);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -345,7 +386,9 @@ const FacultyCourseSelection = ({ navigation, route }) => {
         </View>
 
         <View style={{ marginTop: 20, marginHorizontal: 25,bottom:"20%" }}>
+          {(Status === "Completed" || Status === "In Progress" ) && final?.testResponses?.length  > 0 ? 
           <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500",marginBottom:10 }}>Assignment</Text>
+          : null}
           {final !== '' ?
             final?.testResponses.map((item) =>
             <View>
@@ -366,14 +409,14 @@ const FacultyCourseSelection = ({ navigation, route }) => {
           </View>
             )
             : null}
-
-          {Status === "Completed" && final?.testResponses?.length > 0 ?
+{/* Assign button rendering on Status */}
+          {(Status === "Completed" || Status === "In Progress" ) && final?.testResponses?.length > 0  ?
             <View style={{ width: "100%", backgroundColor: "#F5F7FB", }}>
 
               <TouchableOpacity
-               disabled={!assignEnable}
+               disabled={!assignEnable && assignBtnActive}
                 onPress={() => validateTest()}
-                style={{ backgroundColor: assignEnable ? "#F38216" : "gray", width: "40%", padding: 10, alignSelf: "center", alignItems: "center", borderRadius: 5, marginTop: 20, margin: 10 }}>
+                style={{ backgroundColor: assignEnable && assignBtnActive ? "#F38216" : "#999999", width: "40%", padding: 10, alignSelf: "center", alignItems: "center", borderRadius: 5, marginTop: 20, margin: 10 }}>
                 <Text style={{ color: "#FFFFFF", fontSize: 18, fontWeight: "600" }}>Assign</Text>
               </TouchableOpacity>
 
@@ -395,7 +438,9 @@ const FacultyCourseSelection = ({ navigation, route }) => {
                 </MenuProvider>
               </View>
             ))
-          ) : null}
+          ) : 
+          <Text> No Content Available</Text>
+          }
         </View>
 
        { final !== '' && final?.lessonPlanExecutions[0]?.Status === "Completed" ? 
@@ -406,13 +451,46 @@ const FacultyCourseSelection = ({ navigation, route }) => {
               <Text style={{ color: "#B2B2B2", fontSize: 16, fontWeight: "400", marginHorizontal: 40 }}>{final?.lessonPlanExecutions[0]?.Status}</Text>
               : null}
           </View>
-        </View>: null
+
+        </View>: 
+
+        <View style={{ marginTop: 20, marginHorizontal: 25 ,bottom:"20%"}}>
+        <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Status</Text>
+            {/* {final !== '' && final?.lessonPlanExecutions[0]?.Status !== "Completed" ? */}
+             <Dropdown
+             style={{
+               width: 248,
+               height:40,
+               borderRadius: 3,
+             borderColor:"#F5F7FB",
+             backgroundColor:"#F5F7FB",
+             borderWidth:1,
+             marginTop:5,
+             }}
+             itemTextStyle={{color: "black",fontSize:14,fontWeight:"400",}}
+             iconStyle={{ width: 30, height:30 }}
+             data={testTypeValues}
+             labelField="Type"
+             valueField="Type"
+             placeholder={'Select Type'}
+             placeholderStyle={{color: "black",fontSize:14,fontWeight:"400",marginHorizontal:50}}
+             onChange={(data) => {
+                 console.log("data is>>>>>>>>>",data?.Course_Offering_Id)
+                 // setTestType(data)
+              setStatus(data.Type)
+             }}
+             value={status} // Set the value prop correctly
+             selectedStyle={{color:"black"}}
+           />                  
+             {/* : null} */}
+     
+    </View> 
        }
 
         {/* <TouchableOpacity
           onPress={touchableEnable ? handleTouchableOpacity : null}
           disabled={!touchableEnable}
-          style={{ backgroundColor: touchableEnable ? "#F38216" : "gray", width: "35%", alignSelf: "center", alignItems: "center", marginBottom: "20%", padding: 10, borderRadius: 5 }}
+          style={{ backgroundColor: touchableEnable ? "#F38216" : "#999999y", width: "35%", alignSelf: "center", alignItems: "center", marginBottom: "20%", padding: 10, borderRadius: 5 }}
         >
           <Text style={{ color: "#FFFFFF", fontSize: 18, fontWeight: "600" }}>Join Now</Text>
         </TouchableOpacity> */}
@@ -492,7 +570,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
 
 
         <TouchableOpacity
-          disabled={!date || revisionDate === null || description === ''}
+          disabled={!date || revisionDate === null || description === '' || status === null}
           onPress={() => validateInput()}
           style={[styles.saveButton, !date || revisionDate === null || description === '' && styles.disabledButton,{bottom:"30%"}]}
 
@@ -523,7 +601,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   disabledButton: {
-    backgroundColor: 'gray',
+    backgroundColor: '#999999',
     width: "35%", alignSelf: "center", alignItems: "center", marginBottom: "20%", padding: 10, borderRadius: 5
     // Add a different style for the disabled button
   },

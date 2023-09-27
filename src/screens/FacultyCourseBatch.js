@@ -13,8 +13,8 @@ import StudentCourseSelect from '../../component/StudentCourseSelect';
 import StudentCourseCurriculum from '../../component/StudentCourseCurriculum';
 import StudentCourseAssignment from '../../component/StudentCourseAssignment';
 import FacultyBatchSelect from '../../component/FacultyBatchSelect';
-import FacultyAssessment from '../../component/FacultyAssignment';
 import FacultyAssignment from '../../component/FacultyAssignment';
+import FacultyAssessment from '../../component/FacultyAssessment';
 
 const FacultyCourseBatch = ({ route, navigation }) => {
 
@@ -29,7 +29,8 @@ const FacultyCourseBatch = ({ route, navigation }) => {
   );
 
   const SecondRoute = () => (
-    <View style={{ flex: 1, backgroundColor: 'red' }} />
+    // <View style={{ flex: 1, backgroundColor: 'red' }} />
+    <FacultyAssessment  batchid={batchId} />
   );
 
   const ThirdRoute = () => (

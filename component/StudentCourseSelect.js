@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getAccessToken } from '../redux/actions';
 import LinearGradient from 'react-native-linear-gradient';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import BASE_URL from '../apiConfig';
 import {
   StyleSheet,
   Text,
@@ -18,7 +19,6 @@ const StudentCourseSelect = ({batchId,courseName }) => {
 
   const [final, setFinal] = useState();
   const dataFetchApi = useSelector(state => state.recordId);
-  console.log("DATAFETCH", dataFetchApi);
   
   useEffect(() => {
     StudentCourseSelection();
@@ -32,7 +32,7 @@ const StudentCourseSelect = ({batchId,courseName }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNCourseAttendanceLessonPlans`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNCourseAttendanceLessonPlans`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -43,7 +43,6 @@ const StudentCourseSelect = ({batchId,courseName }) => {
     let courseresult = await response.json()
     console.log(" studentCourseSelection API RES",   courseresult);
     setFinal(courseresult);
-    console.log("final data is", final)
   }
 
   const ShowMoreText = ({ text, numberOfLinesToShow }) => {
@@ -193,7 +192,7 @@ const handleTouchablePress = () => {
                 rotation={0}
                 lineCap="round"
                 tintColor="orange"
-                backgroundColor="lightgray">
+                backgroundColor="#999999">
                 {(fill) => (
                   <Text style={{ fontSize: 13 ,color:"#D6387F",fontWeight:"700"}}>{`${Math.round(fill)}%`}</Text>
                 )}
@@ -203,7 +202,7 @@ const handleTouchablePress = () => {
         </View>
 
         <View>
-          <View style={{ width: 130, height: 130, borderRadius: 65, borderColor: "lightgray", borderWidth: 1 }}>
+          <View style={{ width: 130, height: 130, borderRadius: 65, borderColor: "#999999", borderWidth: 1 }}>
             <AnimatedCircularProgress
               style={{ alignSelf: "center", margin: 4, color: "orange" }}
               size={120}
@@ -267,7 +266,7 @@ const handleTouchablePress = () => {
           onPress={handleTouchablePress}
           disabled={!isTouchableEnabled}
           style={{
-            backgroundColor: isTouchableEnabled ? '#F38216' : 'gray',
+            backgroundColor: isTouchableEnabled ? '#F38216' : '#999999',
             padding: 10,
             alignSelf: "center",
             width: "55%",

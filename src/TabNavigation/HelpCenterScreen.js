@@ -1,31 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { getAccessToken } from '../../redux/actions';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import moment from 'moment';
 import PieChart from 'react-native-pie-chart';
-import { useNavigation } from '@react-navigation/native';
-
+import BASE_URL from '../../apiConfig';
 
 const HelpCenterScreen = ({ navigation }) => {
-    const recordId = useSelector(state => state.recordId);
-    const [final, setFinal] = useState('');
-    const [statusCounts, setStatusCounts] = useState({
-        Reopen: 0,
-        'Ticket Raised': 0,
-        'Ticket In progress': 0,
-        Closed: 0,
-        Done:0
-    });
+  const recordId = useSelector((state) => state.recordId);
+  const [final, setFinal] = useState([]);
+  const [statusCounts, setStatusCounts] = useState({
+    Reopen: 0,
+    'Ticket Raised': 0,
+    'Ticket In progress': 0,
+    'New': 0,
+    Closed: 0,
+    Done: 0,
+  });
 
-    const data = [
-        { value: 35, color: '#FFC300' },
-        { value: 20, color: '#FF5733' },
-        { value: 45, color: '#C70039' },
-    ];
-
-    const sum = statusCounts['Ticket Raised'] + statusCounts['Reopen'];
+    const sum = statusCounts['Ticket Raised'] + statusCounts['Reopen']+ statusCounts['New'];
     const doneCloseSum = statusCounts['Closed'] + statusCounts['Done'];
     const widthAndHeight = 150
     const series = [doneCloseSum, sum, statusCounts['Ticket In progress']]
@@ -44,7 +38,7 @@ const HelpCenterScreen = ({ navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/Lvcases`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/Lvcases`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -61,6 +55,7 @@ const HelpCenterScreen = ({ navigation }) => {
             'Ticket In progress': 0,
             Closed: 0,
             Done:0,
+            'New': 0, // Initialize count for "New" cases
         };
         if(final !== ''){
 
@@ -138,7 +133,7 @@ const HelpCenterScreen = ({ navigation }) => {
 
                 <View style={{ marginTop: 40 }}>
                     <Text style={{ color: "white", fontSize: 16, fontWeight: "600", margin: 10 }}>Closed- {(statusCounts['Closed'] + statusCounts['Done']) || 0}</Text>
-                    <Text style={{ color: "white", fontSize: 16, fontWeight: "600", margin: 10 }}>Open- {(statusCounts['Ticket Raised'] + statusCounts['Reopen']) || 0}</Text>
+                    <Text style={{ color: "white", fontSize: 16, fontWeight: "600", margin: 10 }}>Open- {(statusCounts['Ticket Raised'] + statusCounts['Reopen']+ statusCounts['New']) || 0}</Text>
                     <Text style={{ color: "white", fontSize: 16, fontWeight: "600", margin: 10 }}>InProgress-{statusCounts['Ticket In progress']}</Text>
                 </View>
                 <View>
@@ -149,9 +144,11 @@ const HelpCenterScreen = ({ navigation }) => {
                 </View>
 
             </LinearGradient>
+            {/* <View style={{elevation: 10 }}> */}
+
             <TouchableOpacity
                 onPress={() => navigation.navigate('NewTicket')}
-                style={{ height: 92, borderRadius: 5, marginTop: 30, }}>
+                style={{ height: 92, borderRadius: 5, marginTop: 30,}}>
                 <Text style={{ color: "#F38216", fontSize: 16, fontWeight: "600", marginHorizontal: 26 }}>Help Center</Text>
                 <View style={{ flexDirection: "row", marginTop: 20, marginHorizontal: 26 }}>
                     <Text style={{ color: "#4D4C4B", fontSize: 16, fontWeight: "600" }}>New Tickets</Text>
@@ -160,6 +157,7 @@ const HelpCenterScreen = ({ navigation }) => {
                         source={require('../../assets/sidearrow.png')} />
                 </View>
             </TouchableOpacity>
+            {/* </View> */}
             <View style={{ marginTop: 15 }}>
                 <Text style={{ color: "#F38216", fontSize: 16, fontWeight: "600", marginHorizontal: 26 }}>Ticket Status</Text>
                 <FlatList

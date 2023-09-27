@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAccessToken } from '../../redux/actions';
 import { useNavigation } from '@react-navigation/native';
+import BASE_URL from '../../apiConfig';
 
 import {
     StyleSheet,
@@ -44,7 +45,7 @@ const NewTicket = ({navigation}) =>{
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/LvCasesCreation`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/LvCasesCreation`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",

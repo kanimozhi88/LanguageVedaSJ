@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet,SafeAreaView, FlatList } from 'react-native';
 import { getAccessToken } from '../../redux/actions';
 import moment from 'moment';
+import BASE_URL from '../../apiConfig';
 
 
 const FacultyAssignmentSelect = ({ route,navigation }) => {
@@ -16,11 +17,12 @@ const FacultyAssignmentSelect = ({ route,navigation }) => {
     const FacultyTeststatus = async () => {
         let data = {};
         data.LessonPlanExId = LPExecutionId;
+        data.AssignmentTitle = assignmentTitle;
 
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RnFacultyTestStatusofStudent`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RnFacultyTestStatusofStudent`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -39,10 +41,10 @@ const FacultyAssignmentSelect = ({ route,navigation }) => {
 <TouchableOpacity 
 onPress={()=> navigation.navigate('SpecificStudentTestDetails',{Id: item?.Id,assignmentTitle:assignmentTitle,Status:item?.Status})}
 style={{flexDirection:"row",padding:10,backgroundColor: (index+1)%2 === 0 ? "#F5F7FB" : "white"}}>
-    <Text style={{width:"15%",marginLeft:40,color:"black"}}>{index+1}</Text>
-    <Text style={{width:"25%",marginLeft:15,color:"black"}}>{moment(item?.TestDate).format('DD/MM/YYYY')}</Text>
-    <Text numberOfLines={2} style={{width:"25%",color:"black"}}>{item?.ContactName}</Text>
-    <Text style={{width:"25%",marginLeft:5,color: item?.Status == "Redo" ? "red" : item?.Status == "Completed" ? "green" :"black"}}>{item?.Status}</Text>
+    <Text style={{width:"15%",marginLeft:25,color:"black"}}>{index+1}</Text>
+    <Text style={{width:"25%",marginRight:15,color:"black"}}>{moment(item?.TestDate).format('DD/MM/YYYY')}</Text>
+    <Text numberOfLines={2} style={{width:"25%",color:"black",right:10}}>{item?.ContactName}</Text>
+    <Text style={{width:"25%",right:5,color: item?.Status == "Redo" ? "red" : item?.Status == "Completed" ? "green" :"black"}}>{item?.Status}</Text>
 </TouchableOpacity>
         )
     }

@@ -1,28 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { getAccessToken } from '../../redux/actions';
-import { useNavigation } from '@react-navigation/native';
 import {
     StyleSheet,
     Text,
     View,
-    Linking,
     SafeAreaView,
-    FlatList,
     TouchableOpacity,
     Image,
     ScrollView,
     TextInput,
-    Alert,
     Modal,
 } from 'react-native';
 import moment from 'moment';
-import { Dropdown } from "react-native-element-dropdown";
+import BASE_URL from '../../apiConfig';
 
 
 const TicketStatus = ({ navigation, route }) => {
 
-    const recordId = useSelector(state => state.recordId);
     const [final, setFinal] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [reopencheck, setReopenCheck] = useState(false);
@@ -43,7 +38,7 @@ const TicketStatus = ({ navigation, route }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/LvSpecificCase`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/LvSpecificCase`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -65,7 +60,7 @@ const TicketStatus = ({ navigation, route }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/LvReOpenSpecificCase`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/LvReOpenSpecificCase`, {
             method: 'PATCH',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -179,7 +174,7 @@ const TicketStatus = ({ navigation, route }) => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        style={{ justifyContent: "center",backgroundColor: "lightgray" }}
+        style={{ justifyContent: "center",backgroundColor: "#999999" }}
       >
         <View style={{ width: "80%", height: "20%", backgroundColor: "pink", marginTop: "70%", alignSelf: "center" }}>
          <Text style={{color:"#F38216",fontSize:15,fontWeight:"700",alignSelf:"center"}}>Are You Sure You Want To Re Open?</Text>

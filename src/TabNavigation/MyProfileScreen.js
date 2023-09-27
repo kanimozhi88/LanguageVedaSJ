@@ -1,61 +1,72 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Image, SafeAreaView, Text, TouchableOpacity, FlatList, Button } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, View, Image, SafeAreaView, Text, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-// import RNFetchBlob from 'react-native-fetch-blob';
 import WebView from 'react-native-webview';
-import { CommonActions } from '@react-navigation/native';
-import { getDataMethod } from '../../redux/actions';
-import { getLoginStatus } from '../../redux/actions';
+import { getDataMethod,getLoginOtpStatus } from '../../redux/actions';
+import ToggleSwitch from 'toggle-switch-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const MyProfileScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
-
+  // const ToggleSwitch = useSelector(state => state.toggleSwitch);
+  // console.log("dispatched value",toggleSwitch)
   const LastName = useSelector(state => state.LastName);
   const Email = useSelector(state => state.Email);
-  const Phone = useSelector(state => state.Phone);
   const [imagePath, setImagePath] = useState('');
   const userrecordId = useSelector(state => state.recordId);
   const Status = useSelector(state => state.status);
-
+  const [toggleSwitch, setToggleSwitch] = useState(true);
+  const [matches,setMatches] = useState('');
 
 
   const profilePhoto = useSelector(state => state.profilePhoto);
   const urlRegex = /<a\s+(?:[^>]*?\s+)?href="([^"]*)"/i;
-  const matches = profilePhoto.match(urlRegex);
+  // if(profilePhoto !== null){
+  //   setMatches(profilePhoto.match(urlRegex))
+  // }
+  // const matches = profilePhoto.match(urlRegex);
+ 
 
-  useEffect(()=>{
+  useEffect(() => {
+    if(profilePhoto !== null){
+    setMatches(profilePhoto.match(urlRegex))
+  }
     if (matches && matches.length === 2) {
       const url = matches[1];
-      setImagePath(url);
-      console.log("url>>>>", url); // Output: https://www.techup.co.in/wp-content/uploads/2020/01/techup_logo_72-scaled.jpg
-    } else {
-      console.log("URL not found in the response.");
+      // setImagePath(url);
     }
-  
-  },[])
-
-  console.log("profilephoto", profilePhoto)
-
-  // Call the function to download and save the image
-  useEffect(() => {
-    // downloadAndSaveImage();
-
   }, [])
+
+  const saveToggleValueToAsyncStorage = async (isOn) => {
+    try {
+      await AsyncStorage.setItem('toggleSwitchValue', JSON.stringify(isOn));
+      console.log('Toggle switch value saved to AsyncStorage: ', isOn);
+    } catch (error) {
+      console.error('Error saving toggle switch value: ', error);
+    }
+  };
+
+
+
 
   return (
     <SafeAreaView style={styles.container}>
 
       <View style={{ flexDirection: "row", marginTop: "10%" }}>
 
-        {/* {imagePath !== '' && <Image source={{ uri: imagePath }} style={styles.image} />} */}
         <View style={{ width: 100, height: 100, borderRadius: 50, backgroundColor: "red", overflow: "hidden", marginHorizontal: "5%" }}>
+          {imagePath !== '' ? 
           <WebView
             style={{ width: 100, height: 100, }}
             source={{ uri: imagePath }}
           />
+          :
+          <Image
+          style={{ width: 100, height: 100, borderRadius: 50, backgroundColor: "red", overflow: "hidden",  }}
+          source={require('../../assets/profileimage.png')}/>
+          } 
         </View>
 
         <View style={{ marginTop: 40, }}>
@@ -102,28 +113,29 @@ const MyProfileScreen = ({ navigation }) => {
         <Text style={{ color: "#979797", fontSize: 16, fontWeight: "600", marginLeft: "5%" }}>
           Notification
         </Text>
-        <Image
-          style={{ height: 20, width: 20, marginLeft: "60%" }}
-          source={require('../../assets/graysidearrow.png')} />
+
+        <ToggleSwitch
+         style={{marginHorizontal:"52%"}}
+          isOn={toggleSwitch}
+          onColor="green"
+          offColor="#999999"
+          size="medium"
+          onToggle={isOn => [setToggleSwitch(isOn), 
+            saveToggleValueToAsyncStorage(isOn)
+            //  dispatch(getToggleResponse(toggleSwitch))
+          ]}
+        />
+
       </TouchableOpacity>
       <View style={{ borderBottomWidth: 0.2, borderBottomColor: "#979797", margin: 5 }} />
 
       <TouchableOpacity
         onPress={() => [
-          //   dispatch(getDataMethod('')),
+          dispatch(getDataMethod('')),
+          dispatch(getLoginOtpStatus('')),
+
           // dispatch(getLoginStatus('')),
           console.log("recordId profile", userrecordId, Status)]}
-        // onPress={() => {
-        //   // Perform your logout logic here, clear any authentication tokens or user data
-
-        //   // Reset the navigation stack to the "Login" screen in the "AuthStack" navigator
-        //   navigation.dispatch(
-        //     CommonActions.reset({
-        //       index: 0,
-        //       routes: [{ name: 'Login' }],
-        //     })
-        //   );
-        // }}
         style={{ flexDirection: "row", alignSelf: "center", marginTop: "15%" }}>
         <Image
           source={require('../../assets/logout.png')}
@@ -143,5 +155,14 @@ const styles = StyleSheet.create({
     // marginTop:10,
     // paddingTop: StatusBar.currentHeight,
     // marginHorizontal: 16,
+  },
+  button: {
+    padding: 10,
+    backgroundColor: '#3498db',
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
   },
 })

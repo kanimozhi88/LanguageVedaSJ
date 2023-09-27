@@ -3,15 +3,13 @@ import { View, Text,Platform,PermissionsAndroid, StyleSheet, SafeAreaView, Image
 import { getAccessToken } from "../../redux/actions";
 import { useDispatch, useSelector } from 'react-redux';
 import HTML from 'react-native-render-html';
-import HTMLRender from 'react-native-render-html';
 import { ActionSheetCustom as ActionSheet } from 'react-native-actionsheet';
 import * as ImagePicker from 'react-native-image-picker';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import { Menu, MenuOptions, MenuOption, MenuTrigger, MenuProvider } from 'react-native-popup-menu';
 import TruncatedText from '../../component/TruncatedText';
-import RNFS, { downloadFile } from 'react-native-fs';
-import WebView from 'react-native-webview';
+import BASE_URL from '../../apiConfig';
 // import RNFetchBlob from 'react-native-fetch-blob';
 
 
@@ -62,7 +60,7 @@ const StudentAssignmentUpload = ({ navigation, route }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNTestDetails/`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNTestDetails/`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -84,7 +82,7 @@ const StudentAssignmentUpload = ({ navigation, route }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/StudentTestfileRetrieval/`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/StudentTestfileRetrieval/`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -114,7 +112,7 @@ const StudentAssignmentUpload = ({ navigation, route }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/Testfileupload/`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/Testfileupload/`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -428,8 +426,17 @@ const downloadFiles = (PublicDownloadUrl,type) =>{
               style={{ alignSelf: "center" }}
             />
           </MenuTrigger>
-          <MenuOptions style={{ borderWidth: 1, borderColor: "lightgray", borderRadius: 5 }} >
-            <MenuOption onSelect={() => navigation.navigate('DocumentScreen', { base64: base64, type: type })}>
+          <MenuOptions style={{ borderWidth: 1, borderColor: "#999999", borderRadius: 5 }} >
+            <MenuOption onSelect={() => {
+              if(PublicDownloadUrl !== undefined){
+                const updatedUrl = PublicDownloadUrl.replace("/", "");
+              navigation.navigate('WebViewDownload',{uri:updatedUrl})
+              // requestStoragePermission(updatedUrl,type)
+              }
+            }}
+            
+              // navigation.navigate('DocumentScreen', { base64: base64, type: type })}
+              >
               <Text>Preview</Text>
             </MenuOption>
             {final[0]?.status !== "Completed" ?
@@ -474,7 +481,7 @@ const downloadFiles = (PublicDownloadUrl,type) =>{
       <ScrollView ref={scrollViewRef}>
         {final !== '' && final[0]?.status !== "Completed" ?
           <View>
-            <Text style={{ fontSize: 16, fontWeight: "600", color: "#1B2236", marginHorizontal: 20, marginTop: 30 }}>Instruction To Follow</Text>
+            <Text style={{ fontSize: 16, fontWeight: "600", color: "#1B2236", marginHorizontal: 20, marginTop: 30 }}>Instructions To Follow</Text>
             <HTML source={{ html: final[0]?.Instructions }} />
           </View> : <></>}
 
@@ -574,14 +581,13 @@ const downloadFiles = (PublicDownloadUrl,type) =>{
             <Text style={{ color: "white", fontSize: 18, fontWeight: "500" }}>Submit</Text>
           </TouchableOpacity> : <></>}
 
+{ final !== '' ?
+<View>
         <View
           style={{ width: "85%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop:final[0]?.status === "Completed" ? 20 :70, elevation: 5, padding: 10, }}>
           <View style={{ flexDirection: "row" }}>
-            <Image
-              style={{}}
-              source={require('../../assets/langicon.png')} />
 
-            <Text style={{ color: "black", fontSize: 16, fontWeight: "500", margin: 10 }}>{final[0]?.assignmentTitle}</Text>
+            <Text style={{ color: "black", fontSize: 16, fontWeight: "500",marginBottom:30 }}>{final[0]?.assignmentTitle}</Text>
           </View>
 
           <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
@@ -641,7 +647,7 @@ const downloadFiles = (PublicDownloadUrl,type) =>{
           </View>
 
           <View style={{ alignItems: "center", bottom: 12 }}>
-            <Text style={{ color: "#F38216", fontSize: 14, fontWeight: "600" }}>{final[0]?.assignmentTitle}</Text>
+            <Text style={{ color: "#F38216", fontSize: 14, fontWeight: "600",right:50 }}>Draft</Text>
             <Text style={{ color: "#F38216", fontSize: 14, fontWeight: "600", marginTop: 90 }}>Assignment Submitted</Text>
             <Text style={{ color: "#F38216", fontSize: 14, fontWeight: "600", marginTop: 90 }}>Vetting InProgress</Text>
             {final[0]?.status === "Completed" ?
@@ -656,19 +662,20 @@ const downloadFiles = (PublicDownloadUrl,type) =>{
 
 
 
-        <View style={{ marginHorizontal: 60, marginTop: 60, marginBottom:40  }}>
+        <View style={{ marginHorizontal: 20, marginTop: 60, marginBottom:40  }}>
           <Text style={{ color: "#6F6E6E", fontSize: 16, fontWeight: "400" }}>Feedback</Text>
           <View style={{ backgroundColor: "#C8C6C64A", padding: 15, marginTop: 10,borderRadius:5,width:296}}>
             <Text style={{color:"#000000",fontSize:14,fontWeight:"500"}}>{final[0]?.feedBack}</Text>
           </View>
         </View>
 
-
+</View>
+: null}
        
         <View style={{marginBottom: 90,}}>
         {Array.isArray(retrievedData) && retrievedData.length > 0 ? (
           retrievedData.map((item, index) => (
-            <View key={index} style={{  margin: 10, backgroundColor: "white", width: "90%", elevation: 5, flexDirection: "row", paddingBottom: 5, justifyContent: "space-evenly", alignItems: "center", alignSelf: "center" }}>
+            <View key={index} style={{  margin: 10, backgroundColor: "white", width: "95%", elevation: 5, flexDirection: "row", paddingBottom: 5, justifyContent: "space-evenly", alignItems: "center", alignSelf: "center" }}>
               {item.Type === "image" ?
                 <Image
                   source={require('../../assets/Image.png')}
@@ -680,7 +687,7 @@ const downloadFiles = (PublicDownloadUrl,type) =>{
               <Text style={{ margin: 5,width:"50%" }}>{item?.filename.length > 25 ? item?.filename.substring(0, 25) + "..." : item.filename}</Text>
               <Text style={{ padding: 4, borderColor: "#CDD3D8", borderWidth: 1, color: "#242634", fontSize: 11, fontWeight: "900", margin: 5 }}> {item.ContentSize}</Text>
               <MenuProvider>
-                <View style={{ height: 55, top: 15 }}>
+                <View style={{ height: 65, top: 15 }}>
                   <PopupMenuExample PublicDownloadUrl={item?.PublicDownloadUrl} base64={item?.content} type={item?.Type} index={-1} />
                 </View>
               </MenuProvider>

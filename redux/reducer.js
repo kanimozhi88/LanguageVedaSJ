@@ -1,8 +1,7 @@
 import { act } from "react-test-renderer";
-import { GET_API, GET_LASTNAME, GET_COURSEAPIRESULT,GET_LOGINSTATUS } from "./actionType";
+import { GET_API, GET_LASTNAME, GET_COURSEAPIRESULT,GET_LOGINSTATUS ,GET_TOGGLERESPONSE} from "./actionType";
 
 const initialState = {
-    // counter: 0,
     recordId: '',
     status: '',
     LastName: '',
@@ -14,6 +13,7 @@ const initialState = {
     AssignmentApiResult: undefined,
     recordType: '',
     profilePhoto: undefined,
+    statusOtp: '',
 
 }
 export const ApiResponse = (state = initialState, action) => {
@@ -24,6 +24,13 @@ export const ApiResponse = (state = initialState, action) => {
                 recordId: action.payload,
                
             };
+            case 'GET_LOGINOTPSTATUS':
+                return {
+                    ...state,
+                    statusOtp: action.payload,
+                   
+                };
+      
             case 'GET_LOGINSTATUS':
             return {
                 ...state,

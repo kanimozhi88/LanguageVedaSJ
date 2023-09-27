@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getAccessToken } from '../../redux/actions';
 import moment from 'moment';
 import { Dropdown } from "react-native-element-dropdown";
-import DatePicker from 'react-native-date-picker'
+import DatePicker from 'react-native-date-picker';
+import BASE_URL from '../../apiConfig';
 
 
 
@@ -13,19 +14,19 @@ const FacultyRevision = ({ route, navigation }) => {
     const dataFetchApi = useSelector(state => state.recordId);
     const [modalVisible, setModalVisible] = useState(false);
     const [batchRes,setBatchRes] = useState('');
-    const [testType, setTestType] = useState(null);
     const [selectedType, setSelectedType] = useState(null); // Store the selected value
-    const [modifiedBatchRes,setModifiedBatchRes] = useState('');
     const [batchSelection,setBatchSelection] = useState('');
     const [open, setOpen] = useState(false);
     const [date, setDate] = useState(new Date());
     const [topic,setTopic] = useState('');
-    const [selectedRevisionReason,setSelectedRevisionReason] = useState('');
-    const [selectedRevisionRemarks,setselectedRevisionRemarks] = useState('');
-    const [description, setDescription] = useState('');
+    const [lessonPlanId,setLessonPlanId] = useState('');
+    const [selectedRevisionReason,setSelectedRevisionReason] = useState(null);
+    const [selectedRevisionRemarks,setselectedRevisionRemarks] = useState(null);
+    const [description, setDescription] = useState(null);
+    const [activity,setActivity] = useState(null);
 
     const revisionReason = [{Type:"Primary Teacher Not Available"},{Type:"Student Requested For Revision"},{Type:"Exams Are Approaching"},{Type:"Others"}]
-    const revisionRemarks = [{Type:"Yet To Start"},{Type:"In Progress"},{Type:"Completed"},{Type:"NONE"}]
+    const revisionRemarks = [{Type:"Yet To Start"},{Type:"In Progress"},{Type:"Completed"}]
 
 
 
@@ -67,7 +68,7 @@ const FacultyRevision = ({ route, navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/rnRevisionStatusDisplay`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/rnRevisionStatusDisplay`, {
             method: 'POST',
             headers: new Headers({
                 "Content-Type": "application/json",
@@ -88,7 +89,7 @@ const FacultyRevision = ({ route, navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyBatchDisplay`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyBatchDisplay`, {
           method: 'POST',
           headers: new Headers({
             "Content-Type": "application/json",
@@ -100,11 +101,12 @@ const FacultyRevision = ({ route, navigation }) => {
         console.log(" faculty COURSE API RES",courseresult);
         setBatchRes(courseresult);
         console.log("courseresult data is", final)
-        const modifiedBatchRes = courseresult.map((item, index) => ({
-            ...item,
-            batchIndex: `B${index + 1}`,
-          }));
-          setModifiedBatchRes(modifiedBatchRes)
+        // const modifiedBatchRes = courseresult.map((item, index) => ({
+        //     ...item,
+        //     batchIndex: `B${index + 1}`,
+        //     key: `item-${index}`
+        //   }));
+        //   setModifiedBatchRes(modifiedBatchRes)
         // dispatch(getCourseApiResult(courseresult?.Result));
         
       }
@@ -119,7 +121,7 @@ const FacultyRevision = ({ route, navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/RNFacultyCourseAttendanceLessonPlans`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyCourseAttendanceLessonPlans`, {
           method: 'POST',
           headers: new Headers({
             "Content-Type": "application/json",
@@ -136,7 +138,7 @@ const FacultyRevision = ({ route, navigation }) => {
 
       const FacultyRevisionUpdate = async () => {
         let data = {};
-        const requestList = [{batchId:selectedType?.Course_Offering_Id, lessonPlanId: topic, revisionDate :formatDate(date), revisionReason : selectedRevisionReason, revisionStatus: selectedRevisionRemarks, feedBack: description}]
+        const requestList = [{ lessonPlanId: lessonPlanId, Name : topic ,revisionDate :formatDate(date), revisionReason : selectedRevisionReason, revisionStatus: selectedRevisionRemarks, feedBack: description , Activity: activity}]
         console.log("requestList>>>>>>>>>>",requestList);
         data.requestList = requestList;
         
@@ -144,7 +146,7 @@ const FacultyRevision = ({ route, navigation }) => {
         const body = JSON.stringify(data)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
-        const response = await fetch(`https://languageveda--developer.sandbox.my.salesforce.com/services/apexrest/facultyRevisions`, {
+        const response = await fetch(`${BASE_URL}/services/apexrest/facultyRevisions`, {
           method: 'POST',
           headers: new Headers({
             "Content-Type": "application/json",
@@ -154,10 +156,10 @@ const FacultyRevision = ({ route, navigation }) => {
         });
         let facultyRevisionRes = await response.json()
         console.log("facultyRevisionRes", facultyRevisionRes);
-     Alert.alert(
+        Alert.alert(
               "Successful",
-          "Records Created successfully",
-           [{text: 'OK', onPress: () => setDescription('')}]
+          "Record Updated Successfully",
+           [{text: 'OK', onPress: () => [setDescription(''), setActivity('')]}]
            )
     
       }
@@ -177,17 +179,22 @@ const FacultyRevision = ({ route, navigation }) => {
                 <Text style={{ color: "#F38216", fontSize: 16, fontWeight: "600", marginLeft: "25%", alignSelf: "center", marginTop: 10 }}>Revision</Text>
             </View>
 
-
-
+            <View  style={{height:"80%"}}>
+<ScrollView>
+ 
             { final !== '' && final?.revisions.map((item) =>
 
 
                 <TouchableOpacity
                     key={item?.LPExecutionId}
-                    onPress={() => navigation.navigate('FacultyCourseSelection', { LPExecutionId: item?.LPExecutionId, Status: item?.Status })}
+                    onPress={() => navigation.navigate('RevisionCourseSelection', { LPExecutionId: item?.lesssonplanExId , Status: item?.revisionStatus, revisionId : item?.revisionId })}
                     style={{ width: "90%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop: 10, elevation: 5 }}>
                     <View style={{flexDirection:"row"}}>
+                      <View>
                     <Text style={{ color: "#B9B9B9", fontSize: 16, fontWeight: "500", margin: 10 }}>{item?.topicName}</Text>
+                    <Text style={{ color: "#B9B9B9", fontSize: 16, fontWeight: "500", marginLeft:14 }}>{item?.revisionName}</Text>
+                    <Text style={{ color: "#B9B9B9", fontSize: 16, fontWeight: "500", marginLeft:14 }}>{item?.courseName}</Text>
+                    </View>
                     <View style={{flexDirection:"row",margin:12}}>
                     <Text style={{ color: "#B9B9B9", fontSize: 13, fontWeight: "700", }}>Status: </Text>
                     <Text style={{ color: "#B9B9B9", fontSize: 14, fontWeight: "500",}}>{item?.revisionStatus}</Text>
@@ -197,11 +204,14 @@ const FacultyRevision = ({ route, navigation }) => {
                         <Text style={{ fontSize: 14, fontWeight: "500", marginLeft: 5,color:"#B9B9B9" }}>{item?.lessonPlanNumber}</Text>
                     </View>
                     <View style={{ flexDirection: "row", margin: 10 }}>
-                        <Text style={{ color: "#B9B9B9", fontSize: 13, fontWeight: "700", marginLeft: 5 }}>Date: </Text><Text style={{ color: "#F38216", fontSize: 14, fontWeight: "500", marginLeft: 5 }}>{item?.revisionDate}</Text>
+                        <Text style={{ color: "#B9B9B9", fontSize: 13, fontWeight: "700", marginLeft: 5 }}>Date: </Text><Text style={{ color: "#B9B9B9", fontSize: 14, fontWeight: "500", marginLeft: 5 }}>{moment(item?.revisionDate).format('DD/MM/YYYY')}</Text>
                     </View>
                 </TouchableOpacity>
             )
             }
+        
+            </ScrollView>
+            </View>
 
 <TouchableOpacity onPress={()=>{setModalVisible(true)}} style={styles.floatingButton}>
       <Text style={styles.buttonText}>+</Text>
@@ -211,9 +221,9 @@ const FacultyRevision = ({ route, navigation }) => {
         animationType="slide"
         transparent={true}
         visible={modalVisible}
-        style={{ justifyContent: "center",backgroundColor: "lightgray" }}
+        style={{ justifyContent: "center",backgroundColor: "#999999" }}
       >
-        <View style={{ width: "100%", height: "90%", marginTop:"19%",backgroundColor: "white",lignSelf: "center" }}>
+        <View style={{ width: "100%", height: "100%", marginTop:"19%",backgroundColor: "white",lignSelf: "center",bottom:50 }}>
          <Text style={{color:"#000000",fontSize:16,fontWeight:"500",margin:15}}>Create Revision</Text>
         <ScrollView>
          <View style={{ marginTop: 5, marginHorizontal: 25 }}>
@@ -231,9 +241,9 @@ const FacultyRevision = ({ route, navigation }) => {
                      }}
                      itemTextStyle={{color: "black",fontSize:14,fontWeight:"400",}}
                      iconStyle={{ width: 30, height:30 }}
-                     data={modifiedBatchRes}
-                     labelField="batchIndex"
-                     valueField="Course_Offering_Id"
+                     data={batchRes}
+                     labelField="Course_Name"
+                     valueField="Course_Name"
                      placeholder={'Select Type'}
                      placeholderStyle={{color: "black",fontSize:14,fontWeight:"400",marginHorizontal:50}}
                      onChange={(data) => {
@@ -250,7 +260,9 @@ const FacultyRevision = ({ route, navigation }) => {
             </View> 
 
             <View style={{ marginTop: 20, marginHorizontal: 25 }}>
+              {batchSelection !== '' ?
                 <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Topic</Text>
+                : null}
                     {batchSelection !== '' ?
                      <Dropdown
                      style={{
@@ -272,7 +284,8 @@ const FacultyRevision = ({ route, navigation }) => {
                      onChange={(data) => {
                          console.log("data is>>>>>>>>>",data)
                          // setTestType(data)
-                         setTopic(data.LPExecutionId)
+                         setTopic(data.TopicName)
+                         setLessonPlanId(data.LPExecutionId)
                       
                      }}
                      value={selectedType} // Set the value prop correctly
@@ -338,7 +351,7 @@ const FacultyRevision = ({ route, navigation }) => {
             </View> 
 
             <View style={{ marginTop: 20, marginHorizontal: 25 }}>
-                <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Revision Remarks</Text>
+                <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Revision Status</Text>
                     {batchRes !== '' ?
                      <Dropdown
                      style={{
@@ -382,15 +395,30 @@ const FacultyRevision = ({ route, navigation }) => {
           </View>
         </View>
 
-            <TouchableOpacity
-          disabled={!date || selectedRevisionRemarks === '' || selectedRevisionReason === ''}
+        <View style={{ marginHorizontal: 25, marginTop:20}}>
+          <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Activity</Text>
+          <View style={{ width: "100%", backgroundColor: "#F5F7FB", height: 145, marginTop: 5 }}>
+              <TextInput
+                placeholder='Type Message'
+                placeholderTextColor={"#C8C6C6"}
+                onChangeText={text => setActivity(text)}
+                value={activity}
+                style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />
+            
+          </View>
+        </View>
+
+          <TouchableOpacity 
+          disabled={ !selectedRevisionRemarks || !selectedRevisionReason  || !description || !activity || !date || !topic }
           onPress={() => FacultyRevisionUpdate()}
-          style={[styles.saveButton, !date || selectedRevisionRemarks === null || selectedRevisionReason === '' && styles.disabledButton,{marginTop:50}]}
+          style={[styles.saveButton, 
+             (!selectedRevisionRemarks  || !selectedRevisionReason || !description || !activity)  && styles.disabledButton,{marginTop:50}]}
 
         // style={{ backgroundColor: "#F38216", width: "35%", alignSelf: "center", alignItems: "center", marginBottom: "20%", padding: 10, borderRadius: 5 }}
         >
           <Text style={{ color: "#FFFFFF", fontSize: 18, fontWeight: "600" }}>Submit</Text>
         </TouchableOpacity>
+
 
         <TouchableOpacity onPress={()=>{setModalVisible(false)}} style={[styles.floatingButton,{transform: [{ rotate: '45deg' }]}]}>
       <Text style={styles.buttonText}>+</Text>
@@ -445,7 +473,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
       },
       disabledButton: {
-        backgroundColor: 'gray',
+        backgroundColor: '#999999',
         width: "35%", alignSelf: "center", alignItems: "center", marginBottom: "20%", padding: 10, borderRadius: 5
         // Add a different style for the disabled button
       },
