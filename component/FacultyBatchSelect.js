@@ -188,7 +188,7 @@ const FacultyBatchSelect = ({ batchId, courseName }) => {
       <Text style={{ color: "black", fontSize: 19, fontWeight: "700", marginHorizontal: 20, marginTop: 10 }}>Course Detail</Text>
       <View style={{ height: 330 }}>
 
-        <ScrollView>
+        <ScrollView >
           {final?.lessonPlan.map((item) =>
 
 

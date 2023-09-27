@@ -7,6 +7,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import DatePicker from 'react-native-date-picker'
 import { Dropdown } from "react-native-element-dropdown";
 import BASE_URL from '../../apiConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 import {
@@ -48,6 +49,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
   const [reopenStatus, setReopenStatus] = useState(false);
   const [reopenRes, setReopenRes] = useState('');
   const testTypeValues = [{Type:"In Progress"},{Type:"Yet To Start"},{Type:"Completed"}]
+  const [assignBtnActive,setAssignBtnActive] = useState(true);
 
 
   const { LPExecutionId, Status } = route.params;
@@ -55,6 +57,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
   useEffect(() => {
     FacultyCourseSelection();
     FacultyCourseRetrieval();
+    getAssignBtnValue();
   }, [])
 
   const FacultyCourseSelection = async () => {
@@ -113,6 +116,21 @@ const FacultyCourseSelection = ({ navigation, route }) => {
   };
 
   console.log("selecteditems", selectedItems);
+  const getAssignBtnValue = async () => {
+    try {
+      const value = await AsyncStorage.getItem('assignBtn');
+      console.log("get assignbtn val::::::",value)
+      if (value !== null) {
+        setAssignBtnActive(false)
+        return JSON.parse(value);
+      }else{
+        setAssignBtnActive(true)
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
+  };
 
   const FacultyTestActive = async () => {
 
@@ -135,9 +153,19 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     console.log("faculty TestActive", FacultyTestActive);
    if(Array.isArray(FacultyTestActive)){
     Alert.alert(" Test Assigned To Student successfully")
+    savAssignBtnValueToAsyncStorage()
    }
    setAssignEnable(false)
   }
+
+  const savAssignBtnValueToAsyncStorage = async () => {
+    try {
+      await AsyncStorage.setItem('assignBtn', "true");
+      console.log('assignBtn switch value saved to AsyncStorage: ', true);
+    } catch (error) {
+      console.error('Error saving toggle switch value: ', error);
+    }
+  };
 
   const FacultyCourseRetrieval = async () => {
     let data = {};
@@ -382,13 +410,13 @@ const FacultyCourseSelection = ({ navigation, route }) => {
             )
             : null}
 {/* Assign button rendering on Status */}
-          {(Status === "Completed" || Status === "In Progress" ) && final?.testResponses?.length > 0 ?
+          {(Status === "Completed" || Status === "In Progress" ) && final?.testResponses?.length > 0  ?
             <View style={{ width: "100%", backgroundColor: "#F5F7FB", }}>
 
               <TouchableOpacity
-               disabled={!assignEnable}
+               disabled={!assignEnable && assignBtnActive}
                 onPress={() => validateTest()}
-                style={{ backgroundColor: assignEnable ? "#F38216" : "#999999", width: "40%", padding: 10, alignSelf: "center", alignItems: "center", borderRadius: 5, marginTop: 20, margin: 10 }}>
+                style={{ backgroundColor: assignEnable && assignBtnActive ? "#F38216" : "#999999", width: "40%", padding: 10, alignSelf: "center", alignItems: "center", borderRadius: 5, marginTop: 20, margin: 10 }}>
                 <Text style={{ color: "#FFFFFF", fontSize: 18, fontWeight: "600" }}>Assign</Text>
               </TouchableOpacity>
 

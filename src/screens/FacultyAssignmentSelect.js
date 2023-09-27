@@ -17,6 +17,7 @@ const FacultyAssignmentSelect = ({ route,navigation }) => {
     const FacultyTeststatus = async () => {
         let data = {};
         data.LessonPlanExId = LPExecutionId;
+        data.AssignmentTitle = assignmentTitle;
 
         const body = JSON.stringify(data)
         const token = await getAccessToken();
