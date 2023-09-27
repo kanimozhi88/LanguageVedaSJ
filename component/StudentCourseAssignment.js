@@ -60,40 +60,46 @@ const StudentCourseAssignment = ({ batchId, courseName }) => {
 
     }
 
-    const getPieChartStatus = ()=>{
-    let completedCount = 0;
-    let redoCount = 0;
-    let vettingInProgressCount = 0;
-    let assignmentSubmittedCount = 0;
-    {final !== '' && final.length > 0 ?
-    final.forEach(record => {
-      switch (record.status) {
-        case 'Completed':
-          completedCount++;
-          break;
-        case 'Redo':
-          redoCount++;
-          break;
-        case 'Vetting In Progress':
-          vettingInProgressCount++;
-          break;
-        case 'Assignment Submitted':
-          assignmentSubmittedCount++;
-          break;
-        default:
-          break;
-      }
-    }) : null
+    const getPieChartStatus = () => {
+        let completedCount = 0;
+        let redoCount = 0;
+        let vettingInProgressCount = 0;
+        let assignmentSubmittedCount = 0;
+        let yetToStartCount = 0; // Initialize a count for "Yet To Start"
     
-}
-// setSeriesArr({...seriesArr,completed:completedCount,submitted:assignmentSubmittedCount,InProgress:vettingInProgressCount,Redo:redoCount})
-setSeriesArr({
-    completed: completedCount,
-    submitted: assignmentSubmittedCount,
-    InProgress: vettingInProgressCount,
-    Redo: redoCount,
-  });
-}
+        if (final !== '' && final.length > 0) {
+            final.forEach(record => {
+                switch (record.status) {
+                    case 'Completed':
+                        completedCount++;
+                        break;
+                    case 'Redo':
+                        redoCount++;
+                        break;
+                    case 'Vetting In Progress':
+                        vettingInProgressCount++;
+                        break;
+                    case 'Assignment Submitted':
+                        assignmentSubmittedCount++;
+                        break;
+                    case 'Yet_To_Start':
+                        yetToStartCount++; // Increment the count for "Yet To Start"
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+    
+        setSeriesArr({
+            completed: completedCount,
+            submitted: assignmentSubmittedCount,
+            InProgress: vettingInProgressCount,
+            Redo: redoCount,
+            YetToStart: yetToStartCount, // Set the count for "Yet To Start"
+        });
+    };
+    
 
     
     console.log('Completed Count:', seriesArr.completed);
@@ -111,9 +117,9 @@ setSeriesArr({
             onPress={()=>{navigation.navigate('StudentAssignmentUpload',{testId:item.id})}}
                 style={{ width: "99%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop: 10, elevation: 5, padding: 10, }}>
                 <View style={{ flexDirection: "row",alignItems:"center", justifyContent:"space-around"}}>
-                    <Image
+                    {/* <Image
                         style={{}}
-                        source={require('../assets/langicon.png')} />
+                        source={require('../assets/langicon.png')} /> */}
 
                     <Text numberOfLines={2} style={{ color: "black", fontSize: 16, fontWeight: "500", margin: 10,alignSelf:"center",width:100 }}>{item.assignmentTitle}</Text>
                
@@ -214,7 +220,7 @@ setSeriesArr({
 
             </LinearGradient>
 
-            <Text style={{ color: "#F38216", fontSize: 16, fontWeight: "600", margin: 20 }}>{courseName}</Text>
+            <Text style={{ color: "#F38216", fontSize: 20, fontWeight: "600", margin: 30 }}>{courseName}</Text>
             {final !== '' && final !== undefined ?
             <View style={{height:340}}>
                 <FlatList
