@@ -232,6 +232,8 @@ const Timmer = ({ recordId }) => {
                 <View>
                     <Text style={{ color: "white", fontWeight: "800" }}>Today Class</Text>
                     <Text style={{ color: "white", fontWeight: "bold" }}>{final[0]?.courseName}</Text>
+                    <Text style={{ color: "white", fontWeight: "bold" }}>{final[0]?.timeBlockName}</Text>
+
                 </View>
                 <View>
 

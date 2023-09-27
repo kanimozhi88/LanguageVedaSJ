@@ -66,6 +66,7 @@ const StudentCourseAssignment = ({ batchId, courseName }) => {
         let vettingInProgressCount = 0;
         let assignmentSubmittedCount = 0;
         let yetToStartCount = 0; // Initialize a count for "Yet To Start"
+        
     
         if (final !== '' && final.length > 0) {
             final.forEach(record => {
@@ -107,8 +108,8 @@ const StudentCourseAssignment = ({ batchId, courseName }) => {
     console.log('Vetting In Progress Count:', seriesArr.InProgress);
     console.log('redo Submitted Count:', seriesArr.Redo);
     const widthAndHeight = 145
-    const series = [seriesArr.completed, seriesArr.submitted, seriesArr.InProgress, seriesArr.Redo]
-    const sliceColor = ['#9B88ED', '#04BFDA', '#FB67CA', '#FFA84A']
+    const series = [seriesArr.completed, seriesArr.submitted, seriesArr.InProgress, seriesArr.Redo,seriesArr.YetToStart]
+    const sliceColor = ['#9B88ED', '#04BFDA', '#FB67CA', '#FFA84A', '#FF9533'];
 
     const renderItem = ({ item, index }) => {
 
@@ -199,10 +200,18 @@ const StudentCourseAssignment = ({ batchId, courseName }) => {
                     <Text style={{fontSize:12,fontWeight:400,color:"white",alignSelf:"center",marginHorizontal:10}}>Redo</Text>
                     <Text style={{fontSize:12,fontWeight:400,color:"white",}}>({seriesArr.Redo})</Text>
                     </View>
+                    <View style={{flexDirection:"row",marginTop:10}}>
+                 <View style={{width: 13,height:13,backgroundColor:"white",borderRadius:7,alignItems:"center",justifyContent:"center",alignSelf:"center"}}>
+                 <View style={{width:9,height:9,backgroundColor:"#FFA84A",borderRadius:5,margin:2}}>
+                    </View>
+                    </View>
+                    <Text style={{fontSize:12,fontWeight:400,color:"white",alignSelf:"center",marginHorizontal:10}}>Yet To Start</Text>
+                    <Text style={{fontSize:12,fontWeight:400,color:"white",}}>({seriesArr.YetToStart})</Text>
+                    </View>
 
                     <View style={{flexDirection:"row",marginTop:10}}>
                     <Text style={{fontSize:12,fontWeight:400,color:"white",alignSelf:"center",marginHorizontal:22}}>Total</Text>
-                    <Text style={{fontSize:12,fontWeight:400,color:"white",}}>({seriesArr.completed + seriesArr.submitted + seriesArr.InProgress + seriesArr.Redo})</Text>
+                    <Text style={{fontSize:12,fontWeight:400,color:"white",}}>({seriesArr.completed + seriesArr.submitted + seriesArr.InProgress + seriesArr.Redo +seriesArr.YetToStart})</Text>
                     </View>
 
                 </View>

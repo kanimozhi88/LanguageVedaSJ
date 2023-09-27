@@ -123,7 +123,7 @@ console.log("sum is", totalNum)
           <View>
           <Text style={{ color: "white", fontSize: 16, fontWeight: "600"}}>{courseName}</Text>
           <Text style={{ color: "white", fontSize: 16, fontWeight: "600"}}>REVISION 25</Text>
-          <Text style={{ color: "white", fontSize: 16, fontWeight: "600"}}>BackUp Class 05</Text>
+          <Text style={{ color: "white", fontSize: 16, fontWeight: "600"}}>BackUp Class RevisionCount</Text>
           </View>
           <View>
           <View style={{ width: 100, height: 100, borderRadius: 50, backgroundColor: "white", marginTop: 5 }}>
