@@ -8,17 +8,18 @@ import PieChart from 'react-native-pie-chart';
 import BASE_URL from '../../apiConfig';
 
 const HelpCenterScreen = ({ navigation }) => {
-    const recordId = useSelector(state => state.recordId);
-    const [final, setFinal] = useState('');
-    const [statusCounts, setStatusCounts] = useState({
-        Reopen: 0,
-        'Ticket Raised': 0,
-        'Ticket In progress': 0,
-        Closed: 0,
-        Done:0
-    });
+  const recordId = useSelector((state) => state.recordId);
+  const [final, setFinal] = useState([]);
+  const [statusCounts, setStatusCounts] = useState({
+    Reopen: 0,
+    'Ticket Raised': 0,
+    'Ticket In progress': 0,
+    'New': 0,
+    Closed: 0,
+    Done: 0,
+  });
 
-    const sum = statusCounts['Ticket Raised'] + statusCounts['Reopen'];
+    const sum = statusCounts['Ticket Raised'] + statusCounts['Reopen']+ statusCounts['New'];
     const doneCloseSum = statusCounts['Closed'] + statusCounts['Done'];
     const widthAndHeight = 150
     const series = [doneCloseSum, sum, statusCounts['Ticket In progress']]
@@ -54,6 +55,7 @@ const HelpCenterScreen = ({ navigation }) => {
             'Ticket In progress': 0,
             Closed: 0,
             Done:0,
+            'New': 0, // Initialize count for "New" cases
         };
         if(final !== ''){
 
@@ -131,7 +133,7 @@ const HelpCenterScreen = ({ navigation }) => {
 
                 <View style={{ marginTop: 40 }}>
                     <Text style={{ color: "white", fontSize: 16, fontWeight: "600", margin: 10 }}>Closed- {(statusCounts['Closed'] + statusCounts['Done']) || 0}</Text>
-                    <Text style={{ color: "white", fontSize: 16, fontWeight: "600", margin: 10 }}>Open- {(statusCounts['Ticket Raised'] + statusCounts['Reopen']) || 0}</Text>
+                    <Text style={{ color: "white", fontSize: 16, fontWeight: "600", margin: 10 }}>Open- {(statusCounts['Ticket Raised'] + statusCounts['Reopen']+ statusCounts['New']) || 0}</Text>
                     <Text style={{ color: "white", fontSize: 16, fontWeight: "600", margin: 10 }}>InProgress-{statusCounts['Ticket In progress']}</Text>
                 </View>
                 <View>

@@ -7,8 +7,12 @@ import { getDataMethod, getLastNameMethod, getCourseApiResult, getEmailMethod, g
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import OTPTextView from 'react-native-otp-textinput';
 import BASE_URL from '../../apiConfig';
+import { Appearance, useColorScheme } from 'react-native';
 
 const LoginScreen = ({ route }) => {
+  const colorScheme = useColorScheme();
+  const inputTextColor = colorScheme === 'dark' ? 'white' : 'black';
+  const inputBackgroundColor = colorScheme === 'dark' ? 'black' : 'white';
 
   const dispatch = useDispatch();
   const recordType = useSelector(state => state.recordType);
@@ -202,13 +206,13 @@ const LoginScreen = ({ route }) => {
           <Text style={styles.welcomeTxt}>Welcome!</Text>
           <Text style={styles.continueTxt}>Log In To Continue</Text>
           <View style={{ marginTop: 20 }}>
-            <Text style={styles.userIdTxt}>User Id</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter User name"
-              onChangeText={text => handleMobileNumberChange(text)}
-              value={Phone}
-            />
+          <Text style={styles.userIdTxt}>User Id</Text>
+        <TextInput
+          style={[styles.input, { color: inputTextColor, backgroundColor: inputBackgroundColor }]}
+          placeholder="Enter User name"
+          onChangeText={text => handleMobileNumberChange(text)}
+          value={Phone}
+        />
 
             {error !== '' && <Text>{error}</Text>}
             <TouchableOpacity
@@ -352,18 +356,15 @@ const styles = StyleSheet.create({
   },
 
   input: {
-
     width: '90%',
     height: 50,
-    backgroundColor: "white",
+    backgroundColor: 'white', // Set the default background color
     borderColor: '#999999',
     borderWidth: 1,
     borderRadius: 10,
     margin: 10,
     padding: 10,
-    alignSelf: "center"
+    alignSelf: "center",
   },
-},
-);
-
+});
 export default LoginScreen;
