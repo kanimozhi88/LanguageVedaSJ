@@ -26,7 +26,8 @@ const LoginScreen = ({ route }) => {
   const [errors, setErrors] = useState('');
   const [inputOtp, setInputOtp] = useState('');
   const [showOtp, setShowOtp] = useState(false);
-  const [showResend,setShowResend] = useState(false);
+  const [showResend, setShowResend] = useState(false);
+  const [otpTextShow, setOtpTextShow] = useState(true);
 
   const restrictedPattern = /^[a-zA-Z0-9]*$/;
 
@@ -87,7 +88,7 @@ const LoginScreen = ({ route }) => {
   }
 
 
- 
+
 
   const handleSubmitForOtp = async () => {
     let data = {};
@@ -119,7 +120,8 @@ const LoginScreen = ({ route }) => {
           {
             text: 'OK',
             // onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
-            onPress: () => setShowOtp(true)
+            onPress: () => [setShowOtp(true), setOtpTextShow(false)]
+
           },
         ]
       );
@@ -138,7 +140,7 @@ const LoginScreen = ({ route }) => {
     dispatch(getProfilePhotoMethod(result?.Result?.profilePhoto));
 
     console.log(JSON.stringify(result));
-    
+
 
 
   }
@@ -206,23 +208,28 @@ const LoginScreen = ({ route }) => {
           <Text style={styles.welcomeTxt}>Welcome!</Text>
           <Text style={styles.continueTxt}>Log In To Continue</Text>
           <View style={{ marginTop: 20 }}>
-          <Text style={styles.userIdTxt}>User Id</Text>
-        <TextInput
-          style={[styles.input, { color: inputTextColor, backgroundColor: inputBackgroundColor }]}
-          placeholder="Enter User name"
-          onChangeText={text => handleMobileNumberChange(text)}
-          value={Phone}
-        />
+            <Text style={styles.userIdTxt}>User Id</Text>
+            <TextInput
+            placeholderTextColor={"#424242"}
+              style={[styles.input, { color: inputTextColor, backgroundColor: inputBackgroundColor }]}
+              placeholder="Enter User name"
+              onChangeText={text => handleMobileNumberChange(text)}
+              value={Phone}
+            />
 
             {error !== '' && <Text>{error}</Text>}
-            <TouchableOpacity
-              style={{ alignSelf: "center", borderBottomColor: "#F38216", borderBottomWidth: 1 }}
-              onPress={() => handleSubmitForOtp()}>
-              <Text  style={{color:"#F38216",fontSize:12}}>Send OTP</Text>
-            </TouchableOpacity>
+            {otpTextShow ?
+              <TouchableOpacity
+                style={{ alignSelf: "center", borderBottomColor: "#F38216", borderBottomWidth: 1 }}
+                onPress={() => handleSubmitForOtp()}>
+                <Text style={{ color: "#F38216", fontSize: 12 }}>Send OTP</Text>
+              </TouchableOpacity>
+              : null}
+
             {/* <Text style={styles.passwordTxt}>Enter OTP</Text> */}
             {showOtp ?
               <TextInput
+              placeholderTextColor={"#424242"}
                 style={styles.input}
                 placeholder="Enter OTP"
                 secureTextEntry
@@ -231,13 +238,13 @@ const LoginScreen = ({ route }) => {
               />
               : null}
 
-              {showResend ?
-               <TouchableOpacity
-               style={{ alignSelf: "center", borderBottomColor: "#F38216", borderBottomWidth: 1 }}
-               onPress={() => handleSubmitForOtp()}>
-               <Text  style={{color:"#F38216",fontSize:12}}>Resend OTP</Text>
-             </TouchableOpacity>
-             : null}
+            {showResend ?
+              <TouchableOpacity
+                style={{ alignSelf: "center", borderBottomColor: "#F38216", borderBottomWidth: 1 }}
+                onPress={() => handleSubmitForOtp()}>
+                <Text style={{ color: "#F38216", fontSize: 12 }}>Resend OTP</Text>
+              </TouchableOpacity>
+              : null}
 
             {/* <Text style={{ marginTop: 15, fontSize: 12, marginHorizontal:5}}>Enter Your 4 Digit Number That send to +91******</Text>
             <OTPTextView
@@ -269,7 +276,7 @@ const LoginScreen = ({ route }) => {
 
         <TouchableOpacity
           disabled={Password ? false : true}
-          style={[styles.logInView, {backgroundColor: Password ? "orange" : "gray"}]}
+          style={[styles.logInView, { backgroundColor: Password ? "orange" : "gray" }]}
           onPress={() => handleOTP()}
         >
           <Text style={styles.logInTxt}>Log In</Text>

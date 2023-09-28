@@ -18,7 +18,6 @@ import BASE_URL from '../../apiConfig';
 const AssessmentReport = ({ navigation, route }) => {
 
     const testId = route.params;
-    console.log("passed testId:::::::::", testId);
     const [final, setFinal] = useState();
     const [percentageVal, setPercentageVal] = useState();
     const dataFetchApi = useSelector(state => state.recordId);
@@ -47,7 +46,6 @@ const AssessmentReport = ({ navigation, route }) => {
         let AsssessmentReportApi = await response.json()
         console.log(" student AsssessmentReportApi  RES",   AsssessmentReportApi);
         setFinal(AsssessmentReportApi?.records[0]);
-        console.log("final data is", final)
         const totalMarks = final?.totalMarks;
         const totalMarksObtained = final?.totalMarksObtained;
 
@@ -60,7 +58,6 @@ const AssessmentReport = ({ navigation, route }) => {
         }
     }
 
-  console.log("percentage:::::::::",percentageVal)
     const [currentStatusFill, setStatusFill] = useState(0);
     const statusTargetFill = percentageVal;
     const statusDuration = 500; // Animation duration in milliseconds

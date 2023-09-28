@@ -134,7 +134,7 @@ const TicketStatus = ({ navigation, route }) => {
                 <Text style={{ color: "#F38216", fontSize: 15, fontWeight: "500" }}>Reopened-Issue</Text>
                 <TextInput
         placeholder='Type Message'
-        placeholderTextColor={"#C8C6C6"}
+        placeholderTextColor={"#424242"}
         onChangeText={text => setDescription(text)}
         value={description}
         style={{width:290,borderRadius:5,marginTop:20,textAlignVertical:"top",backgroundColor:"#EFEFEF"}}/>

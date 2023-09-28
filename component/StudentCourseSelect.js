@@ -90,9 +90,7 @@ const StudentCourseSelect = ({batchId,courseName }) => {
   const totalProgress = final?.lessonPlan?.reduce((sum, item) => sum + item.Progress, 0);
   const maxProgress = final?.lessonPlan?.length * 100; // Assuming each item has a maximum progress of 100
   const totalProgressPercentage = (totalProgress / maxProgress) * 100;
-  console.log(`Total Progress: ${totalProgressPercentage.toFixed(2)}%`);
   const overallStatus= Number( totalProgressPercentage.toFixed(0));
-  console.log("overallstatus", overallStatus);
 
 //Joinnow btn
 const currentTime = new Date();
@@ -127,7 +125,6 @@ const handleTouchablePress = () => {
   };
 
   const overallPercentage = calculateOverallCourseDurationDaysPercentage(final?.attendance);
-  console.log("overallPercentage", overallPercentage);
 
 //Attence Progress Bar
   const [currentAttendancetFill, setCurrentAttendanceFill] = useState(0);

@@ -414,7 +414,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
             <View style={{ width: "100%", backgroundColor: "#F5F7FB", }}>
 
               <TouchableOpacity
-               disabled={!assignEnable && assignBtnActive}
+               disabled={!assignEnable && !assignBtnActive}
                 onPress={() => validateTest()}
                 style={{ backgroundColor: assignEnable && assignBtnActive ? "#F38216" : "#999999", width: "40%", padding: 10, alignSelf: "center", alignItems: "center", borderRadius: 5, marginTop: 20, margin: 10 }}>
                 <Text style={{ color: "#FFFFFF", fontSize: 18, fontWeight: "600" }}>Assign</Text>
@@ -559,7 +559,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
               :
               <TextInput
                 placeholder='Type Message'
-                placeholderTextColor={"#C8C6C6"}
+                placeholderTextColor={"#424242"}
                 onChangeText={text => setDescription(text)}
                 value={description}
                 style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />

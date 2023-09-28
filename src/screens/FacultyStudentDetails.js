@@ -633,7 +633,7 @@ const FacultyStudentDetails = ({ route, navigation }) => {
           <View style={{ flexDirection: "row", width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10 }}>
             <TextInput
               placeholder='Enter Marks'
-              placeholderTextColor={"#C8C6C6"}
+              placeholderTextColor={"#424242"}
               onChangeText={text => setEssayMarks(text)}
               value={essayMarks}
               style={{ width: "50%", borderColor: "#F38216", textAlignVertical: "top", }} />
@@ -663,7 +663,7 @@ const FacultyStudentDetails = ({ route, navigation }) => {
               :
               <TextInput
                 placeholder='Type Message'
-                placeholderTextColor={"#C8C6C6"}
+                placeholderTextColor={"#424242"}
                 onChangeText={text => setDescription(text)}
                 value={description}
                 style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />

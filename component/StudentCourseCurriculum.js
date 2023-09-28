@@ -81,7 +81,6 @@ const roundedAverage = Number(averageProgress.toFixed(0));
 
     
 
-console.log("sum is", totalNum)
 
     const renderItem = ({ item, index }) => {
        
@@ -149,7 +148,7 @@ console.log("sum is", totalNum)
       </LinearGradient>
 
       <Text style={{ color: "#F38216", fontSize: 16, fontWeight: "600",margin:20}}>{courseName}</Text>
-<View style={{height:330}}>
+<View style={{height:280,marginBottom:20}}>
 <FlatList
  data={final?.lessonPlanExecutions}
  renderItem={renderItem}/>

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text,Platform,PermissionsAndroid, StyleSheet, SafeAreaView, ImageBackground, Alert, TouchableOpacity, Image, FlatList, ScrollView } from "react-native";
+import { View, Text, Platform, PermissionsAndroid, StyleSheet, SafeAreaView, ImageBackground, Alert, TouchableOpacity, Image, FlatList, ScrollView } from "react-native";
 import { getAccessToken } from "../../redux/actions";
 import { useDispatch, useSelector } from 'react-redux';
 import HTML from 'react-native-render-html';
@@ -28,7 +28,7 @@ const StudentAssignmentUpload = ({ navigation, route }) => {
   const [images, setImages] = useState([]);
   const [showFullContent, setShowFullContent] = useState(false);
   const [uploadApi, setUploadApi] = useState(false);
-  const [showSubmit,setShowSubmit] = useState(false);
+  const [showSubmit, setShowSubmit] = useState(false);
   const recordId = useSelector(state => state.recordId);
 
   const scrollViewRef = useRef(null);
@@ -128,7 +128,7 @@ const StudentAssignmentUpload = ({ navigation, route }) => {
       Alert.alert(
         'Uploaded Successfully',
         'OK',
-        [{text: 'OK',onPress: () => {[setShowSubmit(true), setImages([])]}}
+        [{ text: 'OK', onPress: () => { [setShowSubmit(true), setImages([])] } }
         ],
         { cancelable: false }
       );
@@ -156,7 +156,7 @@ const StudentAssignmentUpload = ({ navigation, route }) => {
         let BaseURL = 'data:image/png;base64,';
         let CompleteURL = BaseURL + SelectedImage;
         let obj = [];
-        
+
         obj.push({
           name: response?.assets[0]?.fileName,
           base64: SelectedImage,
@@ -329,55 +329,55 @@ const StudentAssignmentUpload = ({ navigation, route }) => {
   //     console.log('Error downloading file:', err);
   //   }
   // };
-  
-  
-const requestStoragePermission = async (updatedUrl,type) => {
-  try {
-    const granted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-      {
-        title: 'App Storage Permission',
-        message:
-          'App needs access to your Storage ' +
-          'so you can download files',
-        buttonNeutral: 'Ask Me Later',
-        buttonNegative: 'Cancel',
-        buttonPositive: 'OK',
-      },
-    );
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-     downloadFiles(updatedUrl,type);
-    } else {
-      console.log('storage permission denied');
-    }
-  } catch (err) {
-    console.warn(err);
-  }
-};
 
-const downloadFiles = (PublicDownloadUrl,type) =>{
-  
-    const {config,fs} = RNFetchBlob;
+
+  const requestStoragePermission = async (updatedUrl, type) => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'App Storage Permission',
+          message:
+            'App needs access to your Storage ' +
+            'so you can download files',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        downloadFiles(updatedUrl, type);
+      } else {
+        console.log('storage permission denied');
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  const downloadFiles = (PublicDownloadUrl, type) => {
+
+    const { config, fs } = RNFetchBlob;
     const date = new Date();
     const fileDir = fs.dirs.DownloadDir;
     config({
       fileCache: true,
-      addAndroidDownloads:{
-        useDownloadManager:true,
-        notification:true,
-        path:fileDir + "/download_" + Math.floor(date.getDate()+date.getSeconds()/2) ,
-        description:'file download'
+      addAndroidDownloads: {
+        useDownloadManager: true,
+        notification: true,
+        path: fileDir + "/download_" + Math.floor(date.getDate() + date.getSeconds() / 2),
+        description: 'file download'
       }
     })
-    .fetch('GET',PublicDownloadUrl,{
+      .fetch('GET', PublicDownloadUrl, {
 
-    })
-    .then(res =>{
-      alert("file downloaded successfully")
-      console.log("file saved",res.path());
-    });
-    
-};
+      })
+      .then(res => {
+        alert("file downloaded successfully")
+        console.log("file saved", res.path());
+      });
+
+  };
 
 
   const validateUpload = () => {
@@ -411,9 +411,9 @@ const downloadFiles = (PublicDownloadUrl,type) =>{
   // const questionsWithoutTags = final[0].Questions.replace(/<\/?[^>]+(>|$)/g, '');
 
   const PopupMenuExample = ({ PublicDownloadUrl, base64, type, index }) => {
-    console.log("PublicDownloadUrl is",PublicDownloadUrl);
-    
-    
+    console.log("PublicDownloadUrl is", PublicDownloadUrl);
+
+
     // }
     // console.log("PublicDownloadUrl is",updatedUrl);
 
@@ -428,15 +428,15 @@ const downloadFiles = (PublicDownloadUrl,type) =>{
           </MenuTrigger>
           <MenuOptions style={{ borderWidth: 1, borderColor: "#999999", borderRadius: 5 }} >
             <MenuOption onSelect={() => {
-              if(PublicDownloadUrl !== undefined){
+              if (PublicDownloadUrl !== undefined) {
                 const updatedUrl = PublicDownloadUrl.replace("/", "");
-              navigation.navigate('WebViewDownload',{uri:updatedUrl})
-              // requestStoragePermission(updatedUrl,type)
+                navigation.navigate('WebViewDownload', { uri: updatedUrl })
+                // requestStoragePermission(updatedUrl,type)
               }
             }}
-            
-              // navigation.navigate('DocumentScreen', { base64: base64, type: type })}
-              >
+
+            // navigation.navigate('DocumentScreen', { base64: base64, type: type })}
+            >
               <Text>Preview</Text>
             </MenuOption>
             {final[0]?.status !== "Completed" ?
@@ -446,12 +446,12 @@ const downloadFiles = (PublicDownloadUrl,type) =>{
                   setImages(newImages)
               }}>
                 <Text>Delete</Text>
-              </MenuOption> : 
+              </MenuOption> :
               <MenuOption onSelect={() => {
-                if(PublicDownloadUrl !== undefined){
+                if (PublicDownloadUrl !== undefined) {
                   const updatedUrl = PublicDownloadUrl.replace("/", "");
-                navigation.navigate('WebViewDownload',{uri:updatedUrl})
-                // requestStoragePermission(updatedUrl,type)
+                  navigation.navigate('WebViewDownload', { uri: updatedUrl })
+                  // requestStoragePermission(updatedUrl,type)
                 }
               }}>
                 <Text>Download</Text>
@@ -462,7 +462,7 @@ const downloadFiles = (PublicDownloadUrl,type) =>{
     );
   };
 
- 
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -486,7 +486,7 @@ const downloadFiles = (PublicDownloadUrl,type) =>{
           </View> : <></>}
 
 
-          {final !== '' && final[0]?.status !== "Completed" ?
+        {final !== '' && final[0]?.status !== "Completed" ?
           <View>
 
             <Text style={{ fontSize: 16, fontWeight: "600", color: "#1B2236", marginHorizontal: 25, }}>Assignment</Text>
@@ -531,7 +531,7 @@ const downloadFiles = (PublicDownloadUrl,type) =>{
 
         {final !== '' && final[0]?.status !== "Completed" ?
           <TouchableOpacity
-            onPress={() => [validateUpload(),setShowSubmit(false)]}
+            onPress={() => [validateUpload(), setShowSubmit(false)]}
             style={{ backgroundColor: "#F38216", width: "40%", alignSelf: "center", alignItems: "center", borderRadius: 5, padding: 10, marginTop: 25 }}>
             <Text style={{ color: "white", fontSize: 18, fontWeight: "500" }}>Upload</Text>
           </TouchableOpacity> : <></>}
@@ -576,124 +576,135 @@ const downloadFiles = (PublicDownloadUrl,type) =>{
 
         {images.length > 0 && !showSubmit ?
           <TouchableOpacity
-            onPress={() => [callUploadApi() ]}
+            onPress={() => [callUploadApi()]}
             style={{ backgroundColor: "#F38216", width: "40%", alignSelf: "center", alignItems: "center", borderRadius: 5, padding: 10, marginTop: 25 }}>
             <Text style={{ color: "white", fontSize: 18, fontWeight: "500" }}>Submit</Text>
           </TouchableOpacity> : <></>}
 
-{ final !== '' ?
-<View>
-        <View
-          style={{ width: "85%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop:final[0]?.status === "Completed" ? 20 :70, elevation: 5, padding: 10, }}>
-          <View style={{ flexDirection: "row" }}>
+        {final !== '' ?
+          <View>
+            <View
+              style={{ width: "85%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop: final[0]?.status === "Completed" ? 20 : 70, elevation: 5, padding: 10, }}>
+              <View style={{ flexDirection: "row" }}>
 
-            <Text style={{ color: "black", fontSize: 16, fontWeight: "500",marginBottom:30 }}>{final[0]?.assignmentTitle}</Text>
-          </View>
+                <Text style={{ color: "black", fontSize: 16, fontWeight: "500", marginBottom: 30 }}>{final[0]?.assignmentTitle}</Text>
+              </View>
 
-          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-            <Text style={{ color: "black", fontSize: 12, fontWeight: "500" }}>Date :<Text>{final[0]?.endDate}</Text></Text>
+              <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                <Text style={{ color: "black", fontSize: 12, fontWeight: "500" }}>Date :<Text>{final[0]?.endDate}</Text></Text>
 
-            <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-              <Text style={{ color: "black", fontSize: 12, fontWeight: "500", marginRight: 10 }}>Status :</Text>
-              <View
-                style={{
-                  width: 89, backgroundColor: final[0]?.status === "Vetting In Progress" ?
-                    "#FF9533" :
-                    final[0]?.status === "Completed" ?
-                      "#67CB65" :
-                      final[0]?.status === "Redo" ? "#E74444" : final[0]?.status === "Assignment Submitted" ? "#67CB65" : "red", borderRadius: 10,
-                }}
-              >
-                {final[0]?.status === "Vetting In Progress" ?
-                  <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>In-Progress</Text> :
-                  final[0]?.status === "Completed" ?
-                    <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Completed</Text> :
-                    final[0]?.status === "Redo" ? <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}> Redo</Text> :
-                      final[0]?.status === "Assignment Submitted" ?
-                        <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Submitted</Text> : <></>}
+                <View style={{ flexDirection: "row", justifyContent: "flex-end" }}>
+                  <Text style={{ color: "black", fontSize: 12, fontWeight: "500", marginRight: 10 }}>Status :</Text>
+                  <View
+                    style={{
+                      width: 89, backgroundColor: final[0]?.status === "Vetting In Progress" ?
+                        "#FF9533" :
+                        final[0]?.status === "Completed" ?
+                          "#67CB65" :
+                          final[0]?.status === "Redo" ? "#E74444" : final[0]?.status === "Assignment Submitted" ? "#67CB65" :
+                            final[0]?.status === "Yet_To_Submit" ? "#FF9533" :
+                              null, borderRadius: 10,
+                    }}
+                  >
+                    {final[0]?.status === "Vetting In Progress" ?
+                      <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>In-Progress</Text> :
+                      final[0]?.status === "Completed" ?
+                        <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Completed</Text> :
+                        final[0]?.status === "Redo" ? <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}> Redo</Text> :
+                          final[0]?.status === "Assignment Submitted" ?
+                            <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Submitted</Text> :
+                            final[0]?.status === "Yet_To_Submit" ?
+                              <Text style={{ fontSize: 12, fontWeight: "400", alignSelf: "center", color: "white" }}>Yet_To_Submit</Text> : <></>}
+
+                  </View>
+                </View>
+              </View>
+
+            </View>
+
+            <View style={{ flexDirection: "row", marginHorizontal: 50, marginTop: 30 }}>
+
+              <View>
+                <Image
+                  source={require('../../assets/Trackeractive.png')}
+                  style={{ height: 24, width: 24 }} />
+                <View style={{ height: 81, width: 3, backgroundColor: "#D6387F", marginLeft: 10, marginTop: 4 }} />
+                {final[0]?.status === "Yet_To_Submit" ?
+                  <View style={{ height: 24, width: 24, backgroundColor: "#F38216", borderRadius: 12, marginTop: 4 }}></View> :
+                  <Image
+                    source={require('../../assets/Trackeractive.png')}
+                    style={{ height: 24, width: 24, marginTop: 4 }} />}
+
+                {final[0]?.status === "Yet_To_Submit" ?
+                  <View style={{ height: 81, width: 3, backgroundColor: "#F38216", marginLeft: 10, marginTop: 4 }} /> :
+                  <View style={{ height: 81, width: 3, backgroundColor: "#D6387F", marginLeft: 10, marginTop: 4 }} />}
+
+                {final[0]?.status === "Assignment Submitted" || final[0]?.status === "Yet_To_Submit" ?
+                  <View style={{ height: 24, width: 24, backgroundColor: "#F38216", borderRadius: 12, marginTop: 4 }}></View> :
+                  <Image
+                    source={require('../../assets/Trackeractive.png')}
+                    style={{ height: 24, width: 24, marginTop: 4 }} />}
+
+                {final[0]?.status === "Yet_To_Submit" || final[0]?.status === "Vetting In Progress" || final[0]?.status === "Redo" || final[0]?.status === "Assignment Submitted" ?
+                  <View style={{ height: 81, width: 3, backgroundColor: "#F38216", marginLeft: 10, marginTop: 4 }} /> :
+                  <View style={{ height: 81, width: 3, backgroundColor: "#D6387F", marginLeft: 10, marginTop: 4 }} />}
+
+                {final[0]?.status === "Yet_To_Submit" || final[0]?.status === "Vetting In Progress" || final[0]?.status === "Redo" || final[0]?.status === "Assignment Submitted" ?
+                  <View style={{ height: 24, width: 24, backgroundColor: "#F38216", borderRadius: 12, marginTop: 4 }}></View> :
+                  <Image
+                    source={require('../../assets/Trackeractive.png')}
+                    style={{ height: 24, width: 24, marginTop: 4 }} />}
 
               </View>
+
+              <View style={{ alignItems: "center", bottom: 12 }}>
+                <Text style={{ color: "#F38216", fontSize: 14, fontWeight: "600", right: 50 }}>Draft</Text>
+                <Text style={{ color: "#F38216", fontSize: 14, fontWeight: "600", marginTop: 90 }}>Assignment Submitted</Text>
+                <Text style={{ color: "#F38216", fontSize: 14, fontWeight: "600", marginTop: 90 }}>Vetting InProgress</Text>
+                {final[0]?.status === "Completed" ?
+                  <Text style={{ color: "#F38216", fontSize: 14, fontWeight: "600", marginTop: 90 }}> Completed</Text> :
+                  final[0]?.status === "Vetting In Progress" ?
+                    <Text style={{ color: "#D9D9D9", fontSize: 14, fontWeight: "600", marginTop: 90 }}> Completed</Text> :
+                    final[0]?.status === "Redo" ?
+                      <Text style={{ color: "#FF0303", fontSize: 14, fontWeight: "600", marginTop: 90 }}> Redo</Text> : <></>}
+              </View>
             </View>
-          </View>
-
-        </View>
-
-        <View style={{ flexDirection: "row", marginHorizontal: 50, marginTop: 30 }}>
-
-          <View>
-            <Image
-              source={require('../../assets/Trackeractive.png')}
-              style={{ height: 24, width: 24 }} />
-            <View style={{ height: 81, width: 3, backgroundColor: "#D6387F", marginLeft: 10, marginTop: 4 }} />
-            <Image
-              source={require('../../assets/Trackeractive.png')}
-              style={{ height: 24, width: 24, marginTop: 4 }} />
-            <View style={{ height: 81, width: 3, backgroundColor: "#D6387F", marginLeft: 10, marginTop: 4 }} />
-            {final[0]?.status === "Assignment Submitted" ?
-              <View style={{ height: 24, width: 24, backgroundColor: "#F38216", borderRadius: 12, marginTop: 4 }}></View> :
-              <Image
-                source={require('../../assets/Trackeractive.png')}
-                style={{ height: 24, width: 24, marginTop: 4 }} />}
-                            {final[0]?.status === "Vetting In Progress" || final[0]?.status === "Redo" || final[0]?.status === "Assignment Submitted" ?
-            <View style={{ height: 81, width: 3, backgroundColor: "#F38216", marginLeft: 10, marginTop: 4 }} /> :
-            <View style={{ height: 81, width: 3, backgroundColor: "#D6387F", marginLeft: 10, marginTop: 4 }} /> }
-
-            {final[0]?.status === "Vetting In Progress" || final[0]?.status === "Redo" || final[0]?.status === "Assignment Submitted" ?
-              <View style={{ height: 24, width: 24, backgroundColor: "#F38216", borderRadius: 12, marginTop: 4 }}></View> :
-              <Image
-                source={require('../../assets/Trackeractive.png')}
-                style={{ height: 24, width: 24, marginTop: 4 }} />}
-
-          </View>
-
-          <View style={{ alignItems: "center", bottom: 12 }}>
-            <Text style={{ color: "#F38216", fontSize: 14, fontWeight: "600",right:50 }}>Draft</Text>
-            <Text style={{ color: "#F38216", fontSize: 14, fontWeight: "600", marginTop: 90 }}>Assignment Submitted</Text>
-            <Text style={{ color: "#F38216", fontSize: 14, fontWeight: "600", marginTop: 90 }}>Vetting InProgress</Text>
-            {final[0]?.status === "Completed" ?
-              <Text style={{ color: "#F38216", fontSize: 14, fontWeight: "600", marginTop: 90 }}> Completed</Text> :
-              final[0]?.status === "Vetting In Progress" ?
-                <Text style={{ color: "#D9D9D9", fontSize: 14, fontWeight: "600", marginTop: 90 }}> Completed</Text> :
-                final[0]?.status === "Redo" ?
-                  <Text style={{ color: "#FF0303", fontSize: 14, fontWeight: "600", marginTop: 90 }}> Redo</Text> : <></>}
-          </View>
-        </View>
 
 
 
 
-        <View style={{ marginHorizontal: 20, marginTop: 60, marginBottom:40  }}>
-          <Text style={{ color: "#6F6E6E", fontSize: 16, fontWeight: "400" }}>Feedback</Text>
-          <View style={{ backgroundColor: "#C8C6C64A", padding: 15, marginTop: 10,borderRadius:5,width:296}}>
-            <Text style={{color:"#000000",fontSize:14,fontWeight:"500"}}>{final[0]?.feedBack}</Text>
-          </View>
-        </View>
-
-</View>
-: null}
-       
-        <View style={{marginBottom: 90,}}>
-        {Array.isArray(retrievedData) && retrievedData.length > 0 ? (
-          retrievedData.map((item, index) => (
-            <View key={index} style={{  margin: 10, backgroundColor: "white", width: "95%", elevation: 5, flexDirection: "row", paddingBottom: 5, justifyContent: "space-evenly", alignItems: "center", alignSelf: "center" }}>
-              {item.Type === "image" ?
-                <Image
-                  source={require('../../assets/Image.png')}
-                  style={{ width: 16, height: 16, margin: 5 }} /> :
-                <Image
-                  source={require('../../assets/PDF.png')}
-                  style={{ width: 16, height: 16, margin: 5 }} />}
-
-              <Text style={{ margin: 5,width:"50%" }}>{item?.filename.length > 25 ? item?.filename.substring(0, 25) + "..." : item.filename}</Text>
-              <Text style={{ padding: 4, borderColor: "#CDD3D8", borderWidth: 1, color: "#242634", fontSize: 11, fontWeight: "900", margin: 5 }}> {item.ContentSize}</Text>
-              <MenuProvider>
-                <View style={{ height: 65, top: 15 }}>
-                  <PopupMenuExample PublicDownloadUrl={item?.PublicDownloadUrl} base64={item?.content} type={item?.Type} index={-1} />
-                </View>
-              </MenuProvider>
+            <View style={{ marginHorizontal: 20, marginTop: 60, marginBottom: 40 }}>
+              <Text style={{ color: "#6F6E6E", fontSize: 16, fontWeight: "400" }}>Feedback</Text>
+              <View style={{ backgroundColor: "#C8C6C64A", padding: 15, marginTop: 10, borderRadius: 5, width: 296 }}>
+                <Text style={{ color: "#000000", fontSize: 14, fontWeight: "500" }}>{final[0]?.feedBack}</Text>
+              </View>
             </View>
-          ))
-        ) : null}
+
+          </View>
+          : null}
+
+        <View style={{ marginBottom: 90, }}>
+          {Array.isArray(retrievedData) && retrievedData.length > 0 ? (
+            retrievedData.map((item, index) => (
+              <View key={index} style={{ margin: 10, backgroundColor: "white", width: "95%", elevation: 5, flexDirection: "row", paddingBottom: 5, justifyContent: "space-evenly", alignItems: "center", alignSelf: "center" }}>
+                {item.Type === "image" ?
+                  <Image
+                    source={require('../../assets/Image.png')}
+                    style={{ width: 16, height: 16, margin: 5 }} /> :
+                  <Image
+                    source={require('../../assets/PDF.png')}
+                    style={{ width: 16, height: 16, margin: 5 }} />}
+
+                <Text style={{ margin: 5, width: "50%" }}>{item?.filename.length > 25 ? item?.filename.substring(0, 25) + "..." : item.filename}</Text>
+                <Text style={{ padding: 4, borderColor: "#CDD3D8", borderWidth: 1, color: "#242634", fontSize: 11, fontWeight: "900", margin: 5 }}> {item.ContentSize}</Text>
+                <MenuProvider>
+                  <View style={{ height: 65, top: 15 }}>
+                    <PopupMenuExample PublicDownloadUrl={item?.PublicDownloadUrl} base64={item?.content} type={item?.Type} index={-1} />
+                  </View>
+                </MenuProvider>
+              </View>
+            ))
+          ) : null}
         </View>
         {/* {Array.isArray(retrievedData) && retrievedData.length > 0 ?
 <TouchableOpacity
@@ -705,14 +716,14 @@ const downloadFiles = (PublicDownloadUrl,type) =>{
 
         {final[0]?.status === "Redo" ?
           <TouchableOpacity
-          onPress={handleScrollToTop}
+            onPress={handleScrollToTop}
             style={{ backgroundColor: "#F38216", width: "45%", borderRadius: 5, alignSelf: "center", alignItems: "center", padding: 10, margin: 50, bottom: 90 }}>
             <Text style={{ color: "white", fontSize: 18, fontWeight: "500" }}>Redo</Text>
           </TouchableOpacity> : null}
-          </ScrollView>
+      </ScrollView>
 
 
-     
+
     </SafeAreaView>
   )
 }

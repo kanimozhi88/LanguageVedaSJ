@@ -25,7 +25,6 @@ import { correctFloat } from "highcharts";
 //               details.client_secret = remoteConfig().getValue('client_secret').asString();
 //               details.username = remoteConfig().getValue('username').asString();
 //               details.password = remoteConfig().getValue('password').asString();
-//               console.log('myParam value: ', JSON.stringify(details));
 //               resolve(details);
 //             });
 //         } catch(error){

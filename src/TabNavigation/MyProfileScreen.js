@@ -11,7 +11,6 @@ const MyProfileScreen = ({ navigation }) => {
 
   const dispatch = useDispatch();
   // const ToggleSwitch = useSelector(state => state.toggleSwitch);
-  // console.log("dispatched value",toggleSwitch)
   const LastName = useSelector(state => state.LastName);
   const Email = useSelector(state => state.Email);
   const [imagePath, setImagePath] = useState('');
@@ -42,7 +41,6 @@ const MyProfileScreen = ({ navigation }) => {
   const saveToggleValueToAsyncStorage = async (isOn) => {
     try {
       await AsyncStorage.setItem('toggleSwitchValue', JSON.stringify(isOn));
-      console.log('Toggle switch value saved to AsyncStorage: ', isOn);
     } catch (error) {
       console.error('Error saving toggle switch value: ', error);
     }

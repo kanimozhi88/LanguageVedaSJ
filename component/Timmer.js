@@ -12,9 +12,7 @@ import BASE_URL from '../apiConfig';
 //     const value = startTimestamp - now;
 //     const [remainingTime, setRemainingTime] = useState(value);
 //     const [isJoinButtonEnabled, setIsJoinButtonEnabled] = useState(false);
-//     console.log("value*****",value)
 
-//    console.log("*****",remainingTime)
 //     useEffect(() => {
 //       const interval = setInterval(() => {
 //         setRemainingTime(calculateRemainingTime());
@@ -25,7 +23,6 @@ import BASE_URL from '../apiConfig';
 //         }
 //         const fifteenMinutesInSeconds = 15 * 60;
 //         setIsJoinButtonEnabled(remainingTime >= -fifteenMinutesInSeconds && remainingTime <= endTimestamp - startTimestamp);
-//         console.log("remainingtime*****",remainingTime)
 
 //     }, 1000);
   
@@ -51,7 +48,6 @@ import BASE_URL from '../apiConfig';
 //     const hours = Math.floor(remainingTime / 3600);
 //     const minutes = Math.floor((remainingTime % 3600) / 60);
 //     const seconds = remainingTime % 60;
-//     console.log(">>>>>>>>>>>>>",hours,minutes,seconds)
 //     return (
 //       <View>
 //               {renderTime}
@@ -73,7 +69,6 @@ import BASE_URL from '../apiConfig';
 
 
 const Timmer = ({ recordId }) => {
-    // console.log("passsed recotrdId", recordId);
     const [final, setFinal] = useState('');
 
     const [isButtonEnabled, setIsButtonEnabled] = useState(false);
@@ -129,7 +124,6 @@ const Timmer = ({ recordId }) => {
         if (timerResponse[0] !== '') {
             const now = Math.floor(Date.now() / 1000);
             const remaining = (timerResponse[0]?.startTimestamp - now);
-            // console.log("now startstamp", now, timerResponse[0]?.startTimestamp, remaining)
             setRefresh(true)
             // setTimeRemaining(remaining)
         }
@@ -156,7 +150,6 @@ const Timmer = ({ recordId }) => {
         if (timerResponse[0] !== '') {
             const now = Math.floor(Date.now() / 1000);
             const remaining = timerResponse[0]?.startTimestamp - now;
-            // console.log("now startstamp", now, timerResponse[0]?.startTimestamp, remaining)
             setTimeRemaining(remaining);
         }
     }

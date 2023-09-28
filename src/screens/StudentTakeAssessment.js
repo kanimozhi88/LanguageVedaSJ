@@ -9,6 +9,8 @@ import RNFetchBlob from 'rn-fetch-blob';
 import { Menu, MenuOptions, MenuOption, MenuTrigger, MenuProvider } from 'react-native-popup-menu';
 import { RadioButton } from 'react-native-paper';
 import BASE_URL from '../../apiConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 // import RNFetchBlob from 'react-native-fetch-blob';
 
@@ -35,6 +37,9 @@ const StudentTakeAssessment = ({ navigation, route }) => {
   const [submitShow,setSubmitShow] = useState(false)
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [selectedOptionState, setSelectedOptionState] = useState(null); 
+  const [submitBtn, setSubmitBtn] = useState(true);
+  const {title} = route.params;
+
 
 
 
@@ -58,6 +63,14 @@ const StudentTakeAssessment = ({ navigation, route }) => {
     StudenttakeAsessmentApi();
   }, [])
 
+  const saveSubmitBtnToAsyncStorage = async () => {
+    try {
+      await AsyncStorage.setItem('SubmitBtn', "false");
+      console.log("setetedd******************")
+    } catch (error) {
+      console.error('Error saving toggle switch value: ', error);
+    }
+  };
  
 
   const StudenttakeAsessmentApi = async () => {
@@ -114,7 +127,20 @@ const StudentTakeAssessment = ({ navigation, route }) => {
     });
     let StudentQuesAnsUpdate = await response.json()
     console.log("StudentQuesAnsUpdate ",StudentQuesAnsUpdate );
-   Alert.alert("Success");    
+  //  Alert.alert("Success");  
+ 
+  if(images?.length > 0){
+    callUploadApi();  
+
+  }else{
+    Alert.alert(
+      'Assessment Test Uploaded Successfully ',
+      'OK',
+      [{text: 'OK',onPress: () => [setSubmitBtn(false),navigation.navigate('StudentCourseAssessment',{val:"false", passedTitle:title})]}
+      ],
+      { cancelable: false }
+    );
+  }
   }
 
 
@@ -145,7 +171,7 @@ const uploadImageApi = async (fileName, base64, imageType, questId) => {
     Alert.alert(
       'Assessment Test Uploaded Successfully',
       'OK',
-      [{text: 'OK',onPress: () => {[ setImages([])]}}
+      [{text: 'OK',onPress: () => {[ setImages([]), setSubmitBtn(false),navigation.navigate('StudentCourseAssessment', {val :"false",passedTitle:title})]}}
       ],
       { cancelable: false }
     );
@@ -160,7 +186,7 @@ const callUploadApi = () => {
 }
  const onSubmitClick = (quesid) =>{
   StudentQuesAnsUpdate(quesid);
-  callUploadApi();
+  // callUploadApi();
  }
 console.log("curenntindex>>>>>>>>>",currentIndex);
 const launchGallery = () => {
@@ -364,13 +390,13 @@ const handleFileUpload = (fileName, base64, imageType, questionIndex) => {
     return (
       <View style={[styles.container,{margin:10,}]}>
         
-        <Text style={{color:"#696F79", fontSize:16,fontWeight:"600",marginTop:20,marginHorizontal:20}}>Question{currentIndex+1}/{final?.length}</Text>
-        <Text style={{color:"#696F79", fontSize:15,fontWeight:"400",marginTop:20,marginHorizontal:20}}>{questionData?.Que}</Text>
+        <Text style={{color:"#232423", fontSize:16,fontWeight:"600",marginTop:20,marginHorizontal:20}}>Question{currentIndex+1}/{final?.length}</Text>
+        <Text style={{color:"#232423", fontSize:15,fontWeight:"400",marginTop:20,marginHorizontal:20}}>{questionData?.Que}</Text>
        {(currentIndex+1) == final?.length ? setSubmitShow(true) : null}
         {/* Render options for MCQ or textarea for Essay Question */}
         {questionData?.Type === 'MCQ' ? 
           <>
-          <Text style={{ color: '#696F79', fontSize: 16, fontWeight: '600', marginTop: 20, marginHorizontal: 20 }}>Choose Answer</Text>
+          <Text style={{ color: '#232423', fontSize: 16, fontWeight: '600', marginTop: 20, marginHorizontal: 20 }}>Choose Answer</Text>
           <RadioButton.Group onValueChange={handleOptionSelect} value={selectedOptionState}>
             {Object.keys(questionData).map((key) => {
               if (key.startsWith('Option') && questionData[key]) {
@@ -378,7 +404,7 @@ const handleFileUpload = (fileName, base64, imageType, questionIndex) => {
                 return (
                   <View key={key} style={{ marginHorizontal: 15, flexDirection: 'row' }}>
                     <RadioButton value={key} />
-                    <Text style={{ alignSelf: 'center' }}>{questionData[key]}</Text>
+                    <Text style={{ alignSelf: 'center' , color:"#232423"}}>{questionData[key]}</Text>
                   </View>
                 );
               }
@@ -407,7 +433,7 @@ const handleFileUpload = (fileName, base64, imageType, questionIndex) => {
             borderWidth: 2,
           }}
         />
-          <Text style={{alignSelf:"center",marginTop:"20%"}}>Upload Your files</Text>
+          <Text style={{alignSelf:"center",marginTop:"20%",color:"#232423"}}>Upload Your files</Text>
           <TouchableOpacity
           onPress={()=> validateUpload(questionData?.QuesId)}
            style={{alignSelf:"center",marginTop:"5%",backgroundColor:"#F38216",padding:10,borderRadius:5,width:"40%"}}
@@ -552,7 +578,6 @@ console.log("uploaded>>>>>>>>>>>>>",uploadedImages)
     );
   };
 
-  console.log("current quesid::::::",final[currentIndex]?.QuesId)
 
   return (
     <SafeAreaView style={styles.container}>
@@ -574,10 +599,11 @@ console.log("uploaded>>>>>>>>>>>>>",uploadedImages)
       : null}
     
 
-        {submitShow ?
+        {submitShow  ?
           <TouchableOpacity
-          onPress={ () => onSubmitClick(final[currentIndex]?.QuesId)}
-          style={{backgroundColor:"#F38216",width:"30%",padding:10,borderRadius:5,alignSelf:"center",marginBottom:"40%"}}
+          disabled={!submitBtn}
+          onPress={ () => [onSubmitClick(final[currentIndex]?.QuesId), saveSubmitBtnToAsyncStorage()]}
+          style={{backgroundColor: !submitBtn ? "gray" :"#F38216",width:"30%",padding:10,borderRadius:5,alignSelf:"center",marginBottom:"40%"}}
           >
             <Text style={{color:"#FFFFFF",fontSize:15,fontWeight:"700",alignSelf:"center"}}>Submit</Text>
           </TouchableOpacity>

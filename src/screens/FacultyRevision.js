@@ -387,7 +387,7 @@ const FacultyRevision = ({ route, navigation }) => {
           <View style={{ width: "100%", backgroundColor: "#F5F7FB", height: 145, marginTop: 5 }}>
               <TextInput
                 placeholder='Type Message'
-                placeholderTextColor={"#C8C6C6"}
+                placeholderTextColor={"#424242"}
                 onChangeText={text => setDescription(text)}
                 value={description}
                 style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />
@@ -400,7 +400,7 @@ const FacultyRevision = ({ route, navigation }) => {
           <View style={{ width: "100%", backgroundColor: "#F5F7FB", height: 145, marginTop: 5 }}>
               <TextInput
                 placeholder='Type Message'
-                placeholderTextColor={"#C8C6C6"}
+                placeholderTextColor={"#424242"}
                 onChangeText={text => setActivity(text)}
                 value={activity}
                 style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />

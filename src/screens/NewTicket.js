@@ -97,13 +97,13 @@ const NewTicket = ({navigation}) =>{
                         borderWidth:1,
                         marginTop:20,
                         }}
-                        itemTextStyle={{color: "#C8C6C6",fontSize:14,fontWeight:"400",}}
+                        itemTextStyle={{color: "#424242",fontSize:14,fontWeight:"400",}}
                         iconStyle={{ width: 30, height:30 }}
                         data={testTypeValues}
                         labelField="Type"
                         valueField="Type"
                         placeholder={'Select Type'}
-                        placeholderStyle={{color: "#C8C6C6",fontSize:14,fontWeight:"400",marginHorizontal:50}}
+                        placeholderStyle={{color: "#424242",fontSize:14,fontWeight:"400",marginHorizontal:50}}
                         onChange={(data) => {
                             console.log("data is",data?.Type)
                             // setTestType(data)
@@ -117,7 +117,7 @@ const NewTicket = ({navigation}) =>{
         <Text style={{color:"#000000",fontSize:15,fontWeight:"400"}}>Message</Text>
         <TextInput
         placeholder='Type Message'
-        placeholderTextColor={"#C8C6C6"}
+        placeholderTextColor={"#424242"}
         onChangeText={text => setDescription(text)}
         value={description}
         style={{width:290,height:175,borderColor:"#F38216",borderWidth:1,borderRadius:5,marginTop:20,textAlign:"center",textAlignVertical:"top" }}/>

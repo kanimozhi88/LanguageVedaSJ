@@ -4,6 +4,8 @@ import { getAccessToken } from '../redux/actions';
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 import BASE_URL from '../apiConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 import {
   StyleSheet,
@@ -20,12 +22,36 @@ const FacultyAssessment = ({ batchid }) => {
   const [final, setFinal] = useState();
   const dataFetchApi = useSelector(state => state.recordId);
   const navigation = useNavigation();
+  const [publishBtnActive, setpublishBtnActive] = useState(true);
+  // const [indexValue,setIndexValue] = useState('');
 
-  console.log("batchid>>>>>>>>>>>>s", batchid);
+
+
 
   useEffect(() => {
     FacultyAssessemntApi();
+    // getPublishBtnValue();
   }, []);
+
+  useEffect(() => {
+    const loadDisabledState = async () => {
+      try {
+        const storedDisabledState = await AsyncStorage.getItem('publishBtn');
+        // const indexValue = await AsyncStorage.getItem('indexVal');
+
+        if (storedDisabledState !== null) {
+          setpublishBtnActive(JSON.parse(storedDisabledState));
+          // setIndexValue(indexValue)
+        }
+      } catch (error) {
+        console.error('Error loading disabled state:', error);
+      }
+    };
+
+    loadDisabledState();
+  }, []);
+
+
 
   const FacultyAssessemntApi = async () => {
     let data = {};
@@ -48,18 +74,18 @@ const FacultyAssessment = ({ batchid }) => {
     setFinal(FacultyAssessment);
   }
 
-    
-  const FacultyTestActive = async (testId,status) => {
-   console.log("tesid>>>>>>>>>>>>>>",testId,status)
-   const existingArray = [];
+
+  const FacultyTestActive = async (testId, status, index) => {
+    const existingArray = [];
     const testArray = {
-      testId : testId,
-      isActive : true,
-      status : status
+      testId: testId,
+      isActive: true,
+      status: "In Progress",
     }
     existingArray.push(testArray);
     let data = {};
     data.patchDataList = existingArray;
+
 
     const body = JSON.stringify(data)
     const token = await getAccessToken();
@@ -74,10 +100,22 @@ const FacultyAssessment = ({ batchid }) => {
     });
     let FacultyTestActive = await response.json()
     console.log("faculty TestActive", FacultyTestActive);
-   if(Array.isArray(FacultyTestActive)){
-    Alert.alert(" Test Assigned successfully")
-   }
+    if (Array.isArray(FacultyTestActive)) {
+      Alert.alert(" Test Assigned successfully")
+      savAssignBtnValueToAsyncStorage(index);
+    }
   }
+
+  const savAssignBtnValueToAsyncStorage = async (index) => {
+    try {
+      await AsyncStorage.setItem('publishBtn', "false");
+      // await AsyncStorage.setItem('indexVal', index);
+
+      setpublishBtnActive(false)
+    } catch (error) {
+      console.error('Error saving toggle switch value: ', error);
+    }
+  };
 
 
 
@@ -119,15 +157,15 @@ const FacultyAssessment = ({ batchid }) => {
           </View>
 
           <TouchableOpacity
-          onPress={()=> FacultyTestActive(item?.testId, item?.Status)}
-            disabled={item?.status === "In Progress" || item?.status === "Completed"}
-            style={{ backgroundColor: (item?.status === "In Progress" || item?.status === "Completed") ? "#999999" : "#F38216", width: "25%", borderRadius: 3, alignItems: "center", marginLeft: 40, marginTop: 10, margin: 10, padding: 10 }}>
+            onPress={() => FacultyTestActive(item?.testId, item?.Status)}
+            disabled={item?.testStatus === "In Progress" || item?.testStatus === "Completed"}
+            style={{ backgroundColor: (item?.status === "In Progress" || item?.status === "Completed" || item?.status == null || item?.testStatus == null) && (item?.testStatus !== "In Progress" || item?.testStatus !== "Completed") ? "#F38216" : "gray", width: "25%", borderRadius: 3, alignItems: "center", marginLeft: 40, marginTop: 10, margin: 10, padding: 10 }}>
             <Text style={{ color: "#FFFFFF", fontSize: 14, fontWeight: "600" }}>Publish</Text>
           </TouchableOpacity>
           <TouchableOpacity
-          onPress={() =>  navigation.navigate('Scrutinize',{LPExecutionId: item?.lessonPlanExId, assignmentTitle: item?.assignmentTitle,courseName : item?.courseName })}
+            onPress={() => navigation.navigate('Scrutinize', { LPExecutionId: item?.lessonPlanExId, assignmentTitle: item?.assignmentTitle, courseName: item?.courseName })}
             style={{ backgroundColor: "#F38216", width: "25%", borderRadius: 3, alignItems: "center", marginLeft: 15, marginTop: 10, margin: 10, padding: 5 }}>
-            <Text style={{ color: "#FFFFFF", fontSize: 14, fontWeight: "600",marginTop:3 }}>Scrutinize</Text>
+            <Text style={{ color: "#FFFFFF", fontSize: 14, fontWeight: "600", marginTop: 3 }}>Scrutinize</Text>
           </TouchableOpacity>
 
         </View>
@@ -140,11 +178,14 @@ const FacultyAssessment = ({ batchid }) => {
 
 
       <View style={{ height: 530 }}>
-
-        <FlatList
-          data={final?.records}
-          renderItem={renderlist}
-        />
+        {final?.records ?
+          <FlatList
+            data={final?.records}
+            renderItem={renderlist}
+          />
+          :
+          <Text style={{ color: "black", fontSize: 18, fontWeight: "700", alignSelf: "center" }}> NO Assessments Available</Text>
+        }
       </View>
 
     </SafeAreaView>

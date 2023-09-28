@@ -17,7 +17,8 @@ const StudentAssessmentSelect = ({route}) => {
         completed:1,
         submitted:1,
         InProgress:1,
-        Redo:1
+        Redo:1,
+        yetToStart:1,
     });
 
     useEffect(() => {
@@ -67,6 +68,7 @@ const StudentAssessmentSelect = ({route}) => {
     let redoCount = 0;
     let vettingInProgressCount = 0;
     let assignmentSubmittedCount = 0;
+    let yetToStartCount =0;
     {final !== '' && final.length > 0 ?
     final.forEach(record => {
       switch (record.status) {
@@ -76,11 +78,14 @@ const StudentAssessmentSelect = ({route}) => {
         case 'Redo':
           redoCount++;
           break;
-        case 'Vetting In Progress':
+        case 'In Progress':
           vettingInProgressCount++;
           break;
         case 'Assignment Submitted':
           assignmentSubmittedCount++;
+          break;
+          case 'Yet To Start':
+          yetToStartCount++;
           break;
         default:
           break;
@@ -94,12 +99,13 @@ setSeriesArr({
     submitted: assignmentSubmittedCount,
     InProgress: vettingInProgressCount,
     Redo: redoCount,
+    yetToStart: yetToStartCount,
   });
 }
 
     const widthAndHeight = 145
-    const series = [seriesArr.completed, seriesArr.submitted, seriesArr.InProgress, seriesArr.Redo]
-    const sliceColor = ['#9B88ED', '#04BFDA', '#FB67CA', '#FFA84A']
+    const series = [seriesArr.completed, seriesArr.submitted, seriesArr.InProgress, seriesArr.Redo,seriesArr.yetToStart]
+    const sliceColor = ['#9B88ED', '#04BFDA', '#FB67CA', '#FFA84A','#c1ed74']
 
     const renderItem = ({ item, index }) => {
 
@@ -130,7 +136,7 @@ setSeriesArr({
                     {item.status === "In Progress" ?
                         <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>In Progress</Text> :
                         item.status === "Yet To Start" ?
-                        <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Yet To Starts</Text> :                       
+                        <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Yet To Start</Text> :                       
                         item.status === "Completed" ?
                             <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Completed</Text> :
                             item.status === "Redo" ? <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}> Redo</Text> :
@@ -195,6 +201,15 @@ setSeriesArr({
 
                     <View style={{flexDirection:"row",marginTop:10}}>
                  <View style={{width: 13,height:13,backgroundColor:"white",borderRadius:7,alignItems:"center",justifyContent:"center",alignSelf:"center"}}>
+                 <View style={{width:9,height:9,backgroundColor:"#c1ed74",borderRadius:5,margin:2}}>
+                    </View>
+                    </View>
+                    <Text style={{fontSize:12,fontWeight:400,color:"white",alignSelf:"center",marginHorizontal:10}}>Yet To Start</Text>
+                    <Text style={{fontSize:12,fontWeight:400,color:"white",}}>({seriesArr.yetToStart})</Text>
+                    </View>
+
+                    <View style={{flexDirection:"row",marginTop:10}}>
+                 <View style={{width: 13,height:13,backgroundColor:"white",borderRadius:7,alignItems:"center",justifyContent:"center",alignSelf:"center"}}>
                  <View style={{width:9,height:9,backgroundColor:"#FFA84A",borderRadius:5,margin:2}}>
                     </View>
                     </View>
@@ -204,13 +219,13 @@ setSeriesArr({
 
                     <View style={{flexDirection:"row",marginTop:10}}>
                     <Text style={{fontSize:12,fontWeight:400,color:"white",alignSelf:"center",marginHorizontal:22}}>Total</Text>
-                    <Text style={{fontSize:12,fontWeight:400,color:"white",}}>({seriesArr.completed + seriesArr.submitted + seriesArr.InProgress + seriesArr.Redo})</Text>
+                    <Text style={{fontSize:12,fontWeight:400,color:"white",}}>({seriesArr.completed + seriesArr.submitted + seriesArr.InProgress + seriesArr.Redo + seriesArr.yetToStart})</Text>
                     </View>
 
                 </View>
                 <View>
 
-  {seriesArr.completed !== 0 || seriesArr.submitted !== 0 || seriesArr.InProgress !== 0 || seriesArr.Redo ?
+  {seriesArr.completed !== 0 || seriesArr.submitted !== 0 || seriesArr.InProgress !== 0 || seriesArr.Redo || seriesArr.yetToStart !== 0 ?
                     <PieChart
                         widthAndHeight={widthAndHeight}
                         series={series}

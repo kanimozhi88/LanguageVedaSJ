@@ -19,7 +19,6 @@ const ScheduleCalendar = ({route}) => {
   const [calendarConvertedData, setCalendarConvertedData] = useState([]);
   const recordType = useSelector(state => state.recordType);
 
-  console.log("recordType id is>>>>>>>.", recordType);
 
   const eventClicked = (event) => {
     const startTime = new Date(event.start);
@@ -97,7 +96,6 @@ const ScheduleCalendar = ({route}) => {
     const endDate = moment(endDateTest);
     const numberOfDays = endDate.diff(startDate, 'days') + 1;
     for (let i = 0; i < numberOfDays; i++) {
-      // console.log("FOR COND IS :::")
       let CourseName = item?.courseName;
       const date = moment(startDate).add(i, 'days');
       let dateObj = moment(date).format("YYYY-MM-DD")

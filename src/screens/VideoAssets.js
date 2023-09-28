@@ -48,7 +48,6 @@ const VideoAssets = ({ navigation }) => {
         let studentVedioAssets = await response.json()
         console.log(" studentVedioAssets API RES", studentVedioAssets);
         setFinal(studentVedioAssets);
-        console.log("final data is", final)
     }
 
     const facultyVideoAssets = async () => {
@@ -69,7 +68,6 @@ const VideoAssets = ({ navigation }) => {
         let facultyVedioAssets = await response.json()
         console.log("  facultyVedioAssets API RES", facultyVedioAssets);
         setFinal(facultyVedioAssets);
-        console.log("final data is", final)
     }
 
 

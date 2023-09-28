@@ -7,6 +7,7 @@ import Timmer from '../../component/Timmer';
 import { getAccessToken } from '../../redux/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BASE_URL from '../../apiConfig';
+import moment from 'moment-timezone';
 
 const MyCourses = () => {
 
@@ -17,7 +18,7 @@ const MyCourses = () => {
   const [refreshCount, setRefreshCount] = useState(0);
   const [notificationcount, setNotificationCount] = useState('');
   const [announcementCount, setAnnouncementCount] = useState('');
-  const [toggleVal, setToggleVal] = useState('');
+  const [toggleVal, setToggleVal] = useState(true);
   const [notifyClick,setNotifyClick] = useState(false);
 
 
@@ -41,7 +42,11 @@ const MyCourses = () => {
   useEffect(() => {
     const fetchToggleSwitchValue = async () => {
       const value = await getToggleSwitchValue();
-      setToggleVal(value);
+      if(value !== null){
+        setToggleVal(value);
+      }else{
+        setToggleVal(true)
+      }
     };
     const fetchNotifyClickValue = async () => {
       const value = await getNotifyClickValue();
@@ -49,8 +54,11 @@ const MyCourses = () => {
     };
 
     fetchToggleSwitchValue();
+    fetchNotifyClickValue();
     getNotifyClickValue();
   },);
+
+ 
 
   const getToggleSwitchValue = async () => {
     try {
@@ -93,12 +101,12 @@ const MyCourses = () => {
       body,
     });
     let NotificationsApi = await response.json()
-    console.log("NotificationsApi", typeof NotificationsApi);
+    console.log("NotificationsApi",  NotificationsApi);
     const currentDate = new Date().toISOString();
     let count = 0;
 
     JSON.parse(NotificationsApi).forEach(announcement => {
-      if (announcement.CreatedDate === currentDate) {
+      if (moment(announcement.CreatedDate).format('YYYY-MM-DD') === moment(currentDate).format('YYYY-MM-DD')) {
         count++;
       }
     });
@@ -123,7 +131,7 @@ const MyCourses = () => {
     let count = 0;
 
     NotificationsAnnounceApi.forEach(announcement => {
-      if (announcement.CreatedDateTime === currentDate) {
+      if (moment(announcement.CreatedDateTime).format('YYYY-MM-DD') === moment(currentDate).format('YYYY-MM-DD')) {
         count++;
       }
     });
@@ -132,11 +140,10 @@ const MyCourses = () => {
 
   const notification = notificationcount + announcementCount;
 
+
   const handleMycoursesPress = () => {
     navigation.navigate('StudentMyCourses');
   };
-
-
 
 
   return (
@@ -159,7 +166,7 @@ const MyCourses = () => {
                   style={styles.notificationImage} />
               }
 
-              {notification   && notifyClick ?
+              {notification > 0  && !notifyClick && toggleVal ?
                 <Text style={{ right: 15, bottom: 15, backgroundColor: "#e01d85", fontWeight: "500", color: "white", width: 22, height: 22, borderRadius: 12.5, alignSelf: "center", textAlign: "center" }}>{notification}</Text>
                 : null} 
             </View>

@@ -19,25 +19,11 @@ const AuthNavigation = ({isFirstLaunch}) => {
     const Status = useSelector(state => state.status);
     const statusOtp = useSelector(state => state.statusOtp);
 
-    console.log("recordId is ", recordId,Status);
     useEffect(() => {
         SplashScreen.hide();
     }, [])
 
-    // const [isFirstLaunch, setIsFirstLaunch] = useState(true);
-    // useEffect(() => {
-    //     getAppLaunchStatus();
-    // }, [])
-
-    // const getAppLaunchStatus = async () => {
-    //     const appLaunched = await AsyncStorage.getItem("isLaunched");
-    //     console.log("applunach status", appLaunched);
-    //     if (appLaunched == null) {
-    //         setIsFirstLaunch(true)
-    //         AsyncStorage.setItem("isLaunched", "true");
-
-    //     }
-    // }
+    
    
     return (
      <NavigationContainer>

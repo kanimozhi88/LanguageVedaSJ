@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import HTML from 'react-native-render-html';
 import TruncatedText from '../../component/TruncatedText';
 import BASE_URL from '../../apiConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // import RNFetchBlob from 'react-native-fetch-blob';
 
@@ -26,8 +27,23 @@ const StudentCourseAssessment = ({ navigation, route }) => {
   const [uploadApi, setUploadApi] = useState(false);
   const [showSubmit,setShowSubmit] = useState(false);
   const recordId = useSelector(state => state.recordId);
+  const [assignBtn,setAssignBtn] = useState(true);
+  const {val, passedTitle} = route.params;
+  const [refreshCount, setRefreshCount] = useState(0);
+
+  console.log("passed val:::::::",val,passedTitle)
 
   const scrollViewRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      // Increment the refreshCount to trigger a re-render
+      setRefreshCount(refreshCount + 1);
+    }, 2000); // 2000 milliseconds = 2 seconds
+
+    // Clear the timer when the component unmounts
+    return () => clearTimeout(timer);
+  }, [refreshCount]); // Re-run the effect whenever refreshCount changes
 
   const handleScrollToTop = () => {
     scrollViewRef.current.scrollTo({ y: 0, animated: true });
@@ -41,6 +57,35 @@ const StudentCourseAssessment = ({ navigation, route }) => {
   useEffect(() => {
     StudentAssessmentUpload();
   }, [])
+
+  useEffect(() => {
+    const fetchSubmitBtnhValue = async () => {
+      const value = await AsyncStorage.getItem('SubmitBtn');
+      console.log("submit VAL:::::::::::",value)
+      if(value !== null){
+        setAssignBtn(false);
+      }else{
+        setAssignBtn(true)
+      }
+    };
+    fetchSubmitBtnhValue();
+    // getSubmitBtnValue();
+  },);
+console.log("assignBtb val:::::::::::", assignBtn)
+ 
+  const getSubmitBtnValue = async () => {
+    try {
+      const value = await AsyncStorage.getItem('SubmitBtn');
+      console.log("^^^^^^^^^^",value);
+
+      if (value !== null) {
+        return JSON.parse(value);
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
+  };
 
  
 
@@ -65,7 +110,6 @@ const StudentCourseAssessment = ({ navigation, route }) => {
     setFinal(val?.TestDetails);
     
   }
-  console.log("finaldara>>>>>>>>>>>",final);
 
 
   return (
@@ -129,12 +173,13 @@ const StudentCourseAssessment = ({ navigation, route }) => {
           </View>
         </View> : null}
 
-        {final !== '' && final?.Status !== "Completed" ?
+        {final !== ''  ?
           <TouchableOpacity
+          disabled={final?.Status !== "Yet To Start"}
             onPress={() => 
-              navigation.navigate('StudentTakeAssessment', {testId: testId})
+              navigation.navigate('StudentTakeAssessment', {testId: testId , title: final?.AssignmentTitle})
             }
-            style={{ backgroundColor: "#F38216", width: "60%", alignSelf: "center", alignItems: "center", borderRadius: 5, padding: 10, marginTop: 25 }}>
+            style={{ backgroundColor: (passedTitle === final?.AssignmentTitle)|| final?.Status !== "Yet To Start"  ?  "gray" : "#F38216", width: "60%", alignSelf: "center", alignItems: "center", borderRadius: 5, padding: 10, marginTop: 25 }}>
             <Text style={{ color: "white", fontSize: 18, fontWeight: "500" }}>Take Assessment</Text>
           </TouchableOpacity> : <></>}
 
