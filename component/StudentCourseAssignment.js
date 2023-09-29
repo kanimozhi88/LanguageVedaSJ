@@ -196,14 +196,14 @@ const StudentCourseAssignment = ({ batchId, courseName }) => {
                     <Text style={{fontSize:12,fontWeight:400,color:"white",alignSelf:"center",marginHorizontal:10}}>Redo</Text>
                     <Text style={{fontSize:12,fontWeight:400,color:"white",}}>({seriesArr.Redo})</Text>
                     </View>
-                    <View style={{flexDirection:"row",marginTop:10}}>
+                    {/* <View style={{flexDirection:"row",marginTop:10}}>
                  <View style={{width: 13,height:13,backgroundColor:"white",borderRadius:7,alignItems:"center",justifyContent:"center",alignSelf:"center"}}>
                  <View style={{width:9,height:9,backgroundColor:"#FFA84A",borderRadius:5,margin:2}}>
                     </View>
                     </View>
                     <Text style={{fontSize:12,fontWeight:400,color:"white",alignSelf:"center",marginHorizontal:10}}>Yet To Start</Text>
                     <Text style={{fontSize:12,fontWeight:400,color:"white",}}>({seriesArr.YetToStart})</Text>
-                    </View>
+                    </View> */}
 
                     <View style={{flexDirection:"row",marginTop:10}}>
                  <View style={{width: 13,height:13,backgroundColor:"white",borderRadius:7,alignItems:"center",justifyContent:"center",alignSelf:"center"}}>

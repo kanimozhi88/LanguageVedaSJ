@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useRef } from 'react';
 import { View, TextInput, StyleSheet, Text, TouchableOpacity, Image, KeyboardAvoidingView, Dimensions, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getAccessToken, getLoginOtpStatus, getLoginStatus, getProfilePhotoMethod } from '../../redux/actions';
@@ -10,6 +10,8 @@ import BASE_URL from '../../apiConfig';
 import { Appearance, useColorScheme } from 'react-native';
 
 const LoginScreen = ({ route }) => {
+  const otpInputRef = useRef(null);
+
   const colorScheme = useColorScheme();
   const inputTextColor = colorScheme === 'dark' ? 'white' : 'black';
   const inputBackgroundColor = colorScheme === 'dark' ? 'black' : 'white';
@@ -119,11 +121,15 @@ const LoginScreen = ({ route }) => {
         [
           {
             text: 'OK',
-            // onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
-            onPress: () => [setShowOtp(true), setOtpTextShow(false)]
-
+            onPress: () => {
+              setShowOtp(true);
+              setOtpTextShow(false);
+              // Use the ref to focus on the OTP input field
+              otpInputRef.current.focus();
+            },
           },
         ]
+        
       );
     }
     else {
@@ -180,7 +186,12 @@ const LoginScreen = ({ route }) => {
           {
             text: 'OK',
             // onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
-            onPress: () => setShowResend(true)
+            onPress: () => {
+              setShowOtp(true);
+              setOtpTextShow(false);
+              // Use the ref to focus on the OTP input field
+              otpInputRef.current.focus();
+            }
           },
         ]
       );
@@ -228,14 +239,15 @@ const LoginScreen = ({ route }) => {
 
             {/* <Text style={styles.passwordTxt}>Enter OTP</Text> */}
             {showOtp ?
-              <TextInput
-              placeholderTextColor={"#424242"}
-                style={styles.input}
-                placeholder="Enter OTP"
-                secureTextEntry
-                onChangeText={text => handlePasswordChange(text)}
-                value={Password}
-              />
+           <TextInput
+           ref={otpInputRef}
+           placeholderTextColor={"#424242"}
+           style={styles.input}
+           placeholder="Enter OTP"
+           onChangeText={text => handlePasswordChange(text)}
+           value={Password}
+         />
+         
               : null}
 
             {showResend ?
