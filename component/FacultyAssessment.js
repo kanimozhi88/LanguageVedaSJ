@@ -2,7 +2,7 @@ import React, { useEffect, useState, } from 'react';
 import { useSelector } from 'react-redux';
 import { getAccessToken } from '../redux/actions';
 import { useNavigation } from '@react-navigation/native';
-import { Alert } from 'react-native';
+import { ActivityIndicator, Alert } from 'react-native';
 import BASE_URL from '../apiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -100,10 +100,17 @@ const FacultyAssessment = ({ batchid }) => {
     });
     let FacultyTestActive = await response.json()
     console.log("faculty TestActive", FacultyTestActive);
-    if (Array.isArray(FacultyTestActive)) {
+    if(FacultyTestActive.length > 0){
       Alert.alert(" Test Assigned successfully")
-      savAssignBtnValueToAsyncStorage(index);
-    }
+        savAssignBtnValueToAsyncStorage(index);
+      }else{
+        Alert.alert("Test Asssigned Already ")
+      }
+    
+    // if (Array.isArray(FacultyTestActive)) {
+    //   Alert.alert(" Test Assigned successfully")
+    //   savAssignBtnValueToAsyncStorage(index);
+    // }
   }
 
   const savAssignBtnValueToAsyncStorage = async (index) => {
@@ -158,8 +165,8 @@ const FacultyAssessment = ({ batchid }) => {
 
           <TouchableOpacity
             onPress={() => FacultyTestActive(item?.testId, item?.Status)}
-            disabled={item?.testStatus === "In Progress" || item?.testStatus === "Completed"}
-            style={{ backgroundColor: (item?.status === "In Progress" || item?.status === "Completed" || item?.status == null || item?.testStatus == null) && (item?.testStatus !== "In Progress" || item?.testStatus !== "Completed") ? "#F38216" : "gray", width: "25%", borderRadius: 3, alignItems: "center", marginLeft: 40, marginTop: 10, margin: 10, padding: 10 }}>
+            disabled={(item?.status === "Yet To Start") }
+            style={{ backgroundColor: (item?.status === "Yet To Start") ? "gray"  : "#F38216", width: "25%", borderRadius: 3, alignItems: "center", marginLeft: 40, marginTop: 10, margin: 10, padding: 10 }}>
             <Text style={{ color: "#FFFFFF", fontSize: 14, fontWeight: "600" }}>Publish</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -178,14 +185,15 @@ const FacultyAssessment = ({ batchid }) => {
 
 
       <View style={{ height: 530 }}>
-        {final?.records ?
+        {final?.records.length > 0 ?
           <FlatList
             data={final?.records}
             renderItem={renderlist}
           />
           :
-          <Text style={{ color: "black", fontSize: 18, fontWeight: "700", alignSelf: "center" }}> NO Assessments Available</Text>
-        }
+          // <Text style={{ color: "black", fontSize: 18, fontWeight: "700", alignSelf: "center" }}> NO Assessments Available</Text>
+       <ActivityIndicator  style={{alignSelf:"center"}} size={'large'} color={'Orange'}/>
+       }
       </View>
 
     </SafeAreaView>

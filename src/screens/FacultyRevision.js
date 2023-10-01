@@ -136,6 +136,13 @@ const FacultyRevision = ({ route, navigation }) => {
         // console.log("final data is", final)
       }
 
+      const CallSubmit =()=>{
+        if(final?.revisionStatus === "Completed"){
+          Alert.alert("You already completed the Revision");
+        }else{
+          FacultyRevisionUpdate();
+        }
+      }
       const FacultyRevisionUpdate = async () => {
         let data = {};
         const requestList = [{ lessonPlanId: lessonPlanId, Name : topic ,revisionDate :formatDate(date), revisionReason : selectedRevisionReason, revisionStatus: selectedRevisionRemarks, feedBack: description , Activity: activity}]

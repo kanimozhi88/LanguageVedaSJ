@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { getAccessToken } from '../redux/actions';
 import { useNavigation } from '@react-navigation/native';
 import BASE_URL from '../apiConfig';
+import { ActivityIndicator } from 'react-native';
 
 import {
   StyleSheet,
@@ -95,7 +96,9 @@ const FacultyAssignment = ({ batchid }) => {
           renderItem={renderlist}
         />
         :
-        <Text style={{color:"Black", fontSize:18, fontWeight:"800", alignSelf:"center"}}> No Assignments Available</Text>
+        // <Text style={{color:"Black", fontSize:18, fontWeight:"800", alignSelf:"center"}}> No Assignments Available</Text>
+        <ActivityIndicator  style={{alignSelf:"center"}} size={'large'} color={'Orange'}/>
+
     }
       </View>
 

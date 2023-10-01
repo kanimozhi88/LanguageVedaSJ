@@ -42,16 +42,16 @@ const RevisionCourseSelection = ({ navigation, route }) => {
   const [formatedExeDate, setFormatedExeDate] = useState();
   const [formatedRevisionDate, setFormatedRevisionDate] = useState();
   const [touchableEnable, setTouchableEnable] = useState(false);
-  const [testArray,setTestArray] = useState('');
-  const [assignEnable,setAssignEnable] = useState(true);
-  const [status,setStatus] = useState('');
+  const [testArray, setTestArray] = useState('');
+  const [assignEnable, setAssignEnable] = useState(true);
+  const [status, setStatus] = useState('');
   const [reopenStatus, setReopenStatus] = useState(false);
   const [reopenRes, setReopenRes] = useState('');
-  const testTypeValues = [{Type:"In Progress"},{Type:"Yet To Start"},{Type:"Redo"}]
+  const testTypeValues = [{ Type: "In Progress" }, { Type: "Yet To Start" }, { Type: "Completed" }]
 
 
-  const { LPExecutionId, Status, revisionId }= route.params;
-  console.log("paasedparamsrevision", LPExecutionId,Status, revisionId)
+  const { LPExecutionId, Status, revisionId } = route.params;
+  console.log("paasedparamsrevision", LPExecutionId, Status, revisionId)
   useEffect(() => {
     RevisionCourseSelection();
     revisioncontentRetrieval();
@@ -95,10 +95,18 @@ const RevisionCourseSelection = ({ navigation, route }) => {
       setTouchableEnable(isTouchable);
 
     }
-  
+
   }
 
-  console.log("testarray is>>>>>>>>>",testArray);
+  console.log("testarray is>>>>>>>>>", testArray);
+
+  const CallSubmit = () => {
+    if (Status === "Completed") {
+      Alert.alert("You already completed the Revision");
+    } else {
+      validateInput();
+    }
+  }
 
   const [data, setData] = useState(final?.testResponses);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -119,7 +127,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
 
   const FacultyTestActive = async () => {
 
-    console.log("testArray>>>>>>>>>>>>",testArray);
+    console.log("testArray>>>>>>>>>>>>", testArray);
     let data = {};
     data.patchDataList = testArray;
 
@@ -136,10 +144,10 @@ const RevisionCourseSelection = ({ navigation, route }) => {
     });
     let FacultyTestActive = await response.json()
     console.log("faculty TestActive", FacultyTestActive);
-   if(Array.isArray(FacultyTestActive)){
-    Alert.alert("Test Assigned To Student successfully")
-   }
-   setAssignEnable(false)
+    if (Array.isArray(FacultyTestActive)) {
+      Alert.alert("Test Assigned To Student successfully")
+    }
+    setAssignEnable(false)
   }
 
   const revisioncontentRetrieval = async () => {
@@ -164,7 +172,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
     console.log("retriveddata ", retrievedData);
   }
 
-  
+
 
   const rendertestLessons = ({ item }) => {
     return (
@@ -295,18 +303,18 @@ const RevisionCourseSelection = ({ navigation, route }) => {
     });
     let ExeDateUpdate = await response.json()
     console.log("ExeDateUpdate", ExeDateUpdate);
- Alert.alert(
-          "Successful",
+    Alert.alert(
+      "Successful",
       "Data Updated Successfully",
-       [{text: 'OK', onPress: () => setDescription('')}]
-       )
+      [{ text: 'OK', onPress: () => setDescription('') }]
+    )
 
   }
 
 
 
   const validateTest = () => {
-    if(testArray){
+    if (testArray) {
       FacultyTestActive()
     }
   }
@@ -347,43 +355,43 @@ const RevisionCourseSelection = ({ navigation, route }) => {
 
         <View style={{ marginTop: 20, marginHorizontal: 25 }}>
           <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Activity</Text>
-          <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10 ,height:"30%"}}>
+          <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10, height: "30%" }}>
             {final !== '' ?
               <Text style={{ color: "#B2B2B2", fontSize: 16, fontWeight: "400", marginHorizontal: 40 }}>{final?.revisions[0]?.Activity}</Text>
               : null}
           </View>
         </View>
 
-        <View style={{ marginTop: 20, marginHorizontal: 25,bottom:"20%" }}>
-          {  final?.testResponses?.length  > 0 ? 
-          <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500",marginBottom:10 }}>Assignment</Text>
-          : null}
+        <View style={{ marginTop: 20, marginHorizontal: 25, bottom: "20%" }}>
+          {final?.testResponses?.length > 0 ?
+            <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500", marginBottom: 10 }}>Assignment</Text>
+            : null}
           {final !== '' ?
             final?.testResponses.map((item) =>
-            <View>
-            <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 5, flexDirection: "row" }}>
-    
-              <View style={{ width: "80%", flexDirection: "row" }}>
-                <Text style={{ color: "#242634", fontSize: 14, fontWeight: "500", margin: 5 }}>{item?.LessonPlan} - </Text>
-                <Text style={{ color: "#242634", fontSize: 14, fontWeight: "500", margin: 5 }}>{item?.assignmentTitle}</Text>
-              </View>
-              <MenuProvider>
-                <View style={{ height: 50, top: 5, }}>
-                  <PopupMenuExample PublicDownloadUrl={item?.PublicDownloadUrl} />
+              <View>
+                <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 5, flexDirection: "row" }}>
+
+                  <View style={{ width: "80%", flexDirection: "row" }}>
+                    <Text style={{ color: "#242634", fontSize: 14, fontWeight: "500", margin: 5 }}>{item?.LessonPlan} - </Text>
+                    <Text style={{ color: "#242634", fontSize: 14, fontWeight: "500", margin: 5 }}>{item?.assignmentTitle}</Text>
+                  </View>
+                  <MenuProvider>
+                    <View style={{ height: 50, top: 5, }}>
+                      <PopupMenuExample PublicDownloadUrl={item?.PublicDownloadUrl} />
+                    </View>
+                  </MenuProvider>
                 </View>
-              </MenuProvider>
-            </View>
-            <View style={{ height: 1, width: "100%", backgroundColor: "#EBEFF2" }} />
-    
-          </View>
+                <View style={{ height: 1, width: "100%", backgroundColor: "#EBEFF2" }} />
+
+              </View>
             )
             : null}
-{/* Assign button rendering on Status */}
-          {(Status === "Completed" || Status === "In Progress" ) && final?.testResponses?.length > 0 ?
+          {/* Assign button rendering on Status */}
+          {(Status === "Completed" || Status === "In Progress") && final?.testResponses?.length > 0 ?
             <View style={{ width: "100%", backgroundColor: "#F5F7FB", }}>
 
               <TouchableOpacity
-               disabled={!assignEnable}
+                disabled={!assignEnable}
                 onPress={() => validateTest()}
                 style={{ backgroundColor: assignEnable ? "#F38216" : "#999999", width: "40%", padding: 10, alignSelf: "center", alignItems: "center", borderRadius: 5, marginTop: 20, margin: 10 }}>
                 <Text style={{ color: "#FFFFFF", fontSize: 18, fontWeight: "600" }}>Assign</Text>
@@ -392,67 +400,67 @@ const RevisionCourseSelection = ({ navigation, route }) => {
             </View>
             : null}
         </View>
+        {retrievedData.length > 0 ?
+          <View style={{ marginTop: "10%", marginHorizontal: 25, bottom: "20%" }}>
+            <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500", marginBottom: 10 }}>Content</Text>
+            {Array.isArray(retrievedData) && retrievedData.length > 0 ? (
+              retrievedData.map((item, index) => (
+                <View key={index} style={{ backgroundColor: "#F5F7FB", width: "100%", flexDirection: "row", paddingBottom: 5, justifyContent: "space-evenly", alignItems: "center", alignSelf: "center" }}>
 
-        <View style={{  marginTop: "10%", marginHorizontal: 25,bottom:"20%" }}>
-          <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500",marginBottom:10 }}>Content</Text>
-          {Array.isArray(retrievedData) && retrievedData.length > 0 ? (
-            retrievedData.map((item, index) => (
-              <View key={index} style={{ backgroundColor: "#F5F7FB", width: "100%", flexDirection: "row", paddingBottom: 5, justifyContent: "space-evenly", alignItems: "center", alignSelf: "center" }}>
-
-                <Text style={{ margin: 5, width: "75%", color: "#242634", fontSize: 14, fontWeight: "500" }}>{item?.filename.length > 25 ? item?.filename.substring(0, 25) + "..." : item.filename}</Text>
-                <MenuProvider>
-                  <View style={{ height: 35, top: 15 }}>
-                    <PopupMenuSecond PublicDownloadUrl={item?.PublicDownloadUrl} base64={item?.content} type={item?.Type} index={-1} />
-                  </View>
-                </MenuProvider>
-              </View>
-            ))
-          ) : null}
-        </View>
-
-       { final !== '' && final?.revisions[0]?.Status === "Completed" ? 
-          <View style={{ marginTop: 20, marginHorizontal: 25,bottom:"20%" }}>
-          <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Status</Text>
-          <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10 }}>
-            {final !== '' ?
-              <Text style={{ color: "#B2B2B2", fontSize: 16, fontWeight: "400", marginHorizontal: 40 }}>{final?.revisions[0]?.Status}</Text>
-              : null}
+                  <Text style={{ margin: 5, width: "75%", color: "#242634", fontSize: 14, fontWeight: "500" }}>{item?.filename.length > 25 ? item?.filename.substring(0, 25) + "..." : item.filename}</Text>
+                  <MenuProvider>
+                    <View style={{ height: 35, top: 15 }}>
+                      <PopupMenuSecond PublicDownloadUrl={item?.PublicDownloadUrl} base64={item?.content} type={item?.Type} index={-1} />
+                    </View>
+                  </MenuProvider>
+                </View>
+              ))
+            ) : null}
           </View>
+          : null}
+        {final !== '' && final?.revisions[0]?.Status === "Completed" ?
+          <View style={{ marginTop: 20, marginHorizontal: 25, bottom: "20%" }}>
+            <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Status</Text>
+            <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10 }}>
+              {final !== '' ?
+                <Text style={{ color: "#B2B2B2", fontSize: 16, fontWeight: "400", marginHorizontal: 40 }}>{final?.revisions[0]?.Status}</Text>
+                : null}
+            </View>
 
-        </View>: 
+          </View> :
 
-        <View style={{ marginTop: 20, marginHorizontal: 25 ,bottom:"20%"}}>
-        <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Status</Text>
+          <View style={{ marginTop: 20, marginHorizontal: 25, bottom: "20%" }}>
+            <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Status</Text>
             {/* {final !== '' && final?.lessonPlanExecutions[0]?.Status !== "Completed" ? */}
-             <Dropdown
-             style={{
-               width: 248,
-               height:40,
-               borderRadius: 3,
-             borderColor:"#F5F7FB",
-             backgroundColor:"#F5F7FB",
-             borderWidth:1,
-             marginTop:5,
-             }}
-             itemTextStyle={{color: "black",fontSize:14,fontWeight:"400",}}
-             iconStyle={{ width: 30, height:30 }}
-             data={testTypeValues}
-             labelField="Type"
-             valueField="Type"
-             placeholder={'Select Type'}
-             placeholderStyle={{color: "black",fontSize:14,fontWeight:"400",marginHorizontal:50}}
-             onChange={(data) => {
-                 console.log("data is>>>>>>>>>",data?.Course_Offering_Id)
-                 // setTestType(data)
-              setStatus(data.Type)
-             }}
-             value={status} // Set the value prop correctly
-             selectedStyle={{color:"black"}}
-           />                  
-             {/* : null} */}
-     
-    </View> 
-       }
+            <Dropdown
+              style={{
+                width: 248,
+                height: 40,
+                borderRadius: 3,
+                borderColor: "#F5F7FB",
+                backgroundColor: "#F5F7FB",
+                borderWidth: 1,
+                marginTop: 5,
+              }}
+              itemTextStyle={{ color: "black", fontSize: 14, fontWeight: "400", }}
+              iconStyle={{ width: 30, height: 30 }}
+              data={testTypeValues}
+              labelField="Type"
+              valueField="Type"
+              placeholder={'Select Type'}
+              placeholderStyle={{ color: "black", fontSize: 14, fontWeight: "400", marginHorizontal: 50 }}
+              onChange={(data) => {
+                console.log("data is>>>>>>>>>", data?.Course_Offering_Id)
+                // setTestType(data)
+                setStatus(data.Type)
+              }}
+              value={status} // Set the value prop correctly
+              selectedStyle={{ color: "black" }}
+            />
+            {/* : null} */}
+
+          </View>
+        }
 
         {/* <TouchableOpacity
           onPress={touchableEnable ? handleTouchableOpacity : null}
@@ -462,7 +470,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
           <Text style={{ color: "#FFFFFF", fontSize: 18, fontWeight: "600" }}>Join Now</Text>
         </TouchableOpacity> */}
 
-        <View style={{  bottom: "18%",marginHorizontal:25 }}>
+        <View style={{ bottom: "18%", marginHorizontal: 25 }}>
           <View>
             <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500", }}>Execution</Text>
             <View style={{ width: "100%", flexDirection: "row", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10, borderRadius: 5 }}>
@@ -518,7 +526,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
         </View>
 
 
-        <View style={{ marginHorizontal: 25, bottom: "15%",marginBottom:"60%"}}>
+        <View style={{ marginHorizontal: 25, bottom: "15%", marginBottom: "60%" }}>
           <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Feedback</Text>
           <View style={{ width: "100%", backgroundColor: "#F5F7FB", height: 145, marginTop: 10 }}>
             {final !== '' && Status === "Completed" ?
@@ -538,8 +546,8 @@ const RevisionCourseSelection = ({ navigation, route }) => {
 
         <TouchableOpacity
           disabled={!date || revisionDate === null || description === '' || status === null}
-          onPress={() => validateInput()}
-          style={[styles.saveButton, !date || revisionDate === null || description === '' && styles.disabledButton,{bottom:"30%"}]}
+          onPress={() => CallSubmit()}
+          style={[styles.saveButton, !date || revisionDate === null || description === '' && styles.disabledButton, { bottom: "30%" }]}
 
         // style={{ backgroundColor: "#F38216", width: "35%", alignSelf: "center", alignItems: "center", marginBottom: "20%", padding: 10, borderRadius: 5 }}
         >

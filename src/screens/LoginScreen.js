@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, TextInput, StyleSheet, Text, TouchableOpacity, Image, KeyboardAvoidingView, Dimensions, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getAccessToken, getLoginOtpStatus, getLoginStatus, getProfilePhotoMethod } from '../../redux/actions';
@@ -16,6 +16,8 @@ const LoginScreen = ({ route }) => {
 
   const dispatch = useDispatch();
   const recordType = useSelector(state => state.recordType);
+  const otpInputRef = useRef(null);
+
 
   console.log("RecordType is::::", recordType);
   const [Phone, setMobileNumber] = useState('');
@@ -120,7 +122,7 @@ const LoginScreen = ({ route }) => {
           {
             text: 'OK',
             // onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
-            onPress: () => [setShowOtp(true), setOtpTextShow(false)]
+            onPress: () => [setShowOtp(true), setOtpTextShow(false), otpInputRef.current.focus()]
 
           },
         ]
@@ -235,6 +237,7 @@ const LoginScreen = ({ route }) => {
                 secureTextEntry
                 onChangeText={text => handlePasswordChange(text)}
                 value={Password}
+                ref={otpInputRef}
               />
               : null}
 
