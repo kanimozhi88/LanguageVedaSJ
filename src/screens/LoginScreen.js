@@ -10,7 +10,6 @@ import BASE_URL from '../../apiConfig';
 import { Appearance, useColorScheme } from 'react-native';
 
 const LoginScreen = ({ route }) => {
-  const otpInputRef = useRef(null);
 
   const colorScheme = useColorScheme();
   const inputTextColor = colorScheme === 'dark' ? 'white' : 'black';
