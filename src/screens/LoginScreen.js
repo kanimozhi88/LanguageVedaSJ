@@ -10,6 +10,8 @@ import BASE_URL from '../../apiConfig';
 import { Appearance, useColorScheme } from 'react-native';
 
 const LoginScreen = ({ route }) => {
+  const otpInputRef = useRef(null);
+
   const colorScheme = useColorScheme();
   const inputTextColor = colorScheme === 'dark' ? 'white' : 'black';
   const inputBackgroundColor = colorScheme === 'dark' ? 'black' : 'white';
@@ -126,6 +128,7 @@ const LoginScreen = ({ route }) => {
 
           },
         ]
+        
       );
     }
     else {
@@ -182,7 +185,12 @@ const LoginScreen = ({ route }) => {
           {
             text: 'OK',
             // onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
-            onPress: () => setShowResend(true)
+            onPress: () => {
+              setShowOtp(true);
+              setOtpTextShow(false);
+              // Use the ref to focus on the OTP input field
+              otpInputRef.current.focus();
+            }
           },
         ]
       );

@@ -129,7 +129,7 @@ console.log("assignBtb val:::::::::::", assignBtn)
       <ScrollView ref={scrollViewRef}>
         {final !== '' ?
           <View>
-            <Text style={{ fontSize: 16, fontWeight: "600", color: "#1B2236", marginHorizontal: 20, marginTop: 30 }}>Instruction To Follow</Text>
+            <Text style={{ fontSize: 16, fontWeight: "600", color: "#1B2236", marginHorizontal: 20, marginTop: 30 }}>Instructions To Follow</Text>
             <HTML source={{ html: final?.Instructions }} />
           </View> : <></>}
 
