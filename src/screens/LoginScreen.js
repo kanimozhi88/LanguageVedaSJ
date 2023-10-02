@@ -187,6 +187,7 @@ const LoginScreen = ({ route }) => {
             onPress: () => {
               setShowOtp(true);
               setOtpTextShow(false);
+              setShowResend(true)
               // Use the ref to focus on the OTP input field
               otpInputRef.current.focus();
             }
