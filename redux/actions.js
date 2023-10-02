@@ -101,8 +101,8 @@ export async function getAccessToken() {
             'grant_type': 'password',
             'client_id': '3MVG9ZUGg10Hh224dLrl9wXsHAMsIEMCA2YdbSy4TTWzag18glt0P9h3gNxmBvrXfnFE4LPkJ6I.Z8KjVEafI',
             'client_secret': '1F72B06A4D12E374B8B4857F60BC02BB2C9536E9CB6BD210C2C72AE2405E6066',
-            'username': 'santhosh-d1y1@force.com.developer',
-            'password': 'Lv@12345'
+            'username': 'santhosh-d1y1@force.com.uat',
+            'password': 'Pass4LV#2108'
         };
         const calloutURL = "https://test.salesforce.com/services/oauth2/token";
         //const calloutURL="https://https://languageveda--uat\.sandbox\.my\.salesforce\.com/services/oauth2/token";
