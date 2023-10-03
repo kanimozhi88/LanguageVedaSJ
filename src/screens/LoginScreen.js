@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, TextInput, StyleSheet, Text, TouchableOpacity, Image, KeyboardAvoidingView, Dimensions, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getAccessToken, getLoginOtpStatus, getLoginStatus, getProfilePhotoMethod } from '../../redux/actions';
@@ -10,12 +10,15 @@ import BASE_URL from '../../apiConfig';
 import { Appearance, useColorScheme } from 'react-native';
 
 const LoginScreen = ({ route }) => {
+
   const colorScheme = useColorScheme();
   const inputTextColor = colorScheme === 'dark' ? 'white' : 'black';
   const inputBackgroundColor = colorScheme === 'dark' ? 'black' : 'white';
 
   const dispatch = useDispatch();
   const recordType = useSelector(state => state.recordType);
+  const otpInputRef = useRef(null);
+
 
   console.log("RecordType is::::", recordType);
   const [Phone, setMobileNumber] = useState('');
@@ -26,7 +29,8 @@ const LoginScreen = ({ route }) => {
   const [errors, setErrors] = useState('');
   const [inputOtp, setInputOtp] = useState('');
   const [showOtp, setShowOtp] = useState(false);
-  const [showResend,setShowResend] = useState(false);
+  const [showResend, setShowResend] = useState(false);
+  const [otpTextShow, setOtpTextShow] = useState(true);
 
   const restrictedPattern = /^[a-zA-Z0-9]*$/;
 
@@ -87,7 +91,7 @@ const LoginScreen = ({ route }) => {
   }
 
 
- 
+
 
   const handleSubmitForOtp = async () => {
     let data = {};
@@ -119,9 +123,11 @@ const LoginScreen = ({ route }) => {
           {
             text: 'OK',
             // onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
-            onPress: () => setShowOtp(true)
+            onPress: () => [setShowOtp(true), setOtpTextShow(false), otpInputRef.current.focus()]
+
           },
         ]
+        
       );
     }
     else {
@@ -138,7 +144,7 @@ const LoginScreen = ({ route }) => {
     dispatch(getProfilePhotoMethod(result?.Result?.profilePhoto));
 
     console.log(JSON.stringify(result));
-    
+
 
 
   }
@@ -178,7 +184,13 @@ const LoginScreen = ({ route }) => {
           {
             text: 'OK',
             // onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
-            onPress: () => setShowResend(true)
+            onPress: () => {
+              setShowOtp(true);
+              setOtpTextShow(false);
+              setShowResend(true)
+              // Use the ref to focus on the OTP input field
+              otpInputRef.current.focus();
+            }
           },
         ]
       );
@@ -206,38 +218,44 @@ const LoginScreen = ({ route }) => {
           <Text style={styles.welcomeTxt}>Welcome!</Text>
           <Text style={styles.continueTxt}>Log In To Continue</Text>
           <View style={{ marginTop: 20 }}>
-          <Text style={styles.userIdTxt}>User Id</Text>
-        <TextInput
-          style={[styles.input, { color: inputTextColor, backgroundColor: inputBackgroundColor }]}
-          placeholder="Enter User name"
-          onChangeText={text => handleMobileNumberChange(text)}
-          value={Phone}
-        />
+            <Text style={styles.userIdTxt}>User Id</Text>
+            <TextInput
+            placeholderTextColor={"#424242"}
+              style={[styles.input, { color: inputTextColor, backgroundColor: inputBackgroundColor }]}
+              placeholder="Enter User name"
+              onChangeText={text => handleMobileNumberChange(text)}
+              value={Phone}
+            />
 
             {error !== '' && <Text>{error}</Text>}
-            <TouchableOpacity
-              style={{ alignSelf: "center", borderBottomColor: "#F38216", borderBottomWidth: 1 }}
-              onPress={() => handleSubmitForOtp()}>
-              <Text  style={{color:"#F38216",fontSize:12}}>Send OTP</Text>
-            </TouchableOpacity>
+            {otpTextShow ?
+              <TouchableOpacity
+                style={{ alignSelf: "center", borderBottomColor: "#F38216", borderBottomWidth: 1 }}
+                onPress={() => handleSubmitForOtp()}>
+                <Text style={{ color: "#F38216", fontSize: 12 }}>Send OTP</Text>
+              </TouchableOpacity>
+              : null}
+
             {/* <Text style={styles.passwordTxt}>Enter OTP</Text> */}
             {showOtp ?
               <TextInput
+              placeholderTextColor={"#424242"}
                 style={styles.input}
                 placeholder="Enter OTP"
                 secureTextEntry
                 onChangeText={text => handlePasswordChange(text)}
                 value={Password}
+                ref={otpInputRef}
               />
               : null}
 
-              {showResend ?
-               <TouchableOpacity
-               style={{ alignSelf: "center", borderBottomColor: "#F38216", borderBottomWidth: 1 }}
-               onPress={() => handleSubmitForOtp()}>
-               <Text  style={{color:"#F38216",fontSize:12}}>Resend OTP</Text>
-             </TouchableOpacity>
-             : null}
+            {showResend ?
+              <TouchableOpacity
+                style={{ alignSelf: "center", borderBottomColor: "#F38216", borderBottomWidth: 1 }}
+                onPress={() => handleSubmitForOtp()}>
+                <Text style={{ color: "#F38216", fontSize: 12 }}>Resend OTP</Text>
+              </TouchableOpacity>
+              : null}
 
             {/* <Text style={{ marginTop: 15, fontSize: 12, marginHorizontal:5}}>Enter Your 4 Digit Number That send to +91******</Text>
             <OTPTextView
@@ -269,7 +287,7 @@ const LoginScreen = ({ route }) => {
 
         <TouchableOpacity
           disabled={Password ? false : true}
-          style={[styles.logInView, {backgroundColor: Password ? "orange" : "gray"}]}
+          style={[styles.logInView, { backgroundColor: Password ? "orange" : "gray" }]}
           onPress={() => handleOTP()}
         >
           <Text style={styles.logInTxt}>Log In</Text>

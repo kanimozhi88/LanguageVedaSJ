@@ -47,7 +47,6 @@ const HelpCenterScreen = ({ navigation }) => {
             body,
         });
         let RaiseTicketRes = await response.json()
-        console.log("raise ticket res", RaiseTicketRes);
         setFinal(RaiseTicketRes);
         const counts = {
             Reopen: 0,

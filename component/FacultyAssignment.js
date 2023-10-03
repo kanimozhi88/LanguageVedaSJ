@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { getAccessToken } from '../redux/actions';
 import { useNavigation } from '@react-navigation/native';
 import BASE_URL from '../apiConfig';
+import { ActivityIndicator } from 'react-native';
 
 import {
   StyleSheet,
@@ -20,7 +21,6 @@ const FacultyAssignment = ({ batchid }) => {
   const dataFetchApi = useSelector(state => state.recordId);
   const navigation = useNavigation();
 
-  console.log("DATAFETCH", dataFetchApi);
 
   useEffect(() => {
     FacultyAssignmentApi();
@@ -90,11 +90,16 @@ const FacultyAssignment = ({ batchid }) => {
 
 
       <View style={{ height: 530 }}>
-
+    {final?.tests ?
         <FlatList
           data={final?.tests}
           renderItem={renderlist}
         />
+        :
+        // <Text style={{color:"Black", fontSize:18, fontWeight:"800", alignSelf:"center"}}> No Assignments Available</Text>
+        <ActivityIndicator  style={{alignSelf:"center"}} size={'large'} color={'Orange'}/>
+
+    }
       </View>
 
     </SafeAreaView>

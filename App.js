@@ -17,7 +17,6 @@ const App = () => {
   useEffect(()=>{
     getAppLaunchStatus();
   },[])
-  // console.log("isfirstlaucn at app.js", isFirstLaunch);
 
   const getAppLaunchStatus = async () => {
     const appLaunched = await AsyncStorage.getItem("isLaunched");

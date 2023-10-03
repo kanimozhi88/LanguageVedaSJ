@@ -43,13 +43,13 @@ const FacultyCourseSelection = ({ navigation, route }) => {
   const [formatedExeDate, setFormatedExeDate] = useState();
   const [formatedRevisionDate, setFormatedRevisionDate] = useState();
   const [touchableEnable, setTouchableEnable] = useState(false);
-  const [testArray,setTestArray] = useState('');
-  const [assignEnable,setAssignEnable] = useState(true);
-  const [status,setStatus] = useState('');
+  const [testArray, setTestArray] = useState('');
+  const [assignEnable, setAssignEnable] = useState(true);
+  const [status, setStatus] = useState('');
   const [reopenStatus, setReopenStatus] = useState(false);
   const [reopenRes, setReopenRes] = useState('');
-  const testTypeValues = [{Type:"In Progress"},{Type:"Yet To Start"},{Type:"Completed"}]
-  const [assignBtnActive,setAssignBtnActive] = useState(true);
+  const testTypeValues = [{ Type: "In Progress" }, { Type: "Completed" }]
+  const [assignBtnActive, setAssignBtnActive] = useState(true);
 
 
   const { LPExecutionId, Status } = route.params;
@@ -59,7 +59,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     FacultyCourseRetrieval();
     getAssignBtnValue();
   }, [])
-
+ console.log("PASSED STATUS IS::::::::::::", Status)
   const FacultyCourseSelection = async () => {
     let data = {};
     data.LPExecutionId = LPExecutionId;
@@ -81,7 +81,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     const newArray = FacultyCourseSelecRes?.testResponses.map((item) => ({
       testId: item.testId,
       IsActive: true,
-      status: "In Progress"
+      // status: "In Progress"
     }))
     setTestArray(newArray);
 
@@ -95,10 +95,10 @@ const FacultyCourseSelection = ({ navigation, route }) => {
       setTouchableEnable(isTouchable);
 
     }
-  
+
   }
 
-  console.log("testarray is>>>>>>>>>",testArray);
+  console.log("testarray is>>>>>>>>>", testArray);
 
   const [data, setData] = useState(final?.testResponses);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -119,11 +119,11 @@ const FacultyCourseSelection = ({ navigation, route }) => {
   const getAssignBtnValue = async () => {
     try {
       const value = await AsyncStorage.getItem('assignBtn');
-      console.log("get assignbtn val::::::",value)
+      console.log("get assignbtn val::::::", value)
       if (value !== null) {
         setAssignBtnActive(false)
         return JSON.parse(value);
-      }else{
+      } else {
         setAssignBtnActive(true)
       }
       return null;
@@ -134,7 +134,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
 
   const FacultyTestActive = async () => {
 
-    console.log("testArray>>>>>>>>>>>>",testArray);
+    console.log("testArray>>>>>>>>>>>>", testArray);
     let data = {};
     data.patchDataList = testArray;
 
@@ -151,11 +151,16 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     });
     let FacultyTestActive = await response.json()
     console.log("faculty TestActive", FacultyTestActive);
-   if(Array.isArray(FacultyTestActive)){
-    Alert.alert(" Test Assigned To Student successfully")
-    savAssignBtnValueToAsyncStorage()
-   }
-   setAssignEnable(false)
+    if(FacultyTestActive?.length > 0){
+      Alert.alert("Test Already Assigned Successfully")
+    }else{
+      Alert.alert("Test Assigned Successfully")
+    }
+    // if (Array.isArray(FacultyTestActive)) {
+    //   Alert.alert(" Test Assigned To Student successfully")
+    //   savAssignBtnValueToAsyncStorage()
+    // }
+    setAssignEnable(false)
   }
 
   const savAssignBtnValueToAsyncStorage = async () => {
@@ -189,7 +194,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     console.log("retriveddata ", retrievedData);
   }
 
-  
+
 
   const rendertestLessons = ({ item }) => {
     return (
@@ -230,7 +235,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
             />
           </MenuTrigger>
           <MenuOptions style={{ borderWidth: 1, borderColor: "#999999", borderRadius: 5 }} >
-          
+
             <MenuOption onSelect={() => {
               if (PublicDownloadUrl.PublicDownloadUrl !== undefined) {
                 const updatedUrl = PublicDownloadUrl.PublicDownloadUrl.replace("/", "");
@@ -256,7 +261,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
   };
 
   const PopupMenuSecond = ({ PublicDownloadUrl, base64, type, index }) => {
-    
+
     return (
       <View style={{ flex: 1 }}>
         <Menu >
@@ -268,16 +273,16 @@ const FacultyCourseSelection = ({ navigation, route }) => {
           </MenuTrigger>
           <MenuOptions style={{ borderWidth: 1, borderColor: "#999999", borderRadius: 5 }} >
             <MenuOption onSelect={() => {
-               if(PublicDownloadUrl !== undefined){
+              if (PublicDownloadUrl !== undefined) {
                 const updatedUrl = PublicDownloadUrl.replace("/", "");
-                console.log("PUBLIC URL>>>>>",updatedUrl);
-              navigation.navigate('WebViewDownload',{uri:updatedUrl})
-              // requestStoragePermission(updatedUrl,type)
+                console.log("PUBLIC URL>>>>>", updatedUrl);
+                navigation.navigate('WebViewDownload', { uri: updatedUrl })
+                // requestStoragePermission(updatedUrl,type)
               }
-            } }
-            
-              // navigation.navigate('DocumentScreen', { base64: base64, type: type })}
-              >
+            }}
+
+            // navigation.navigate('DocumentScreen', { base64: base64, type: type })}
+            >
               <Text>View</Text>
             </MenuOption>
           </MenuOptions>
@@ -326,18 +331,18 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     });
     let ExeDateUpdate = await response.json()
     console.log("ExeDateUpdate", ExeDateUpdate);
- Alert.alert(
-          "Successful",
-         "Data Updated Successfully",
-       [{text: 'OK', onPress: () => setDescription('')}]
-       )
+    Alert.alert(
+      "Successful",
+      "Data Updated Successfully",
+      [{ text: 'OK', onPress: () => setDescription('') }]
+    )
 
   }
 
 
 
   const validateTest = () => {
-    if(testArray){
+    if (testArray) {
       FacultyTestActive()
     }
   }
@@ -378,45 +383,46 @@ const FacultyCourseSelection = ({ navigation, route }) => {
 
         <View style={{ marginTop: 20, marginHorizontal: 25 }}>
           <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Activity</Text>
-          <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10 ,height:"30%"}}>
+          <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10, height: "30%" }}>
             {final !== '' ?
               <Text style={{ color: "#B2B2B2", fontSize: 16, fontWeight: "400", marginHorizontal: 40 }}>{final?.lessonPlanExecutions[0]?.Activity}</Text>
               : null}
           </View>
         </View>
 
-        <View style={{ marginTop: 20, marginHorizontal: 25,bottom:"20%" }}>
-          {(Status === "Completed" || Status === "In Progress" ) && final?.testResponses?.length  > 0 ? 
-          <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500",marginBottom:10 }}>Assignment</Text>
-          : null}
+        <View style={{ marginTop: 20, marginHorizontal: 25, bottom: "20%" }}>
+          {(Status === "Completed" || Status === "In Progress" || Status === "Yet To Start") && final?.testResponses?.length > 0 ?
+            <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500", marginBottom: 10 }}>Assignment</Text>
+            : null}
           {final !== '' ?
             final?.testResponses.map((item) =>
-            <View>
-            <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 5, flexDirection: "row" }}>
-    
-              <View style={{ width: "80%", flexDirection: "row" }}>
-                <Text style={{ color: "#242634", fontSize: 14, fontWeight: "500", margin: 5 }}>{item?.LessonPlan} - </Text>
-                <Text style={{ color: "#242634", fontSize: 14, fontWeight: "500", margin: 5 }}>{item?.assignmentTitle}</Text>
-              </View>
-              <MenuProvider>
-                <View style={{ height: 50, top: 5, }}>
-                  <PopupMenuExample PublicDownloadUrl={item?.PublicDownloadUrl} />
+              <View>
+                <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 5, flexDirection: "row" }}>
+
+                  <View style={{ width: "80%", flexDirection: "row" }}>
+                    <Text style={{ color: "#242634", fontSize: 14, fontWeight: "500", margin: 5 }}>{item?.LessonPlan} - </Text>
+                    <Text style={{ color: "#242634", fontSize: 14, fontWeight: "500", margin: 5 }}>{item?.assignmentTitle}</Text>
+                  </View>
+                  <MenuProvider>
+                    <View style={{ height: 50, top: 5, }}>
+                      <PopupMenuExample PublicDownloadUrl={item?.PublicDownloadUrl} />
+                    </View>
+                  </MenuProvider>
                 </View>
-              </MenuProvider>
-            </View>
-            <View style={{ height: 1, width: "100%", backgroundColor: "#EBEFF2" }} />
-    
-          </View>
+                <View style={{ height: 1, width: "100%", backgroundColor: "#EBEFF2" }} />
+
+              </View>
             )
             : null}
-{/* Assign button rendering on Status */}
-          {(Status === "Completed" || Status === "In Progress" ) && final?.testResponses?.length > 0  ?
+          {/* Assign button rendering on Status */}
+          {(Status === "Completed" || Status === "In Progress" || Status === "Yet To Start" ) && final?.testResponses?.length > 0 ?
             <View style={{ width: "100%", backgroundColor: "#F5F7FB", }}>
 
               <TouchableOpacity
-               disabled={!assignEnable && assignBtnActive}
+                //  disabled={!assignEnable && !assignBtnActive}
+                disabled={Status === "Yet To Start"}
                 onPress={() => validateTest()}
-                style={{ backgroundColor: assignEnable && assignBtnActive ? "#F38216" : "#999999", width: "40%", padding: 10, alignSelf: "center", alignItems: "center", borderRadius: 5, marginTop: 20, margin: 10 }}>
+                style={{ backgroundColor: Status === "Yet To Start" ? "#999999" : "#F38216", width: "40%", padding: 10, alignSelf: "center", alignItems: "center", borderRadius: 5, marginTop: 20, margin: 10 }}>
                 <Text style={{ color: "#FFFFFF", fontSize: 18, fontWeight: "600" }}>Assign</Text>
               </TouchableOpacity>
 
@@ -424,8 +430,8 @@ const FacultyCourseSelection = ({ navigation, route }) => {
             : null}
         </View>
 
-        <View style={{  marginTop: "10%", marginHorizontal: 25,bottom:"20%" }}>
-          <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500",marginBottom:10 }}>Content</Text>
+        <View style={{ marginTop: "10%", marginHorizontal: 25, bottom: "20%" }}>
+          <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500", marginBottom: 10 }}>Content</Text>
           {Array.isArray(retrievedData) && retrievedData.length > 0 ? (
             retrievedData.map((item, index) => (
               <View key={index} style={{ backgroundColor: "#F5F7FB", width: "100%", flexDirection: "row", paddingBottom: 5, justifyContent: "space-evenly", alignItems: "center", alignSelf: "center" }}>
@@ -438,54 +444,54 @@ const FacultyCourseSelection = ({ navigation, route }) => {
                 </MenuProvider>
               </View>
             ))
-          ) : 
-          <Text> No Content Available</Text>
+          ) :
+            <Text> No Content Available</Text>
           }
         </View>
 
-       { final !== '' && final?.lessonPlanExecutions[0]?.Status === "Completed" ? 
-          <View style={{ marginTop: 20, marginHorizontal: 25,bottom:"20%" }}>
-          <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Status</Text>
-          <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10 }}>
-            {final !== '' ?
-              <Text style={{ color: "#B2B2B2", fontSize: 16, fontWeight: "400", marginHorizontal: 40 }}>{final?.lessonPlanExecutions[0]?.Status}</Text>
-              : null}
-          </View>
+        {final !== '' && final?.lessonPlanExecutions[0]?.Status === "Completed" ?
+          <View style={{ marginTop: 20, marginHorizontal: 25, bottom: "20%" }}>
+            <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Status</Text>
+            <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10 }}>
+              {final !== '' ?
+                <Text style={{ color: "#B2B2B2", fontSize: 16, fontWeight: "400", marginHorizontal: 40 }}>{final?.lessonPlanExecutions[0]?.Status}</Text>
+                : null}
+            </View>
 
-        </View>: 
+          </View> :
 
-        <View style={{ marginTop: 20, marginHorizontal: 25 ,bottom:"20%"}}>
-        <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Status</Text>
+          <View style={{ marginTop: 20, marginHorizontal: 25, bottom: "20%" }}>
+            <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Status</Text>
             {/* {final !== '' && final?.lessonPlanExecutions[0]?.Status !== "Completed" ? */}
-             <Dropdown
-             style={{
-               width: 248,
-               height:40,
-               borderRadius: 3,
-             borderColor:"#F5F7FB",
-             backgroundColor:"#F5F7FB",
-             borderWidth:1,
-             marginTop:5,
-             }}
-             itemTextStyle={{color: "black",fontSize:14,fontWeight:"400",}}
-             iconStyle={{ width: 30, height:30 }}
-             data={testTypeValues}
-             labelField="Type"
-             valueField="Type"
-             placeholder={'Select Type'}
-             placeholderStyle={{color: "black",fontSize:14,fontWeight:"400",marginHorizontal:50}}
-             onChange={(data) => {
-                 console.log("data is>>>>>>>>>",data?.Course_Offering_Id)
-                 // setTestType(data)
-              setStatus(data.Type)
-             }}
-             value={status} // Set the value prop correctly
-             selectedStyle={{color:"black"}}
-           />                  
-             {/* : null} */}
-     
-    </View> 
-       }
+            <Dropdown
+              style={{
+                width: 248,
+                height: 40,
+                borderRadius: 3,
+                borderColor: "#F5F7FB",
+                backgroundColor: "#F5F7FB",
+                borderWidth: 1,
+                marginTop: 5,
+              }}
+              itemTextStyle={{ color: "black", fontSize: 14, fontWeight: "400", }}
+              iconStyle={{ width: 30, height: 30 }}
+              data={testTypeValues}
+              labelField="Type"
+              valueField="Type"
+              placeholder={'Select Type'}
+              placeholderStyle={{ color: "black", fontSize: 14, fontWeight: "400", marginHorizontal: 50 }}
+              onChange={(data) => {
+                console.log("data is>>>>>>>>>", data?.Course_Offering_Id)
+                // setTestType(data)
+                setStatus(data.Type)
+              }}
+              value={status} // Set the value prop correctly
+              selectedStyle={{ color: "black" }}
+            />
+            {/* : null} */}
+
+          </View>
+        }
 
         {/* <TouchableOpacity
           onPress={touchableEnable ? handleTouchableOpacity : null}
@@ -495,7 +501,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
           <Text style={{ color: "#FFFFFF", fontSize: 18, fontWeight: "600" }}>Join Now</Text>
         </TouchableOpacity> */}
 
-        <View style={{  bottom: "18%",marginHorizontal:25 }}>
+        <View style={{ bottom: "18%", marginHorizontal: 25 }}>
           <View>
             <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500", }}>Execution</Text>
             <View style={{ width: "100%", flexDirection: "row", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10, borderRadius: 5 }}>
@@ -551,7 +557,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
         </View>
 
 
-        <View style={{ marginHorizontal: 25, bottom: "15%",marginBottom:"60%"}}>
+        <View style={{ marginHorizontal: 25, bottom: "15%", marginBottom: "60%" }}>
           <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Feedback</Text>
           <View style={{ width: "100%", backgroundColor: "#F5F7FB", height: 145, marginTop: 10 }}>
             {final !== '' && Status === "Completed" ?
@@ -559,7 +565,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
               :
               <TextInput
                 placeholder='Type Message'
-                placeholderTextColor={"#C8C6C6"}
+                placeholderTextColor={"#424242"}
                 onChangeText={text => setDescription(text)}
                 value={description}
                 style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />
@@ -572,7 +578,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
         <TouchableOpacity
           disabled={!date || revisionDate === null || description === '' || status === null}
           onPress={() => validateInput()}
-          style={[styles.saveButton, !date || revisionDate === null || description === '' && styles.disabledButton,{bottom:"30%"}]}
+          style={[styles.saveButton, !date || revisionDate === null || description === '' && styles.disabledButton, { bottom: "30%" }]}
 
         // style={{ backgroundColor: "#F38216", width: "35%", alignSelf: "center", alignItems: "center", marginBottom: "20%", padding: 10, borderRadius: 5 }}
         >

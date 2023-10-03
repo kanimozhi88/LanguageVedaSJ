@@ -16,7 +16,8 @@ const StudentCourseAssignment = ({ batchId, courseName }) => {
         completed:1,
         submitted:1,
         InProgress:1,
-        Redo:1
+        Redo:1,
+        YetToStart:1
     });
 
     useEffect(() => {
@@ -60,49 +61,51 @@ const StudentCourseAssignment = ({ batchId, courseName }) => {
 
     }
 
-    const getPieChartStatus = ()=>{
-    let completedCount = 0;
-    let redoCount = 0;
-    let vettingInProgressCount = 0;
-    let assignmentSubmittedCount = 0;
-    {final !== '' && final.length > 0 ?
-    final.forEach(record => {
-      switch (record.status) {
-        case 'Completed':
-          completedCount++;
-          break;
-        case 'Redo':
-          redoCount++;
-          break;
-        case 'Vetting In Progress':
-          vettingInProgressCount++;
-          break;
-        case 'Assignment Submitted':
-          assignmentSubmittedCount++;
-          break;
-        default:
-          break;
-      }
-    }) : null
+    const getPieChartStatus = () => {
+        let completedCount = 0;
+        let redoCount = 0;
+        let vettingInProgressCount = 0;
+        let assignmentSubmittedCount = 0;
+        let yetToStartCount = 0; // Initialize a count for "Yet To Start"
+        
     
-}
-// setSeriesArr({...seriesArr,completed:completedCount,submitted:assignmentSubmittedCount,InProgress:vettingInProgressCount,Redo:redoCount})
-setSeriesArr({
-    completed: completedCount,
-    submitted: assignmentSubmittedCount,
-    InProgress: vettingInProgressCount,
-    Redo: redoCount,
-  });
-}
+        if (final !== '' && final.length > 0) {
+            final.forEach(record => {
+                switch (record.status) {
+                    case 'Completed':
+                        completedCount++;
+                        break;
+                    case 'Redo':
+                        redoCount++;
+                        break;
+                    case 'Vetting In Progress':
+                        vettingInProgressCount++;
+                        break;
+                    case 'Assignment Submitted':
+                        assignmentSubmittedCount++;
+                        break;
+                    case 'Yet_To_Submit':
+                        yetToStartCount++; // Increment the count for "Yet To Start"
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+    
+        setSeriesArr({
+            completed: completedCount,
+            submitted: assignmentSubmittedCount,
+            InProgress: vettingInProgressCount,
+            Redo: redoCount,
+            YetToStart: yetToStartCount, // Set the count for "Yet To Start"
+        });
+    };
+    
 
-    
-    console.log('Completed Count:', seriesArr.completed);
-    console.log('submitted Count:', seriesArr.submitted);
-    console.log('Vetting In Progress Count:', seriesArr.InProgress);
-    console.log('redo Submitted Count:', seriesArr.Redo);
     const widthAndHeight = 145
-    const series = [seriesArr.completed, seriesArr.submitted, seriesArr.InProgress, seriesArr.Redo]
-    const sliceColor = ['#9B88ED', '#04BFDA', '#FB67CA', '#FFA84A']
+    const series = [seriesArr.completed, seriesArr.submitted, seriesArr.InProgress, seriesArr.Redo,seriesArr.YetToStart]
+    const sliceColor = ['#9B88ED', '#04BFDA', '#FB67CA', '#FFA84A','#959e41']
 
     const renderItem = ({ item, index }) => {
 
@@ -111,9 +114,9 @@ setSeriesArr({
             onPress={()=>{navigation.navigate('StudentAssignmentUpload',{testId:item.id})}}
                 style={{ width: "99%", backgroundColor: "white", alignSelf: "center", borderRadius: 10, marginTop: 10, elevation: 5, padding: 10, }}>
                 <View style={{ flexDirection: "row",alignItems:"center", justifyContent:"space-around"}}>
-                    <Image
+                    {/* <Image
                         style={{}}
-                        source={require('../assets/langicon.png')} />
+                        source={require('../assets/langicon.png')} /> */}
 
                     <Text numberOfLines={2} style={{ color: "black", fontSize: 16, fontWeight: "500", margin: 10,alignSelf:"center",width:100 }}>{item.assignmentTitle}</Text>
                
@@ -135,7 +138,7 @@ setSeriesArr({
                                 item.status === "Assignment Submitted" ?
                                     <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Submitted</Text> :
                                     item.status === "Yet_To_Submit" ? 
-                                    <Text style={{ fontSize: 14, fontWeight: "400", alignSelf: "center", color: "white" }}>Yet To Start</Text> :
+                                    <Text style={{ fontSize: 12, fontWeight: "400", alignSelf: "center", color: "white" }}>Yet_To_Submit</Text> :
 
                                     <></>}
 
@@ -193,10 +196,27 @@ setSeriesArr({
                     <Text style={{fontSize:12,fontWeight:400,color:"white",alignSelf:"center",marginHorizontal:10}}>Redo</Text>
                     <Text style={{fontSize:12,fontWeight:400,color:"white",}}>({seriesArr.Redo})</Text>
                     </View>
+                    {/* <View style={{flexDirection:"row",marginTop:10}}>
+                 <View style={{width: 13,height:13,backgroundColor:"white",borderRadius:7,alignItems:"center",justifyContent:"center",alignSelf:"center"}}>
+                 <View style={{width:9,height:9,backgroundColor:"#FFA84A",borderRadius:5,margin:2}}>
+                    </View>
+                    </View>
+                    <Text style={{fontSize:12,fontWeight:400,color:"white",alignSelf:"center",marginHorizontal:10}}>Yet To Start</Text>
+                    <Text style={{fontSize:12,fontWeight:400,color:"white",}}>({seriesArr.YetToStart})</Text>
+                    </View> */}
+
+                    <View style={{flexDirection:"row",marginTop:10}}>
+                 <View style={{width: 13,height:13,backgroundColor:"white",borderRadius:7,alignItems:"center",justifyContent:"center",alignSelf:"center"}}>
+                 <View style={{width:9,height:9,backgroundColor:"#959e41",borderRadius:5,margin:2}}>
+                    </View>
+                    </View>
+                    <Text style={{fontSize:12,fontWeight:400,color:"white",alignSelf:"center",marginHorizontal:10}}>Yet To Start</Text>
+                    <Text style={{fontSize:12,fontWeight:400,color:"white",}}>({seriesArr.YetToStart})</Text>
+                    </View>
 
                     <View style={{flexDirection:"row",marginTop:10}}>
                     <Text style={{fontSize:12,fontWeight:400,color:"white",alignSelf:"center",marginHorizontal:22}}>Total</Text>
-                    <Text style={{fontSize:12,fontWeight:400,color:"white",}}>({seriesArr.completed + seriesArr.submitted + seriesArr.InProgress + seriesArr.Redo})</Text>
+                    <Text style={{fontSize:12,fontWeight:400,color:"white",}}>({seriesArr.completed + seriesArr.submitted + seriesArr.InProgress + seriesArr.Redo + seriesArr.YetToStart})</Text>
                     </View>
 
                 </View>
@@ -214,9 +234,9 @@ setSeriesArr({
 
             </LinearGradient>
 
-            <Text style={{ color: "#F38216", fontSize: 16, fontWeight: "600", margin: 20 }}>{courseName}</Text>
+            <Text style={{ color: "#F38216", fontSize: 20, fontWeight: "600", margin: 30 }}>{courseName}</Text>
             {final !== '' && final !== undefined ?
-            <View style={{height:340}}>
+            <View style={{height:280}}>
                 <FlatList
                     data={final}
                     renderItem={renderItem}

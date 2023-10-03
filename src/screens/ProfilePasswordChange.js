@@ -68,6 +68,7 @@ return(
 <View style={{flex:1,backgroundColor:"white"}}>
 <Text style={{ color: "black", marginHorizontal:20,marginTop:"10%" }}>User Id</Text>
           <TextInput
+          placeholderTextColor={"#424242"}
             style={styles.input}
             placeholder="Enter mail address"
             // keyboardType="number-pad"

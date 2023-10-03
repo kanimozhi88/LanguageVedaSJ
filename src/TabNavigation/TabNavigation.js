@@ -40,6 +40,7 @@ import FacultyStudentDetails from '../screens/FacultyStudentDetails';
 import Notifications from '../screens/Notifications';
 
 
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -91,8 +92,9 @@ const StackNavigation=()=>{
         component={WebViewScreen}
         options={{
           headerShown:false ,
-          tabBarStyle:{display:'none'}
-          }}
+          tabBarStyle: {display : 'none'}, 
+                     
+        }}
         
       />
       <Stack.Screen
@@ -352,7 +354,9 @@ const TabNavigation=()=>{
     return(
 
 <Tab.Navigator
-screenOptions={({ route }) => ({
+screenOptions={(props) => {
+  return {
+  
   tabBarShowLabel:false,
   tabBarActiveTintColor: 'blue', // Change the active tab color
   tabBarInactiveTintColor: 'white', // Change the inactive tab color
@@ -360,9 +364,10 @@ screenOptions={({ route }) => ({
     backgroundColor: '#F38216', 
     height:60,position:"absolute",
     bottom:20,borderRadius:90,
-    marginHorizontal:25
+    marginHorizontal:25,
+    // ...props.route.name === 'WebViewScreen' ? { display: 'none' } : {}, 
   },
-})}
+}}}
 >
       <Tab.Screen name="Home" component={StackNavigation} options={{
         tabBarIcon: ({focused})=>(

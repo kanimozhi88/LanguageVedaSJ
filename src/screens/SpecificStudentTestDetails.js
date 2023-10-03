@@ -54,6 +54,7 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
         data.feedBack = description;
 
         const body = JSON.stringify(data)
+        console.log("BODY PARAMS::::::::",body)
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
         const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyupdateStudentTestStatus`, {
@@ -366,12 +367,12 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
             </View>
 
             <View style={{ marginTop: 20, marginHorizontal: 25 }}>
-              {final?.Attachments?.length > 0 ?
+              {final?.Attachments?.length  ?
                 <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>File</Text>
                 : null}
                 {final !== '' ?
                 final?.Attachments.map((item, index) => {
-                    if (item.Type.includes("pdf")) {
+                    if (item.Type) {
                         return (
                          
                             <View key={item.id} style={{ width: "100%",flexDirection:"row",backgroundColor: "#F5F7FB",}}>
@@ -394,9 +395,9 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
                                 <Image
                                     source={require('../../assets/Image.png')}
                                     style={{ width: 16, height: 16, margin: 5 }} />
-                                <Text style={{ margin: 5,width:"75%" }}>{item?.title}</Text>
+                                <Text style={{ margin: 5,width:"65%" }}>{item?.title}</Text>
                                 <MenuProvider>
-                                    <View style={{ height: 55, top: 15, }}>
+                                    <View style={{ height: 65, top: 15, }}>
                                         <PopupMenuExample PublicDownloadUrl={item?.PublicDownloadUrl} type='image' />
                                     </View>
                                 </MenuProvider>
@@ -442,7 +443,7 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
               :
               <TextInput
                 placeholder='Type Message'
-                placeholderTextColor={"#C8C6C6"}
+                placeholderTextColor={"#424242"}
                 onChangeText={text => setDescription(text)}
                 value={description}
                 style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />

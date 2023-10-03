@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet,SafeAreaView, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, SafeAreaView, FlatList } from 'react-native';
 import { getAccessToken } from '../../redux/actions';
 import moment from 'moment';
 import BASE_URL from '../../apiConfig';
 
 
-const FacultyAssignmentSelect = ({ route,navigation }) => {
+const FacultyAssignmentSelect = ({ route, navigation }) => {
     const { LPExecutionId, assignmentTitle } = route.params;
     console.log("received exeid", LPExecutionId);
     const [final, setFinal] = useState('');
@@ -36,16 +36,16 @@ const FacultyAssignmentSelect = ({ route,navigation }) => {
         console.log("final data is", final)
     }
 
-    const renderTestStatus = ({item,index})=>{
-        return(
-<TouchableOpacity 
-onPress={()=> navigation.navigate('SpecificStudentTestDetails',{Id: item?.Id,assignmentTitle:assignmentTitle,Status:item?.Status})}
-style={{flexDirection:"row",padding:10,backgroundColor: (index+1)%2 === 0 ? "#F5F7FB" : "white"}}>
-    <Text style={{width:"15%",marginLeft:25,color:"black"}}>{index+1}</Text>
-    <Text style={{width:"25%",marginRight:15,color:"black"}}>{moment(item?.TestDate).format('DD/MM/YYYY')}</Text>
-    <Text numberOfLines={2} style={{width:"25%",color:"black",right:10}}>{item?.ContactName}</Text>
-    <Text style={{width:"25%",right:5,color: item?.Status == "Redo" ? "red" : item?.Status == "Completed" ? "green" :"black"}}>{item?.Status}</Text>
-</TouchableOpacity>
+    const renderTestStatus = ({ item, index }) => {
+        return (
+            <TouchableOpacity
+                onPress={() => navigation.navigate('SpecificStudentTestDetails', { Id: item?.Id, assignmentTitle: assignmentTitle, Status: item?.Status })}
+                style={{ flexDirection: "row", padding: 10, backgroundColor: (index + 1) % 2 === 0 ? "#F5F7FB" : "white" }}>
+                <Text style={{ width: "15%", marginLeft: 25, color: "black" }}>{index + 1}</Text>
+                <Text style={{ width: "25%", marginRight: 15, color: "black" }}>{moment(item?.TestDate).format('DD/MM/YYYY')}</Text>
+                <Text numberOfLines={2} style={{ width: "25%", color: "black", right: 10 }}>{item?.ContactName}</Text>
+                <Text style={{ width: "25%", right: 5, color: item?.Status == "Redo" ? "red" : item?.Status == "Completed" ? "green" : "black" }}>{item?.Status}</Text>
+            </TouchableOpacity>
         )
     }
 
@@ -63,16 +63,19 @@ style={{flexDirection:"row",padding:10,backgroundColor: (index+1)%2 === 0 ? "#F5
                 <Text style={{ color: "#1B2236", fontSize: 16, fontWeight: "500", marginLeft: "5%", alignSelf: "center", marginTop: 10 }}>{assignmentTitle}</Text>
             </View>
 
-  <View style={{flexDirection:"row",justifyContent:"space-around",backgroundColor:"#F5F7FB",marginTop:20 }}>
-    <Text style={styles.txtStyle}>S.No</Text>
-    <Text style={styles.txtStyle}> Date</Text>
-    <Text style={styles.txtStyle}>Name</Text>
-    <Text style={styles.txtStyle}>Status</Text>
-  </View>
-
-  <FlatList
-  data={final}
-  renderItem={renderTestStatus}/>
+            <View style={{ flexDirection: "row", justifyContent: "space-around", backgroundColor: "#F5F7FB", marginTop: 20 }}>
+                <Text style={styles.txtStyle}>S.No</Text>
+                <Text style={styles.txtStyle}> Date</Text>
+                <Text style={styles.txtStyle}>Name</Text>
+                <Text style={styles.txtStyle}>Status</Text>
+            </View>
+            {final?.length > 0 ?
+                <FlatList
+                    data={final}
+                    renderItem={renderTestStatus} />
+                :
+                <Text style={{color:"black", fontSize:18,fontWeight:"800",alignSelf:"center",}}>No Student Data Available</Text>
+            }
 
 
         </SafeAreaView>
@@ -91,7 +94,7 @@ const styles = StyleSheet.create({
         padding: 20,
         marginVertical: 8,
     },
-    txtStyle:{ color: "black", fontSize: 16, fontWeight: "500", margin: 10 },
+    txtStyle: { color: "black", fontSize: 16, fontWeight: "500", margin: 10 },
     backarrowView: { width: 40, height: 40, marginLeft: 20, elevation: 3, borderRadius: 10, marginTop: 10 },
     backarrowImg: { width: 40, height: 40, alignSelf: "center", borderRadius: 10 },
     indicatorStyl: { backgroundColor: '#D6387F', width: 45, marginLeft: 45 },

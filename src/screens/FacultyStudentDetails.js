@@ -454,11 +454,28 @@ const FacultyStudentDetails = ({ route, navigation }) => {
   };
 
   const QuestionScreen = ({ questionData, onNextPress, onPrevPress, selectedOption, uploadedImages, handleFileUpload }) => {
-    const filteredImages = images.filter(item => item.QuesId === questionData?.QuesId);
+    
+    const crtAns = questionData?.CorrectAnswer === "Choice 1" ? "Option1" : questionData?.CorrectAnswer === "Choice 2" ? "Option2" : questionData?.CorrectAnswer === "Choice 3" ? "Option3" :questionData?.CorrectAnswer === "Choice 4" ? "Option4" : null ;//2
+    const userAns = questionData?.UserAnswer === "Choice 1" ? "Option1" : questionData?.UserAnswer === "Choice 2" ? "Option2" : questionData?.UserAnswer === "Choice 3" ? "Option3" :questionData?.UserAnswer === "Choice 4" ? "Option4" : null ;//2
 
-    console.log("qiuestionDATA>>>>>>>>", questionData?.CorrectAnswer);
-    const crtAns = questionData?.CorrectAnswer;//2
-    const userAns = questionData?.UserAnswer;//12
+   console.log("USERANS CRETNAS::::::::::", crtAns, userAns)
+    const findKeyForValue = (object, valueToFind) => {
+      for (const key in object) {
+        if (object[key] === valueToFind) {
+         
+          return key; // Return the key if the value matches
+        }
+      }
+      return null; // Return null if the value is not found
+    };
+    const key1 = findKeyForValue(questionData,questionData?.Option1 );
+    const key2 = findKeyForValue(questionData,questionData?.Option2 );
+    const key3 = findKeyForValue(questionData,questionData?.Option3 );
+    const key4 = findKeyForValue(questionData,questionData?.Option4 );
+
+    console.log("KEY VALUE IS:::::::::::",key1, key2,key3,key4,  `${findKeyForValue(questionData,questionData?.Option1 )}`)
+    
+    
     if (questionData?.QuestionType === 'MCQ') {
       setShowEssayMarks(false)
     } else {
@@ -480,34 +497,34 @@ const FacultyStudentDetails = ({ route, navigation }) => {
             <RadioButton.Group value={selectedOption}>
               <View style={{ marginHorizontal: 15, flexDirection: "row", marginTop: 5 }}>
                 {/* <RadioButton value={(crtAn == questionData?.Option1) || (userAns === questionData?.Option1)}/> */}
-                <View style={{ alignSelf: "center", width: 18, height: 18, borderRadius: 9, borderColor: (crtAns == userAns == questionData?.Option1) ? "green" : (questionData?.Option1 == crtAns) ? "green" : (questionData?.Option1 == userAns) ? "red" : "black", borderWidth: 1 }}>
-                  <View style={{ margin: 2, width: 12, height: 12, alignSelf: "center", borderRadius: 6, backgroundColor: (crtAns == userAns == questionData?.Option1) ? "green" : (questionData?.Option1 == crtAns) ? "green" : (questionData?.Option1 == userAns) ? "red" : "black", }} />
+                <View style={{ alignSelf: "center", width: 18, height: 18, borderRadius: 9, borderColor: (crtAns == userAns == `${findKeyForValue(questionData,questionData?.Option1 )}`) ? "green" : (`${findKeyForValue(questionData,questionData?.Option1 )}` == crtAns) ? "green" : (`${findKeyForValue(questionData,questionData?.Option1)}` == userAns) ? "red" : "black", borderWidth: 1 }}>
+                  <View style={{ margin: 2, width: 12, height: 12, alignSelf: "center", borderRadius: 6, backgroundColor: (crtAns == userAns == `${findKeyForValue(questionData,questionData?.Option1 )}`) ? "green" : (`${findKeyForValue(questionData,questionData?.Option1 )}` == crtAns) ? "green" : (`${findKeyForValue(questionData,questionData?.Option1)}` == userAns) ? "red" : null, }} />
                 </View>
-                <Text style={{ marginLeft: 5, alignSelf: "center", color: (crtAns == userAns == questionData?.Option1) ? "green" : (questionData?.Option1 == crtAns) ? "green" : (questionData?.Option1 == userAns) ? "red" : null }}>{questionData?.Option1}</Text>
+                <Text style={{ marginLeft: 5, alignSelf: "center", color: (crtAns == userAns == `${findKeyForValue(questionData,questionData?.Option1 )}`) ? "green" : (`${findKeyForValue(questionData,questionData?.Option1 )}` == crtAns) ? "green" : (`${findKeyForValue(questionData,questionData?.Option1 )}` == userAns) ? "red" : null }}>{questionData?.Option1}</Text>
               </View>
 
               <View style={{ marginHorizontal: 15, flexDirection: "row", marginTop: 5 }}>
                 {/* <RadioButton value={questionData?.Option2} /> */}
-                <View style={{ alignSelf: "center", width: 18, height: 18, borderRadius: 9, borderColor: (crtAns == userAns == questionData?.Option2) ? "green" : (questionData?.Option2 == crtAns) ? "green" : (questionData?.Option2 == userAns) ? "red" : "black", borderWidth: 1 }}>
-                  <View style={{ margin: 2, width: 12, height: 12, alignSelf: "center", borderRadius: 6, backgroundColor: (crtAns == userAns == questionData?.Option2) ? "green" : (questionData?.Option2 == crtAns) ? "green" : (questionData?.Option2 == userAns) ? "red" : null, }} />
+                <View style={{ alignSelf: "center", width: 18, height: 18, borderRadius: 9, borderColor: (crtAns == userAns == `${findKeyForValue(questionData,questionData?.Option2)}`) ? "green" : (`${findKeyForValue(questionData,questionData?.Option2)}` == crtAns) ? "green" : (`${findKeyForValue(questionData,questionData?.Option2)}` == userAns) ? "red" : "black", borderWidth: 1 }}>
+                  <View style={{ margin: 2, width: 12, height: 12, alignSelf: "center", borderRadius: 6, backgroundColor: (crtAns == userAns == `${findKeyForValue(questionData,questionData?.Option2)}`) ? "green" : (`${findKeyForValue(questionData,questionData?.Option2)}` == crtAns) ? "green" : (`${findKeyForValue(questionData,questionData?.Option2)}` == userAns) ? "red" : null, }} />
                 </View>
-                <Text style={{ marginLeft: 5, alignSelf: "center", color: (crtAns == userAns == questionData?.Option2) ? "green" : (questionData?.Option2 == crtAns) ? "green" : (questionData?.Option2 == userAns) ? "red" : null }}>{questionData?.Option2}</Text>
+                <Text style={{ marginLeft: 5, alignSelf: "center", color: (crtAns == userAns == `${findKeyForValue(questionData,questionData?.Option2)}`) ? "green" : (`${findKeyForValue(questionData,questionData?.Option2)}` == crtAns) ? "green" : (`${findKeyForValue(questionData,questionData?.Option2)}` == userAns) ? "red" : null }}>{questionData?.Option2}</Text>
               </View>
 
               <View style={{ marginHorizontal: 15, flexDirection: "row", marginTop: 5, }}>
                 {/* <RadioButton value={questionData?.Option2} /> */}
-                <View style={{ alignSelf: "center", width: 18, height: 18, borderRadius: 9, borderColor: (crtAns == userAns == questionData?.Option3) ? "green" : (questionData?.Option3 == crtAns) ? "green" : (questionData?.Option3 == userAns) ? "red" : "black", borderWidth: 1 }}>
-                  <View style={{ margin: 2, width: 12, height: 12, alignSelf: "center", borderRadius: 6, backgroundColor: (crtAns == userAns == questionData?.Option3) ? "green" : (questionData?.Option3 == crtAns) ? "green" : (questionData?.Option3 == userAns) ? "red" : null, }} />
+                <View style={{ alignSelf: "center", width: 18, height: 18, borderRadius: 9, borderColor: (crtAns == userAns == `${findKeyForValue(questionData,questionData?.Option3)}`) ? "green" : (`${findKeyForValue(questionData,questionData?.Option3)}` == crtAns) ? "green" : (`${findKeyForValue(questionData,questionData?.Option3)}` == userAns) ? "red" : "black", borderWidth: 1 }}>
+                  <View style={{ margin: 2, width: 12, height: 12, alignSelf: "center", borderRadius: 6, backgroundColor: (crtAns == userAns == `${findKeyForValue(questionData,questionData?.Option3)}`) ? "green" : (`${findKeyForValue(questionData,questionData?.Option3)}` == crtAns) ? "green" : (`${findKeyForValue(questionData,questionData?.Option3)}` == userAns) ? "red" : null, }} />
                 </View>
-                <Text style={{ marginLeft: 5, alignSelf: "center", color: (crtAns == userAns == questionData?.Option3) ? "green" : (questionData?.Option3 == crtAns) ? "green" : (questionData?.Option3 == userAns) ? "red" : null }}>{questionData?.Option3}</Text>
+                <Text style={{ marginLeft: 5, alignSelf: "center", color: (crtAns == userAns == `${findKeyForValue(questionData,questionData?.Option3)}`) ? "green" : (`${findKeyForValue(questionData,questionData?.Option3)}` == crtAns) ? "green" : (`${findKeyForValue(questionData,questionData?.Option3)}` == userAns) ? "red" : null }}>{questionData?.Option3}</Text>
               </View>
 
               <View style={{ marginHorizontal: 15, flexDirection: "row", marginTop: 5 }}>
                 {/* <RadioButton value={questionData?.Option2} /> */}
-                <View style={{ alignSelf: "center", width: 18, height: 18, borderRadius: 9, borderColor: (crtAns == userAns == questionData?.Option4) ? "green" : (questionData?.Option4 == crtAns) ? "green" : (questionData?.Option4 == userAns) ? "red" : "black", borderWidth: 1 }}>
-                  <View style={{ margin: 2, width: 12, height: 12, alignSelf: "center", borderRadius: 6, backgroundColor: (crtAns == userAns == questionData?.Option4) ? "green" : (questionData?.Option4 == crtAns) ? "green" : (questionData?.Option4 == userAns) ? "red" : null, }} />
+                <View style={{ alignSelf: "center", width: 18, height: 18, borderRadius: 9, borderColor: (crtAns == userAns == `${findKeyForValue(questionData,questionData?.Option4)}`) ? "green" : (`${findKeyForValue(questionData,questionData?.Option4)}` == crtAns) ? "green" : (`${findKeyForValue(questionData,questionData?.Option4)}` == userAns) ? "red" : "black", borderWidth: 1 }}>
+                  <View style={{ margin: 2, width: 12, height: 12, alignSelf: "center", borderRadius: 6, backgroundColor: (crtAns == userAns == `${findKeyForValue(questionData,questionData?.Option4)}`) ? "green" : (`${findKeyForValue(questionData,questionData?.Option4)}` == crtAns) ? "green" : (`${findKeyForValue(questionData,questionData?.Option4)}` == userAns) ? "red" : null, }} />
                 </View>
-                <Text style={{ marginLeft: 5, alignSelf: "center", color: (crtAns == userAns == questionData?.Option4) ? "green" : (questionData?.Option4 == crtAns) ? "green" : (questionData?.Option4 == userAns) ? "red" : null }}>{questionData?.Option4}</Text>
+                <Text style={{ marginLeft: 5, alignSelf: "center", color: (crtAns == userAns == `${findKeyForValue(questionData,questionData?.Option4)}`) ? "green" : (`${findKeyForValue(questionData,questionData?.Option4)}`== crtAns) ? "green" : (`${findKeyForValue(questionData,questionData?.Option4)}` == userAns) ? "red" : null }}>{questionData?.Option4}</Text>
               </View>
 
             </RadioButton.Group>
@@ -633,7 +650,7 @@ const FacultyStudentDetails = ({ route, navigation }) => {
           <View style={{ flexDirection: "row", width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10 }}>
             <TextInput
               placeholder='Enter Marks'
-              placeholderTextColor={"#C8C6C6"}
+              placeholderTextColor={"#424242"}
               onChangeText={text => setEssayMarks(text)}
               value={essayMarks}
               style={{ width: "50%", borderColor: "#F38216", textAlignVertical: "top", }} />
@@ -663,7 +680,7 @@ const FacultyStudentDetails = ({ route, navigation }) => {
               :
               <TextInput
                 placeholder='Type Message'
-                placeholderTextColor={"#C8C6C6"}
+                placeholderTextColor={"#424242"}
                 onChangeText={text => setDescription(text)}
                 value={description}
                 style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />
