@@ -8,6 +8,7 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import OTPTextView from 'react-native-otp-textinput';
 import BASE_URL from '../../apiConfig';
 import { Appearance, useColorScheme } from 'react-native';
+import { black } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 
 const LoginScreen = ({ route }) => {
 
@@ -221,7 +222,7 @@ const LoginScreen = ({ route }) => {
             <Text style={styles.userIdTxt}>User Id</Text>
             <TextInput
             placeholderTextColor={"#424242"}
-              style={[styles.input, { color: inputTextColor, backgroundColor: inputBackgroundColor }]}
+            style={[styles.input, { color: '#424242', backgroundColor: inputBackgroundColor }]}
               placeholder="Enter User name"
               onChangeText={text => handleMobileNumberChange(text)}
               value={Phone}
@@ -240,7 +241,7 @@ const LoginScreen = ({ route }) => {
             {showOtp ?
               <TextInput
               placeholderTextColor={"#424242"}
-                style={styles.input}
+              style={[styles.input, { color: '#424242', backgroundColor: inputBackgroundColor }]}
                 placeholder="Enter OTP"
                 secureTextEntry
                 onChangeText={text => handlePasswordChange(text)}

@@ -6,7 +6,7 @@ import { correctFloat } from "highcharts";
 //     return new Promise((resolve,reject)=>{
 //         let details={};
 //         try{
-//             remoteConfig().setConfigSettings({
+//             Config().setConfigSettings({
 //                 minimumFetchIntervalMillis: 3600000, // 1 hour
 //               });
 //               remoteConfig().setDefaults({

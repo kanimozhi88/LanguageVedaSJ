@@ -80,7 +80,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     setFinal(FacultyCourseSelecRes);
     const newArray = FacultyCourseSelecRes?.testResponses.map((item) => ({
       testId: item.testId,
-      IsActive: true,
+      IsActive: true
       // status: "In Progress"
     }))
     setTestArray(newArray);
@@ -152,9 +152,9 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     let FacultyTestActive = await response.json()
     console.log("faculty TestActive", FacultyTestActive);
     if(FacultyTestActive?.length > 0){
-      Alert.alert("Test Already Assigned Successfully")
-    }else{
       Alert.alert("Test Assigned Successfully")
+    }else{
+      Alert.alert("Test Already Assigned Successfully")
     }
     // if (Array.isArray(FacultyTestActive)) {
     //   Alert.alert(" Test Assigned To Student successfully")
@@ -568,7 +568,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
                 placeholderTextColor={"#424242"}
                 onChangeText={text => setDescription(text)}
                 value={description}
-                style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />
+                style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" ,color: "#424242"}} />
             }
           </View>
         </View>

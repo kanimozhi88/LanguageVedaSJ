@@ -149,6 +149,7 @@ const styles = StyleSheet.create({
     borderColor: "#A22451",
     borderWidth: 3,
     textAlign: "center",
+    color: "#424242",
     textAlignVertical: "center"
   },
   roundedTextInput: {

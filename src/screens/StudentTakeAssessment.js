@@ -658,7 +658,7 @@ console.log(updatedAnswersWithChoices);
 
               navigation.navigate('DocumentScreen', { base64: base64, type: type })}
             >
-              <Text>Preview</Text>
+             <Text style={{ color: '#424242' }}>Preview</Text>
             </MenuOption>
             <MenuOption onSelect={() => {
               const newImages = [...images];

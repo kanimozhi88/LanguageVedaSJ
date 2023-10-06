@@ -313,8 +313,8 @@ const FacultyStudentDetails = ({ route, navigation }) => {
     if (jsonUploadApiRes.Status === 'Success') {
       // Alert.alert("Uploaded Successfully")
       Alert.alert(
-        'Uploaded Successfully',
-        'OK',
+        'Records Updated Successfully',
+        '',
         [{ text: 'OK', onPress: () => { [setShowSubmit(true), setImages([])] } }
         ],
         { cancelable: false }
@@ -359,7 +359,7 @@ const FacultyStudentDetails = ({ route, navigation }) => {
     console.log(" StudentRemarks API RES", StudentRemarks);
     Alert.alert(
       'Success',
-      'Uploaded Successfully',
+      'Records Updated Successfully',
       [{ text: 'OK', onPress: () => { setDescription('') } }
       ],
       { cancelable: false }
@@ -395,7 +395,7 @@ const FacultyStudentDetails = ({ route, navigation }) => {
     console.log(" EssayMarks API RES", EssayMarks);
     Alert.alert(
       'Success',
-      'Uploaded Successfully',
+      'Records Updated Successfully',
       [{ text: 'OK', onPress: () => { setEssayMarks('') } }
       ],
       { cancelable: false }
@@ -653,7 +653,7 @@ const FacultyStudentDetails = ({ route, navigation }) => {
               placeholderTextColor={"#424242"}
               onChangeText={text => setEssayMarks(text)}
               value={essayMarks}
-              style={{ width: "50%", borderColor: "#F38216", textAlignVertical: "top", }} />
+              style={{ width: "50%", borderColor: "#F38216", textAlignVertical: "top",color: "#424242", }} />
 
             <TouchableOpacity
               onPress={() => essayMarkUpdate(final[currentIndex]?.QuestionId)}
@@ -683,7 +683,7 @@ const FacultyStudentDetails = ({ route, navigation }) => {
                 placeholderTextColor={"#424242"}
                 onChangeText={text => setDescription(text)}
                 value={description}
-                style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />
+                style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top",color: "#424242" }} />
 
             }
           </View>

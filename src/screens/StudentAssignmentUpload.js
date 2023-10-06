@@ -437,7 +437,7 @@ const StudentAssignmentUpload = ({ navigation, route }) => {
 
             // navigation.navigate('DocumentScreen', { base64: base64, type: type })}
             >
-              <Text>Preview</Text>
+              <Text style={{ color: '#424242' }}>Preview</Text>
             </MenuOption>
             {final[0]?.status !== "Completed" ?
               <MenuOption onSelect={() => {
@@ -454,7 +454,7 @@ const StudentAssignmentUpload = ({ navigation, route }) => {
                   // requestStoragePermission(updatedUrl,type)
                 }
               }}>
-                <Text>Download</Text>
+                <Text style={{ color: '#424242' }}>Download</Text>
               </MenuOption>}
           </MenuOptions>
         </Menu>

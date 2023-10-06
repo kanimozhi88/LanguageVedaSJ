@@ -120,7 +120,7 @@ const NewTicket = ({navigation}) =>{
         placeholderTextColor={"#424242"}
         onChangeText={text => setDescription(text)}
         value={description}
-        style={{width:290,height:175,borderColor:"#F38216",borderWidth:1,borderRadius:5,marginTop:20,textAlign:"center",textAlignVertical:"top" }}/>
+        style={{width:290,height:175,borderColor:"#F38216",borderWidth:1,borderRadius:5,marginTop:20,textAlign:"center",textAlignVertical:"top",color: "#424242" }}/>
       </View>
 
 <TouchableOpacity 

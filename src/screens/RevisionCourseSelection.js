@@ -234,7 +234,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
               }
             }
             }>
-              <Text>Download</Text>
+             <Text style={{ color: '#424242' }}>Download</Text>
             </MenuOption>
           </MenuOptions>
         </Menu>
@@ -537,7 +537,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
                 placeholderTextColor={"#424242"}
                 onChangeText={text => setDescription(text)}
                 value={description}
-                style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />
+                style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" ,color: "#424242"}} />
             }
           </View>
         </View>

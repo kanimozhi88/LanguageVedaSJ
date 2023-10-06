@@ -90,7 +90,7 @@ const FacultyAssessment = ({ batchid }) => {
     const body = JSON.stringify(data)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyTestActive`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyAssessmentActive`, {
       method: 'PATCH',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -101,10 +101,10 @@ const FacultyAssessment = ({ batchid }) => {
     let FacultyTestActive = await response.json()
     console.log("faculty TestActive", FacultyTestActive);
     if(FacultyTestActive.length > 0){
-      Alert.alert(" Test Assigned successfully")
+      Alert.alert("Assessment successfully published")
         savAssignBtnValueToAsyncStorage(index);
       }else{
-        Alert.alert("Test Asssigned Already ")
+        Alert.alert("Assessment Already successfully published")
       }
     
     // if (Array.isArray(FacultyTestActive)) {
