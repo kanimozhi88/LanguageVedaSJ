@@ -152,9 +152,9 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     let FacultyTestActive = await response.json()
     console.log("faculty TestActive", FacultyTestActive);
     if(FacultyTestActive?.length > 0){
-      Alert.alert("Test Already Assigned Successfully")
-    }else{
       Alert.alert("Test Assigned Successfully")
+    }else{
+      Alert.alert("Test Already1 Assigned Successfully")
     }
     // if (Array.isArray(FacultyTestActive)) {
     //   Alert.alert(" Test Assigned To Student successfully")
