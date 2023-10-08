@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, Text, TextInput, SafeAreaView, TouchableOpacity, StyleSheet, Image, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, SafeAreaView, TouchableOpacity, StyleSheet, Image, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import { getAccessToken } from '../../redux/actions';
 import moment from "moment";
 import { Menu, MenuOptions, MenuOption, MenuTrigger, MenuProvider } from 'react-native-popup-menu';
@@ -48,8 +48,11 @@ const FacultyStudentDetails = ({ route, navigation }) => {
     });
     let FctlyStudentDtls = await response.json()
     console.log(" FctlyStudentDtls API RES", FctlyStudentDtls);
-    const finalRes = JSON.parse(FctlyStudentDtls)
-    setFinal(finalRes?.Questions);
+    if(FctlyStudentDtls?.Status !== "Failure"){
+      const finalRes = JSON.parse(FctlyStudentDtls)
+      setFinal(finalRes?.Questions);
+    }
+   
     // console.log("final data is", final)
   }
 
@@ -423,7 +426,7 @@ const FacultyStudentDetails = ({ route, navigation }) => {
                 // requestStoragePermission(updatedUrl,type)
               }
             }}>
-              <Text>View</Text>
+              <Text style={{color:"black"}}>View</Text>
             </MenuOption>
             <MenuOption onSelect={() => {
               if (PublicDownloadUrl !== undefined) {
@@ -432,7 +435,7 @@ const FacultyStudentDetails = ({ route, navigation }) => {
                 // requestStoragePermission(updatedUrl,type)
               }
             }}>
-              <Text>Download</Text>
+              <Text style={{color:"black"}}>Download</Text>
             </MenuOption>
           </MenuOptions>
         </Menu>
@@ -568,7 +571,9 @@ const FacultyStudentDetails = ({ route, navigation }) => {
         </TouchableOpacity>
         <Text style={{ color: "#1B2236", fontSize: 16, fontWeight: "500", marginLeft: "5%", alignSelf: "center", marginTop: 10 }}>{courseName}</Text>
       </View>
-
+      <View>
+     { final  !== '' && final?.length > 0 ? 
+   
       <ScrollView>
 
         <Text style={{ color: "#130F26", fontSize: 16, fontWeight: "400", marginHorizontal: 25, marginTop: 20 }}>{assignmentTitle}</Text>
@@ -597,7 +602,9 @@ const FacultyStudentDetails = ({ route, navigation }) => {
         <View style={{ marginTop: 20, marginHorizontal: 25 }}>
           <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Assessment</Text>
           <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 5, marginTop: 10 }}>
+           {final !== ''  && final?.length > 0 ?
             <QuestionScreen questionData={final[currentIndex]} />
+          : null}
           </View>
         </View>
 
@@ -607,14 +614,14 @@ const FacultyStudentDetails = ({ route, navigation }) => {
             <Text style={{ color: "#000000", fontSize: 16, fontWeight: "400", alignSelf: "center" }}>{final[currentIndex]?.TotalMarks}</Text>
           </View>
         </View>
-
+        
         <View style={{ marginTop: 20, marginHorizontal: 25 }}>
-          <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>File</Text>
-          <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10 }}>
+        {final[currentIndex]?.Attachments?.length > 0 ?   <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>File</Text> : null}
+          <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 0, marginTop: 10 }}>
 
             {final[currentIndex]?.Attachments ? (
               final[currentIndex]?.Attachments.map((item, index) => (
-                <View key={index} style={{ margin: 10, backgroundColor: "#F5F7FB", width: "100%", elevation: 5, flexDirection: "row", paddingBottom: 5, justifyContent: "space-evenly", alignItems: "center", alignSelf: "center" }}>
+                <View key={index} style={{  backgroundColor: "#F5F7FB", width: "100%", elevation: 5, flexDirection: "row", paddingBottom: 5, justifyContent: "space-evenly", alignItems: "center", alignSelf: "center" }}>
                   {item.Type === "image" ?
                     <Image
                       source={require('../../assets/Image.png')}
@@ -624,9 +631,9 @@ const FacultyStudentDetails = ({ route, navigation }) => {
                       style={{ width: 16, height: 16, margin: 5 }} />}
 
                   <Text style={{ margin: 5, width: "50%" }}>{item?.filename.length > 25 ? item?.filename.substring(0, 25) + "..." : item.filename}</Text>
-                  <Text style={{ padding: 4, borderColor: "#CDD3D8", borderWidth: 1, color: "#242634", fontSize: 11, fontWeight: "900", margin: 5 }}> {item.ContentSize}</Text>
+                  <Text style={{ padding: 4, borderColor: "#CDD3D8", borderWidth: 1, color: "#242634", fontSize: 11, fontWeight: "900",}}> {item.ContentSize}</Text>
                   <MenuProvider>
-                    <View style={{ height: 55, top: 15 }}>
+                    <View style={{ height: 65, top: 15 }}>
                       <PopupMenuExample PublicDownloadUrl={item?.PublicDownloadUrl} base64={item?.content} type={item?.Type} index={-1} />
                     </View>
                   </MenuProvider>
@@ -644,13 +651,14 @@ const FacultyStudentDetails = ({ route, navigation }) => {
           </View>
         </View>
 
+
 {showEssayMarks && Status !== "Completed" ?
         <View style={{ marginTop: 20, marginHorizontal: 25 }}>
           <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>Essay Marks</Text>
           <View style={{ flexDirection: "row", width: "100%", backgroundColor: "#F5F7FB", padding: 15, marginTop: 10 }}>
             <TextInput
               placeholder='Enter Marks'
-              placeholderTextColor={"#424242"}
+              placeholderTextColor={"#1B2236"}
               onChangeText={text => setEssayMarks(text)}
               value={essayMarks}
               style={{ width: "50%", borderColor: "#F38216", textAlignVertical: "top", }} />
@@ -676,11 +684,11 @@ const FacultyStudentDetails = ({ route, navigation }) => {
           <Text style={{ color: "#1C1C1C", fontSize: 18, fontWeight: "500" }}>FeedBack</Text>
           <View style={{ width: "100%", backgroundColor: "#F5F7FB", height: 145, marginTop: 10 }}>
             {final !== '' && Status === "Completed" ?
-              <Text style={{ color: "#000000", fontSize: 16, fontWeight: "400", marginHorizontal: 40, textAlign: "justify", }}>{final?.FeedBack}</Text>
+              <Text style={{ color: "#000000", fontSize: 16, fontWeight: "400", marginHorizontal: 40, textAlign: "justify", }}>{final[currentIndex]?.FeedBack}</Text>
               :
               <TextInput
                 placeholder='Type Message'
-                placeholderTextColor={"#424242"}
+                placeholderTextColor={"#1B2236"}
                 onChangeText={text => setDescription(text)}
                 value={description}
                 style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />
@@ -725,7 +733,11 @@ const FacultyStudentDetails = ({ route, navigation }) => {
         />
 
       </ScrollView>
-
+   
+     : 
+<Text style={{color:"black",alignSelf:"center"}}>No Data Available</Text> 
+      }
+         </View>
 
     </SafeAreaView>
   )

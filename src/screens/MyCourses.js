@@ -22,15 +22,15 @@ const MyCourses = () => {
   const [notifyClick,setNotifyClick] = useState(false);
 
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      // Increment the refreshCount to trigger a re-render
-      setRefreshCount(refreshCount + 1);
-    }, 2000); // 2000 milliseconds = 2 seconds
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     // Increment the refreshCount to trigger a re-render
+  //     setRefreshCount(refreshCount + 1);
+  //   }, 2000); // 2000 milliseconds = 2 seconds
 
-    // Clear the timer when the component unmounts
-    return () => clearTimeout(timer);
-  }, [refreshCount]); // Re-run the effect whenever refreshCount changes
+  //   // Clear the timer when the component unmounts
+  //   return () => clearTimeout(timer);
+  // }, [refreshCount]); // Re-run the effect whenever refreshCount changes
 
 
   useEffect(() => {

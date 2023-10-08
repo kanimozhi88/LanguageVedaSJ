@@ -187,6 +187,7 @@ const LoginScreen = ({ route }) => {
             onPress: () => {
               setShowOtp(true);
               setOtpTextShow(false);
+              setShowResend(true)
               // Use the ref to focus on the OTP input field
               otpInputRef.current.focus();
             }
@@ -219,8 +220,10 @@ const LoginScreen = ({ route }) => {
           <View style={{ marginTop: 20 }}>
             <Text style={styles.userIdTxt}>User Id</Text>
             <TextInput
-            placeholderTextColor={"#424242"}
-              style={[styles.input, { color: inputTextColor, backgroundColor: inputBackgroundColor }]}
+            placeholderTextColor={"#1B2236"}
+              style={[styles.input, { color: inputTextColor, 
+                // backgroundColor: inputBackgroundColor 
+              }]}
               placeholder="Enter User name"
               onChangeText={text => handleMobileNumberChange(text)}
               value={Phone}
@@ -238,7 +241,7 @@ const LoginScreen = ({ route }) => {
             {/* <Text style={styles.passwordTxt}>Enter OTP</Text> */}
             {showOtp ?
               <TextInput
-              placeholderTextColor={"#424242"}
+              placeholderTextColor={"#1B2236"}
                 style={styles.input}
                 placeholder="Enter OTP"
                 secureTextEntry

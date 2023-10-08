@@ -80,7 +80,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     setFinal(FacultyCourseSelecRes);
     const newArray = FacultyCourseSelecRes?.testResponses.map((item) => ({
       testId: item.testId,
-      IsActive: true,
+      isActive: true,
       // status: "In Progress"
     }))
     setTestArray(newArray);
@@ -115,7 +115,11 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     });
   };
 
-  console.log("selecteditems", selectedItems);
+  console.log("selecteditems checkbos ix::::::::::::::::::", selectedItems);
+  console.log("selecteditems checkbos ix::::::::::::::::::",  typeof selectedItems);
+
+  console.log("selecteditems checkbos ix::::::::::::::::::",  typeof testArray);
+
   const getAssignBtnValue = async () => {
     try {
       const value = await AsyncStorage.getItem('assignBtn');
@@ -136,9 +140,14 @@ const FacultyCourseSelection = ({ navigation, route }) => {
 
     console.log("testArray>>>>>>>>>>>>", testArray);
     let data = {};
-    data.patchDataList = testArray;
+    // data.patchDataList = testArray;
+    data.patchDataList = selectedItems;
+
+    console.log("patchdatalist is::::::", data.patchDataList);
+    console.log("patchdatalist is::::::", typeof  data.patchDataList);
 
     const body = JSON.stringify(data)
+    console.log("BODY PARAMS IS:::::::::::::",body)
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
     const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyTestActive`, {
@@ -150,16 +159,21 @@ const FacultyCourseSelection = ({ navigation, route }) => {
       body,
     });
     let FacultyTestActive = await response.json()
-    console.log("faculty TestActive", FacultyTestActive);
-    if(FacultyTestActive?.length > 0){
+    console.log("faculty TestActive:::::::::::::::;;", FacultyTestActive);
+    if(FacultyTestActive?.length > 0 && FacultyTestActive[0]?.errorCode !==  "APEX_ERROR"){
       Alert.alert("Test Assigned Successfully")
+    //   Alert.alert(
+    // "Test Assigned Successfully",
+    //  [{text: 'OK', onPress: () =>     FacultyCourseSelection()}]
+    //  )
     }else{
-      Alert.alert("Test Already1 Assigned Successfully")
+      Alert.alert("Test Already Assigned Successfully")
+      // Alert.alert(
+      //   "Test Already Assigned Successfully",
+      //    [{text: 'OK', onPress: () =>     FacultyCourseSelection()}]
+      //    )
     }
-    // if (Array.isArray(FacultyTestActive)) {
-    //   Alert.alert(" Test Assigned To Student successfully")
-    //   savAssignBtnValueToAsyncStorage()
-    // }
+    
     setAssignEnable(false)
   }
 
@@ -243,7 +257,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
               }
             }
             }>
-              <Text>View</Text>
+              <Text style={{color:"black"}}>View</Text>
             </MenuOption>
             <MenuOption onSelect={() => {
               if (PublicDownloadUrl.PublicDownloadUrl !== undefined) {
@@ -252,7 +266,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
               }
             }
             }>
-              <Text>Download</Text>
+              <Text style={{color:"black"}}>Download</Text>
             </MenuOption>
           </MenuOptions>
         </Menu>
@@ -283,7 +297,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
 
             // navigation.navigate('DocumentScreen', { base64: base64, type: type })}
             >
-              <Text>View</Text>
+              <Text style={{color:"black"}}>View</Text>
             </MenuOption>
           </MenuOptions>
         </Menu>
@@ -342,8 +356,14 @@ const FacultyCourseSelection = ({ navigation, route }) => {
 
 
   const validateTest = () => {
-    if (testArray) {
-      FacultyTestActive()
+    // if (testArray) {
+    //   FacultyTestActive()
+    // }
+    if(selectedItems?.length > 0){
+      FacultyTestActive();
+    }
+    else{
+      Alert.alert("Please select any one of the Assignment")
     }
   }
 
@@ -400,6 +420,11 @@ const FacultyCourseSelection = ({ navigation, route }) => {
                 <View style={{ width: "100%", backgroundColor: "#F5F7FB", padding: 5, flexDirection: "row" }}>
 
                   <View style={{ width: "80%", flexDirection: "row" }}>
+                     <CheckBox
+              disabled={false}
+              value={selectedItems.some((selectedItem) => selectedItem.testId === item.testId)}
+              onValueChange={() => toggleCheckBox(item.testId)}
+            />
                     <Text style={{ color: "#242634", fontSize: 14, fontWeight: "500", margin: 5 }}>{item?.LessonPlan} - </Text>
                     <Text style={{ color: "#242634", fontSize: 14, fontWeight: "500", margin: 5 }}>{item?.assignmentTitle}</Text>
                   </View>
@@ -445,7 +470,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
               </View>
             ))
           ) :
-            <Text> No Content Available</Text>
+            <Text style={{color:"black"}}> No Content Available</Text>
           }
         </View>
 
@@ -486,7 +511,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
                 setStatus(data.Type)
               }}
               value={status} // Set the value prop correctly
-              selectedStyle={{ color: "black" }}
+              selectedTextStyle={{ color: "#1c1c1c", }}
             />
             {/* : null} */}
 
@@ -514,7 +539,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
                 //  showDatePicker ?
                 <View>
                   <TouchableOpacity onPress={() => setOpen(true)}>
-                    <Text >  {formatDate(date)}</Text>
+                    <Text style={{ color: "#1B2236", fontSize: 14, fontWeight: "400", marginLeft: 5 }} >  {formatDate(date)}</Text>
                   </TouchableOpacity>
                   {open && (
                     <DatePicker
@@ -539,7 +564,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
                 :
                 <View>
                   <TouchableOpacity onPress={() => setRevisionOpen(true)}>
-                    <Text >  {formatDate(revisionDate)}</Text>
+                    <Text style={{ color: "#1B2236", fontSize: 14, fontWeight: "400", marginLeft: 5 }}>  {formatDate(revisionDate)}</Text>
                   </TouchableOpacity>
                   {revisionOpen && (
                     <DatePicker
@@ -565,7 +590,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
               :
               <TextInput
                 placeholder='Type Message'
-                placeholderTextColor={"#424242"}
+                placeholderTextColor={"#1B2236"}
                 onChangeText={text => setDescription(text)}
                 value={description}
                 style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />

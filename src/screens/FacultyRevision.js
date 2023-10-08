@@ -260,7 +260,7 @@ const FacultyRevision = ({ route, navigation }) => {
                        facultyBatchSelection(data?.Course_Offering_Id);
                      }}
                      value={selectedType} // Set the value prop correctly
-                     selectedStyle={{color:"black"}}
+                     selectedTextStyle={{ color: "#1c1c1c", }}
                    />                  
                      : null}
              
@@ -296,7 +296,7 @@ const FacultyRevision = ({ route, navigation }) => {
                       
                      }}
                      value={selectedType} // Set the value prop correctly
-                     selectedStyle={{color:"black"}}
+                     selectedTextStyle={{ color: "#1c1c1c", }}
                    />                  
                      : null
                      
@@ -310,7 +310,7 @@ const FacultyRevision = ({ route, navigation }) => {
                     {final !== '' ?
                      <View>
                      <TouchableOpacity onPress={() => setOpen(true)}>
-                       <Text >  {formatDate(date)}</Text>
+                       <Text style={{ color: "#1B2236", fontSize: 14, fontWeight: "400", marginLeft: 5 }}>  {formatDate(date)}</Text>
                      </TouchableOpacity>
                      {open && (
                        <DatePicker
@@ -351,7 +351,7 @@ const FacultyRevision = ({ route, navigation }) => {
                       setSelectedRevisionReason(data.Type)
                      }}
                      value={selectedRevisionReason} // Set the value prop correctly
-                     selectedStyle={{color:"black"}}
+                     selectedTextStyle={{ color: "#1c1c1c", }}
                    />                  
                      : null}
              
@@ -383,7 +383,7 @@ const FacultyRevision = ({ route, navigation }) => {
                       setselectedRevisionRemarks(data.Type)
                      }}
                      value={selectedRevisionRemarks} // Set the value prop correctly
-                     selectedStyle={{color:"black"}}
+                     selectedTextStyle={{ color: "#1c1c1c", }}
                    />                  
                      : null}
              
@@ -394,7 +394,7 @@ const FacultyRevision = ({ route, navigation }) => {
           <View style={{ width: "100%", backgroundColor: "#F5F7FB", height: 145, marginTop: 5 }}>
               <TextInput
                 placeholder='Type Message'
-                placeholderTextColor={"#424242"}
+                placeholderTextColor={"#1B2236"}
                 onChangeText={text => setDescription(text)}
                 value={description}
                 style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />
@@ -407,7 +407,7 @@ const FacultyRevision = ({ route, navigation }) => {
           <View style={{ width: "100%", backgroundColor: "#F5F7FB", height: 145, marginTop: 5 }}>
               <TextInput
                 placeholder='Type Message'
-                placeholderTextColor={"#424242"}
+                placeholderTextColor={"#1B2236"}
                 onChangeText={text => setActivity(text)}
                 value={activity}
                 style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />
