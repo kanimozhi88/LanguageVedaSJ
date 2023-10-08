@@ -306,7 +306,7 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
                                     // requestStoragePermission(updatedUrl,type)
                                 }
                             }}>
-                                <Text>View</Text>
+                                <Text style={{color:"black"}}>View</Text>
                         </MenuOption>
                             <MenuOption onSelect={() => {
                                 if (PublicDownloadUrl !== undefined) {
@@ -315,7 +315,7 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
                                     // requestStoragePermission(updatedUrl,type)
                                 }
                             }}>
-                                <Text>Download</Text>
+                                <Text style={{color:"black"}}>Download</Text>
                             </MenuOption>
                     </MenuOptions>
                 </Menu>
@@ -443,7 +443,7 @@ const SpecificStudentTestDetails = ({ route, navigation }) => {
               :
               <TextInput
                 placeholder='Type Message'
-                placeholderTextColor={"#424242"}
+                placeholderTextColor={"#1B2236"}
                 onChangeText={text => setDescription(text)}
                 value={description}
                 style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />

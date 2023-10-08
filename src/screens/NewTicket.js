@@ -111,13 +111,14 @@ const NewTicket = ({navigation}) =>{
                         }}
                         value={testType !== null ? testType : undefined} // Set the value prop correctly
                         selectedStyle={styles.selectedStyle}
+                        selectedTextStyle={{ color: "#1c1c1c", }}
                       />
       </View> 
       <View style={{marginTop:40,marginHorizontal:25}}>
         <Text style={{color:"#000000",fontSize:15,fontWeight:"400"}}>Message</Text>
         <TextInput
         placeholder='Type Message'
-        placeholderTextColor={"#424242"}
+        placeholderTextColor={"#1B2236"}
         onChangeText={text => setDescription(text)}
         value={description}
         style={{width:290,height:175,borderColor:"#F38216",borderWidth:1,borderRadius:5,marginTop:20,textAlign:"center",textAlignVertical:"top" }}/>

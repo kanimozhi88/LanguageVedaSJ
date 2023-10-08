@@ -28,7 +28,7 @@ const HelpCenterScreen = ({ navigation }) => {
 
     useEffect(() => {
         RaiseTicket();
-    }, [final])
+    }, [])
 
 
     const RaiseTicket = async () => {
@@ -47,6 +47,7 @@ const HelpCenterScreen = ({ navigation }) => {
             body,
         });
         let RaiseTicketRes = await response.json()
+        console.log("RAISETICKET,",RaiseTicketRes);
         setFinal(RaiseTicketRes);
         const counts = {
             Reopen: 0,

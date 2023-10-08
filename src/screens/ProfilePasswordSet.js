@@ -94,7 +94,7 @@ const ProfilePasswordSet = ({ route }) => {
         <View style={{ alignSelf:"center",marginLeft:5,flexDirection: "row", backgroundColor: "white", marginTop: 5, borderWidth: 1, borderColor: "#999999", width: "90%", borderRadius: 10 }} >
 
           <TextInput
-           placeholderTextColor={"#424242"}
+           placeholderTextColor={"#1B2236"}
             value={password}
             onChangeText={text => handleParentPasswordChange(text)}
             style={styles.textInputStyle} />
@@ -115,7 +115,7 @@ const ProfilePasswordSet = ({ route }) => {
         <View style={{alignSelf:"center", marginLeft:5,flexDirection: "row", backgroundColor: "white", marginTop: 5, borderWidth: 1, borderColor: "#999999", width: "90%",  borderRadius: 10 }} >
 
           <TextInput
-            placeholderTextColor={"#424242"}
+            placeholderTextColor={"#1B2236"}
             value={confirmPassword}
             onChangeText={(text) => setConfirmPassword(text)}
             style={styles.textInputStyle} />

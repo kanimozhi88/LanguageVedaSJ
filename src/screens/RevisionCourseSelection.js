@@ -224,7 +224,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
               }
             }
             }>
-              <Text>View</Text>
+              <Text style={{color:"black"}}>View</Text>
             </MenuOption>
             <MenuOption onSelect={() => {
               if (PublicDownloadUrl.PublicDownloadUrl !== undefined) {
@@ -234,7 +234,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
               }
             }
             }>
-              <Text>Download</Text>
+              <Text style={{color:"black"}}>Download</Text>
             </MenuOption>
           </MenuOptions>
         </Menu>
@@ -255,7 +255,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
           </MenuTrigger>
           <MenuOptions style={{ borderWidth: 1, borderColor: "#999999", borderRadius: 5 }} >
             <MenuOption onSelect={() => navigation.navigate('DocumentScreen', { base64: base64, type: type })}>
-              <Text>View</Text>
+              <Text style={{color:"black"}}>View</Text>
             </MenuOption>
           </MenuOptions>
         </Menu>
@@ -455,8 +455,8 @@ const RevisionCourseSelection = ({ navigation, route }) => {
                 setStatus(data.Type)
               }}
               value={status} // Set the value prop correctly
-              selectedStyle={{ color: "black" }}
-            />
+              selectedTextStyle={{ color: "#1c1c1c", }}
+              />
             {/* : null} */}
 
           </View>
@@ -483,7 +483,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
                 //  showDatePicker ?
                 <View>
                   <TouchableOpacity onPress={() => setOpen(true)}>
-                    <Text >  {formatDate(date)}</Text>
+                    <Text style={{ color: "#1B2236", fontSize: 14, fontWeight: "400", marginLeft: 5 }}>  {formatDate(date)}</Text>
                   </TouchableOpacity>
                   {open && (
                     <DatePicker
@@ -508,7 +508,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
                 :
                 <View>
                   <TouchableOpacity onPress={() => setRevisionOpen(true)}>
-                    <Text >  {formatDate(revisionDate)}</Text>
+                    <Text style={{ color: "#1B2236", fontSize: 14, fontWeight: "400", marginLeft: 5 }}>  {formatDate(revisionDate)}</Text>
                   </TouchableOpacity>
                   {revisionOpen && (
                     <DatePicker
@@ -534,7 +534,7 @@ const RevisionCourseSelection = ({ navigation, route }) => {
               :
               <TextInput
                 placeholder='Type Message'
-                placeholderTextColor={"#424242"}
+                placeholderTextColor={"#1B2236"}
                 onChangeText={text => setDescription(text)}
                 value={description}
                 style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />
