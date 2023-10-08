@@ -80,7 +80,11 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     setFinal(FacultyCourseSelecRes);
     const newArray = FacultyCourseSelecRes?.testResponses.map((item) => ({
       testId: item.testId,
+<<<<<<< HEAD
       isActive: true,
+=======
+      IsActive: true
+>>>>>>> 4c27836f08f84ad9c0286a1ff2394d1ba13b5962
       // status: "In Progress"
     }))
     setTestArray(newArray);
@@ -159,19 +163,11 @@ const FacultyCourseSelection = ({ navigation, route }) => {
       body,
     });
     let FacultyTestActive = await response.json()
-    console.log("faculty TestActive:::::::::::::::;;", FacultyTestActive);
+    console.log("faculty TestActive", FacultyTestActive);
     if(FacultyTestActive?.length > 0 && FacultyTestActive[0]?.errorCode !==  "APEX_ERROR"){
       Alert.alert("Test Assigned Successfully")
-    //   Alert.alert(
-    // "Test Assigned Successfully",
-    //  [{text: 'OK', onPress: () =>     FacultyCourseSelection()}]
-    //  )
     }else{
       Alert.alert("Test Already Assigned Successfully")
-      // Alert.alert(
-      //   "Test Already Assigned Successfully",
-      //    [{text: 'OK', onPress: () =>     FacultyCourseSelection()}]
-      //    )
     }
     
     setAssignEnable(false)
@@ -593,7 +589,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
                 placeholderTextColor={"#1B2236"}
                 onChangeText={text => setDescription(text)}
                 value={description}
-                style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />
+                style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" ,color: "#424242"}} />
             }
           </View>
         </View>

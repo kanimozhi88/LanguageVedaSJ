@@ -137,7 +137,7 @@ const TicketStatus = ({ navigation, route }) => {
         placeholderTextColor={"#1B2236"}
         onChangeText={text => setDescription(text)}
         value={description}
-        style={{width:290,borderRadius:5,marginTop:20,textAlignVertical:"top",backgroundColor:"#EFEFEF"}}/>
+        style={{width:290,borderRadius:5,marginTop:20,textAlignVertical:"top",backgroundColor:"#EFEFEF",color: "#424242"}}/>
       
             </View>}
 

@@ -397,7 +397,7 @@ const FacultyRevision = ({ route, navigation }) => {
                 placeholderTextColor={"#1B2236"}
                 onChangeText={text => setDescription(text)}
                 value={description}
-                style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />
+                style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top",color: "#424242" }} />
             
           </View>
         </View>
@@ -410,7 +410,7 @@ const FacultyRevision = ({ route, navigation }) => {
                 placeholderTextColor={"#1B2236"}
                 onChangeText={text => setActivity(text)}
                 value={activity}
-                style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top" }} />
+                style={{ width: 290, height: 175, borderColor: "#F38216", textAlign: "center", textAlignVertical: "top",color: "#424242" }} />
             
           </View>
         </View>
