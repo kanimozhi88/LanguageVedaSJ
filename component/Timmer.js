@@ -124,7 +124,7 @@ const Timmer = ({ recordId }) => {
         if (timerResponse[0] !== '') {
             const now = Math.floor(Date.now() / 1000);
             const remaining = (timerResponse[0]?.startTimestamp - now);
-            setRefresh(true)
+            // setRefresh(true)
             // setTimeRemaining(remaining)
         }
     }
@@ -134,6 +134,7 @@ const Timmer = ({ recordId }) => {
         data.contactId = recordId;
 
         const body = JSON.stringify(data)
+        console.log("TIMMER BODY IS:::::::", body);
         const token = await getAccessToken();
         const bearer = 'Bearer ' + token;
         const response = await fetch(`${BASE_URL}/services/apexrest/RNFacultyTimerController`, {

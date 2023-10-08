@@ -82,11 +82,11 @@ const StudentTakeAssessment = ({ navigation, route }) => {
   //     "TestId": "a0U1e000003JltREAS",
   //     "ScoreObtained": 0,
   //     "QuesId": "a171e000006ZPvSAAW",
-  //     "Que": " 2*2",
-  //     "Option4": "4",
+  //     "Que": " 2*2*9",
+  //     "Option1": "4",
   //     "Option3": "3",
   //     "Option2": "2",
-  //     "Option1": "1",
+  //     "Option4": "1",
   //     "Name": "1",
   //     "Marks": 2,
   //     "CorrectAnswer": "Choice 1"
@@ -98,10 +98,10 @@ const StudentTakeAssessment = ({ navigation, route }) => {
   //     "ScoreObtained": 0,
   //     "QuesId": "a171e000006ZPvUAAW",
   //     "Que": "34-30",
-  //     "Option4": "5",
-  //     "Option3": "4",
-  //     "Option2": "2",
-  //     "Option1": "1",
+  //     "Option1": "5",
+  //     "Option2": "4",
+  //     "Option3": "2",
+  //     "Option4": "1",
   //     "Name": "2",
   //     "Marks": 2,
   //     "CorrectAnswer": "Choice 1"
@@ -156,15 +156,15 @@ const StudentTakeAssessment = ({ navigation, route }) => {
       Option2: "Choice 2",
       Option3: "Choice 3",  // Added mapping for Option3
       Option4: "Choice 4"   // Added mapping for Option4
-  };
-  const updatedAnswersWithChoices = selectedAnswers.map(answer => ({
-    ...answer,
-    newUserAnswer: valueMap[answer.newUserAnswer] || answer.newUserAnswer
-}));
+    };
+    const updatedAnswersWithChoices = selectedAnswers.map(answer => ({
+      ...answer,
+      newUserAnswer: valueMap[answer.newUserAnswer] || answer.newUserAnswer
+    }));
 
-console.log(updatedAnswersWithChoices);
+    console.log(updatedAnswersWithChoices);
 
-   
+
 
     let data = {};
     data.questionUpdates = updatedAnswersWithChoices;
@@ -442,7 +442,7 @@ console.log(updatedAnswersWithChoices);
 
 
     const handleOptionSelect = (questionId, value) => {
-      console.log("selected Values*******", questionId,  value)
+      console.log("selected Values*******", questionId, value)
 
       // const Val = value === "Choice 1" ? "Option1" : value === "Choice 2" ? "Option2" : value === "Choice 3" ? "Option3" : value === "Choice 4" ? "Option4" : null;
       const choice = value === "Option1" ? "Choice 1" : value === "Option2" ? "Choice 2" : value === "Option3" ? "Choice 3" : value === "Option4" ? "Choice 4" : null;
@@ -487,7 +487,7 @@ console.log(updatedAnswersWithChoices);
               handleOptionSelect(questionData?.QuesId, value)
             }}
               value={selectedAnswers.find(item => item.questionId === questionData?.QuesId)?.newUserAnswer || null}>
-              {Object.keys(questionData).map((key) => {
+              {/* {Object.keys(questionData).map((key) => {
                 if (key.startsWith('Option') && questionData[key]) {
                   const optionNumber = key.replace('Option', '');
                   return (
@@ -498,6 +498,15 @@ console.log(updatedAnswersWithChoices);
                   );
                 }
                 return null;
+              })} */}
+              {["Option1", "Option2", "Option3", "Option4"].map((optionKey) => {
+                const optionText = questionData[optionKey];
+                return (
+                  <View key={optionKey} style={{ marginHorizontal: 15, flexDirection: 'row' }}>
+                    <RadioButton value={optionKey} />
+                    <Text style={{ alignSelf: 'center', color: "#232423" }}>{optionText}</Text>
+                  </View>
+                );
               })}
             </RadioButton.Group>
           </>
@@ -658,14 +667,14 @@ console.log(updatedAnswersWithChoices);
 
               navigation.navigate('DocumentScreen', { base64: base64, type: type })}
             >
-              <Text>Preview</Text>
+              <Text style={{ color: "black" }}>Preview</Text>
             </MenuOption>
             <MenuOption onSelect={() => {
               const newImages = [...images];
               newImages.splice(index, 1),
                 setImages(newImages)
             }}>
-              <Text>Delete</Text>
+              <Text style={{ color: "black" }}>Delete</Text>
             </MenuOption>
           </MenuOptions>
         </Menu>
@@ -689,9 +698,12 @@ console.log(updatedAnswersWithChoices);
       </View>
 
       <ScrollView >
-        {final !== '' ?
+        {final !== '' && final?.length > 0 ?
           <QuestionScreen questionData={final[currentIndex]} onNextPress={handleNextPress} onPrevPress={handlePrevPress} selectedOption={selectedAns[currentIndex]} handleFileUpload={handleFileUpload} />
-          : null}
+          :
+          // null
+          <Text style={{ color: "black", alignSelf: "center" }}>No Questions Available</Text>
+        }
 
 
         {submitShow ?
