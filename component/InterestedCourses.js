@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useEffect,useState}from 'react';
 import {
   FlatList,
   Image,
@@ -8,6 +8,9 @@ import {
   View,
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
+import {useSelector} from 'react-redux';
+import { getAccessToken } from '../redux/actions';
+import BASE_URL from '../apiConfig';
 
 const note = `<svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M7.80198 0C8.00792 0 8.16634 0.168 8.16634 0.368V2.944C8.16634 4.408 9.36238 5.608 10.8119 5.616C11.4139 5.616 11.8891 5.624 12.2535 5.624L12.3884 5.62341C12.6319 5.62156 12.9597 5.616 13.2436 5.616C13.4416 5.616 13.6 5.776 13.6 5.976V12.408C13.6 14.392 12.0079 16 10.0436 16H3.73861C1.67921 16 0 14.312 0 12.232V3.608C0 1.624 1.6 0 3.57228 0H7.80198ZM8.6495 10.32H4.34059C4.01584 10.32 3.74653 10.584 3.74653 10.912C3.74653 11.24 4.01584 11.512 4.34059 11.512H8.6495C8.97426 11.512 9.24356 11.24 9.24356 10.912C9.24356 10.584 8.97426 10.32 8.6495 10.32ZM7.01782 6.32H4.34059C4.01584 6.32 3.74653 6.592 3.74653 6.92C3.74653 7.248 4.01584 7.512 4.34059 7.512H7.01782C7.34257 7.512 7.61188 7.248 7.61188 6.92C7.61188 6.592 7.34257 6.32 7.01782 6.32ZM9.32055 0.7248C9.32055 0.38 9.73481 0.2088 9.97164 0.4576C10.8279 1.3568 12.3241 2.9288 13.1606 3.8072C13.3918 4.0496 13.2223 4.452 12.8889 4.4528C12.2378 4.4552 11.4703 4.4528 10.9182 4.4472C10.0421 4.4472 9.32055 3.7184 9.32055 2.8336V0.7248Z" fill="#B9B9B9" fill-opacity="0.54"/>
@@ -54,9 +57,43 @@ const data = [
   },
 ];
 const InterestedCourses = () => {
+
+  
+  useEffect(()=>{
+    ParentrecommenedCoursesApi();
+  },[])
+
+  const [parentRes,setParentRes] = useState('');
+  const recordId = useSelector(state => state.recordId);
+
+  const ParentrecommenedCoursesApi = async () => {
+    // let data = {};
+    // data.contactId = recordId;
+
+    // const body = JSON.stringify(data);
+    const token = await getAccessToken();
+    const bearer = 'Bearer ' + token;
+    const response = await fetch(
+      `${BASE_URL}/services/apexrest/RNParentRecommendedCourse`,
+      {
+        method: 'GET',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Authorization: bearer,
+        }),
+        // body,
+      },
+    );
+    let ParentRecApi = await response.json();
+    console.log('ParentApi recommanded ::::::::::::::', ParentRecApi);
+    setParentRes(ParentRecApi);
+   
+  }; 
   const renderItems = () => {
     return (
-      <TouchableOpacity style={styles.tile}>
+      <TouchableOpacity 
+      // onPress={()=> navig}
+      style={styles.tile}>
         <View style={styles.tileView}>
           <View>
             <Image
@@ -77,6 +114,7 @@ const InterestedCourses = () => {
                   fontWeight: '500',
                 }}>
                 Language Learning - Kannada
+                {/* {item?.CourseName} */}
               </Text>
             </View>
             <View

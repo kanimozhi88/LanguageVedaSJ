@@ -59,7 +59,9 @@ const MyCourses = () => {
   useEffect(() => {
     NotificationsApi();
     NotificationsAnnouncementApi();
-  }, []);
+    }, []);
+
+
 
   useEffect(() => {
     const fetchToggleSwitchValue = async () => {

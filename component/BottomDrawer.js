@@ -1,9 +1,13 @@
-import React from 'react';
+import React , {useEffect,useState}from 'react';
 import {FlatList} from 'react-native';
 import {Modal, Text, TouchableOpacity, View} from 'react-native';
 import {StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Divider} from 'react-native-paper';
+import {useSelector} from 'react-redux';
+import { getAccessToken } from '../redux/actions';
+import BASE_URL from '../apiConfig';
+
 
 const data = [
   {
@@ -36,13 +40,46 @@ const data = [
   },
 ];
 const BottomDrawer = ({isVisible, toggleDrawer}) => {
+
+  useEffect(()=>{
+    ParentApi();
+  },[])
+  const [parentRes,setParentRes] = useState('');
+  const recordId = useSelector(state => state.recordId);
+
+
   const renderItems = ({item}) => {
     return (
       <TouchableOpacity style={styles.listContainer}>
-        <Text>{item.name}</Text>
+        <Text style={{fontSize:18,color:"black"}}>{item.studentName}</Text>
       </TouchableOpacity>
     );
   };
+ 
+  const ParentApi = async () => {
+    let data = {};
+    data.contactId = recordId;
+
+    const body = JSON.stringify(data);
+    const token = await getAccessToken();
+    const bearer = 'Bearer ' + token;
+    const response = await fetch(
+      `${BASE_URL}/services/apexrest/rnparentchildrelationship`,
+      {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Authorization: bearer,
+        }),
+        body,
+      },
+    );
+    let ParentApi = await response.json();
+    console.log('ParentApi ::::::::::::::', ParentApi);
+    setParentRes(ParentApi);
+   
+  };
+
   return (
     <Modal visible={isVisible} animationType="fade" transparent={true}>
       <TouchableOpacity
@@ -71,9 +108,9 @@ const BottomDrawer = ({isVisible, toggleDrawer}) => {
               </TouchableOpacity>
             </View>
             <FlatList
-              data={data}
+              data={parentRes?.Relationships}
               renderItem={renderItems}
-              keyExtractor={item => item.id.toString()}
+              // keyExtractor={item => item.id.toString()}
               style={{maxHeight: 200}}
             />
           </View>
