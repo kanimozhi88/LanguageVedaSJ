@@ -99,7 +99,7 @@ const MyProfileScreen = ({ navigation }) => {
           Change Password
         </Text>
         <Image
-          style={{ height: 20, width: 20, marginLeft: "48%" }}
+          style={{ height: 20, width: 20, marginLeft: "46.5%" }}
           source={require('../../assets/graysidearrow.png')} />
       </TouchableOpacity>
       <View style={{ borderBottomWidth: 0.2, borderBottomColor: "#979797", margin: 5 }} />
