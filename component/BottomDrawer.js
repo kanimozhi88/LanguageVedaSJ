@@ -55,6 +55,36 @@ const BottomDrawer = ({isVisible, toggleDrawer}) => {
       </TouchableOpacity>
     );
   };
+
+  // const renderItems = ({ item }) => {
+  //   const [isChecked, setChecked] = useState(false);
+  
+  //   const handleToggle = () => {
+  //     setChecked(!isChecked);
+  //   };
+  
+  //   return (
+  //     <TouchableOpacity
+  //       style={{ flexDirection: 'row', alignItems: 'center' }}
+  //       onPress={handleToggle}
+  //     >
+  //       <Text style={{ fontSize: 18, color: 'black' }}>{item.studentName}</Text>
+  //       <TouchableOpacity
+  //         onPress={handleToggle}
+  //         style={{
+  //           width: 20,
+  //           height: 20,
+  //           borderRadius: 10,
+  //           borderWidth: 2,
+  //           borderColor: isChecked ? 'blue' : 'gray',
+  //           backgroundColor: isChecked ? 'blue' : 'transparent',
+  //         }}
+  //       >
+  //         {/* You can add an icon or any visual representation for the radio button */}
+  //       </TouchableOpacity>
+  //     </TouchableOpacity>
+  //   );
+  // };
  
   const ParentApi = async () => {
     let data = {};
