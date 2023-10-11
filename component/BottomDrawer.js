@@ -1,30 +1,85 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList} from 'react-native';
-import {Modal, Text, TouchableOpacity, View} from 'react-native';
-import {StyleSheet} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList } from 'react-native';
+import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Divider} from 'react-native-paper';
-import {useSelector} from 'react-redux';
+import { Divider } from 'react-native-paper';
+import { useSelector } from 'react-redux';
 import {getAccessToken} from '../redux/actions';
 import BASE_URL from '../apiConfig';
+import { RadioButton } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 
 const BottomDrawer = ({isVisible, toggleDrawer}) => {
   useEffect(() => {
     ParentApi();
-  }, []);
-  const [parentRes, setParentRes] = useState('');
+  },  []);
+  const [parentRes,  setParentRes] = useState('');
   const recordId = useSelector(state => state.recordId);
+  const [selectedStudentId, setSelectedStudentId] = useState(null);
 
-  const renderItems = ({item}) => {
+  const renderItems = ({ item }) => {
+    const { studentName, studentId } = item;
+
     return (
-      <TouchableOpacity style={styles.listContainer} onPress={() => {}}>
-        <View>
-          <Text style={{fontSize: 18, color: 'black'}}>{item.studentName}</Text>
-          <Text></Text>
+      <TouchableOpacity
+        style={{ margin: 10 }}
+        onPress={() => setSelectedStudentId(studentId)}
+      >
+        <View style={{ flexDirection: 'row', justifyContent:"space-between" }}>
+        <Text style={{color:"black", fontSize:18, fontWeight:"400"}}>{studentName}</Text>
+
+          <RadioButton.Android
+            value={studentId}
+            status={selectedStudentId === studentId ? 'checked' : 'unchecked'}
+            onPress={() => [setSelectedStudentId(studentId),
+              saveBtnValueToAsyncStorage(studentId)]}
+          />
         </View>
       </TouchableOpacity>
     );
   };
+ 
+console.log("SELECTED BUTTON IS::::::::::::;",selectedStudentId)
+const saveBtnValueToAsyncStorage = async (studentId) => {
+  try {
+    await AsyncStorage.setItem('studentIdVal', studentId);
+    console.log("stored value::::::::::")
+  } catch (error) {
+    console.error('Error ', error);
+  }
+};
+  // const renderItems = ({ item }) => {
+  //   const [isChecked, setChecked] = useState(false);
+
+  //   const handleToggle = () => {
+  //     setChecked(!isChecked);
+  //   };
+
+  //   return (
+  //     <TouchableOpacity
+  //       style={{ flexDirection: 'row', alignItems: 'center' }}
+  //       onPress={handleToggle}
+  //     >
+  //       <Text style={{ fontSize: 18, color: 'black' }}>{item.studentName}</Text>
+  //       <TouchableOpacity
+  //         onPress={handleToggle}
+  //         style={{
+  //           width: 20,
+  //           height: 20,
+  //           borderRadius: 10,
+  //           borderWidth: 2,
+  //           borderColor: isChecked ? 'blue' : 'gray',
+  //           backgroundColor: isChecked ? 'blue' : 'transparent',
+  //         }}
+  //       >
+  //         {/* You can add an icon or any visual representation for the radio button */}
+  //       </TouchableOpacity>
+  //     </TouchableOpacity>
+  //   );
+  // };
 
   const ParentApi = async () => {
     let data = {};
@@ -47,6 +102,7 @@ const BottomDrawer = ({isVisible, toggleDrawer}) => {
     let ParentApi = await response.json();
     console.log('ParentApi ::::::::::::::', ParentApi);
     setParentRes(ParentApi);
+
   };
 
   return (
@@ -79,8 +135,8 @@ const BottomDrawer = ({isVisible, toggleDrawer}) => {
             <FlatList
               data={parentRes?.Relationships}
               renderItem={renderItems}
-              // keyExtractor={item => item.id.toString()}
-              style={{maxHeight: 200}}
+              keyExtractor={(item) => item.studentId}
+              style={{ maxHeight: 200 }}
             />
           </View>
         </View>
