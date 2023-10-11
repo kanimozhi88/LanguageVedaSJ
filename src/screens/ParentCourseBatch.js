@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, useWindowDimensions} from 'react-native';
+import {ScrollView, Text, useWindowDimensions} from 'react-native';
 import {Image, SafeAreaView, StyleSheet, TouchableOpacity} from 'react-native';
 import {View} from 'react-native';
 import {SvgXml} from 'react-native-svg';

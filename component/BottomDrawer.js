@@ -1,61 +1,31 @@
-import React , {useEffect,useState}from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
 import {Modal, Text, TouchableOpacity, View} from 'react-native';
 import {StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Divider} from 'react-native-paper';
 import {useSelector} from 'react-redux';
-import { getAccessToken } from '../redux/actions';
+import {getAccessToken} from '../redux/actions';
 import BASE_URL from '../apiConfig';
 
-
-const data = [
-  {
-    name: 'User 1',
-    id: '1',
-  },
-  {
-    name: 'User 2',
-    id: '2',
-  },
-  {
-    name: 'User 3',
-    id: '3',
-  },
-  {
-    name: 'User 4',
-    id: '4',
-  },
-  {
-    name: 'User 5',
-    id: '5',
-  },
-  {
-    name: 'User 6',
-    id: '6',
-  },
-  {
-    name: 'User 7',
-    id: '7',
-  },
-];
 const BottomDrawer = ({isVisible, toggleDrawer}) => {
-
-  useEffect(()=>{
+  useEffect(() => {
     ParentApi();
-  },[])
-  const [parentRes,setParentRes] = useState('');
+  }, []);
+  const [parentRes, setParentRes] = useState('');
   const recordId = useSelector(state => state.recordId);
-
 
   const renderItems = ({item}) => {
     return (
-      <TouchableOpacity style={styles.listContainer}>
-        <Text style={{fontSize:18,color:"black"}}>{item.studentName}</Text>
+      <TouchableOpacity style={styles.listContainer} onPress={() => {}}>
+        <View>
+          <Text style={{fontSize: 18, color: 'black'}}>{item.studentName}</Text>
+          <Text></Text>
+        </View>
       </TouchableOpacity>
     );
   };
- 
+
   const ParentApi = async () => {
     let data = {};
     data.contactId = recordId;
@@ -77,7 +47,6 @@ const BottomDrawer = ({isVisible, toggleDrawer}) => {
     let ParentApi = await response.json();
     console.log('ParentApi ::::::::::::::', ParentApi);
     setParentRes(ParentApi);
-   
   };
 
   return (
@@ -93,7 +62,7 @@ const BottomDrawer = ({isVisible, toggleDrawer}) => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'flex-end',
-                gap: 90,
+                gap: 95,
               }}>
               <Divider
                 style={{
@@ -128,7 +97,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalContainer: {
-    height: 250,
+    flexGrow: 1,
+    maxHeight: 200,
     backgroundColor: 'white',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
