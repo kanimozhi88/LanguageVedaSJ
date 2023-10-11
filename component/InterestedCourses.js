@@ -35,7 +35,7 @@ const InterestedCourses = () => {
   
   useEffect(()=>{
     ParentrecommenedCoursesApi();
-  })
+  },[])
 
   
 
