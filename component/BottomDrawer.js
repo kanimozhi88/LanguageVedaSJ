@@ -1,68 +1,63 @@
-import React , {useEffect,useState}from 'react';
-import {FlatList} from 'react-native';
-import {Modal, Text, TouchableOpacity, View} from 'react-native';
-import {StyleSheet} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { FlatList } from 'react-native';
+import { Modal, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Divider} from 'react-native-paper';
-import {useSelector} from 'react-redux';
-import { getAccessToken } from '../redux/actions';
+import { Divider } from 'react-native-paper';
+import { useSelector } from 'react-redux';
+import {getAccessToken} from '../redux/actions';
 import BASE_URL from '../apiConfig';
+import { RadioButton } from 'react-native-paper';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-const data = [
-  {
-    name: 'User 1',
-    id: '1',
-  },
-  {
-    name: 'User 2',
-    id: '2',
-  },
-  {
-    name: 'User 3',
-    id: '3',
-  },
-  {
-    name: 'User 4',
-    id: '4',
-  },
-  {
-    name: 'User 5',
-    id: '5',
-  },
-  {
-    name: 'User 6',
-    id: '6',
-  },
-  {
-    name: 'User 7',
-    id: '7',
-  },
-];
+
 const BottomDrawer = ({isVisible, toggleDrawer}) => {
-
-  useEffect(()=>{
+  useEffect(() => {
     ParentApi();
-  },[])
-  const [parentRes,setParentRes] = useState('');
+  },  []);
+  const [parentRes,  setParentRes] = useState('');
   const recordId = useSelector(state => state.recordId);
+  const [selectedStudentId, setSelectedStudentId] = useState(null);
 
+  const renderItems = ({ item }) => {
+    const { studentName, studentId } = item;
 
-  const renderItems = ({item}) => {
     return (
-      <TouchableOpacity style={styles.listContainer}>
-        <Text style={{fontSize:18,color:"black"}}>{item.studentName}</Text>
+      <TouchableOpacity
+        style={{ margin: 10 }}
+        onPress={() => setSelectedStudentId(studentId)}
+      >
+        <View style={{ flexDirection: 'row', justifyContent:"space-between" }}>
+        <Text style={{color:"black", fontSize:18, fontWeight:"400"}}>{studentName}</Text>
+
+          <RadioButton.Android
+            value={studentId}
+            status={selectedStudentId === studentId ? 'checked' : 'unchecked'}
+            onPress={() => [setSelectedStudentId(studentId),
+              saveBtnValueToAsyncStorage(studentId),toggleDrawer]}
+          />
+        </View>
       </TouchableOpacity>
     );
   };
-
+ 
+console.log("SELECTED BUTTON IS::::::::::::;",selectedStudentId)
+const saveBtnValueToAsyncStorage = async (studentId) => {
+  try {
+    await AsyncStorage.setItem('studentIdVal', studentId);
+    console.log("stored value::::::::::")
+  } catch (error) {
+    console.error('Error ', error);
+  }
+};
   // const renderItems = ({ item }) => {
   //   const [isChecked, setChecked] = useState(false);
-  
+
   //   const handleToggle = () => {
   //     setChecked(!isChecked);
   //   };
-  
+
   //   return (
   //     <TouchableOpacity
   //       style={{ flexDirection: 'row', alignItems: 'center' }}
@@ -85,7 +80,7 @@ const BottomDrawer = ({isVisible, toggleDrawer}) => {
   //     </TouchableOpacity>
   //   );
   // };
- 
+
   const ParentApi = async () => {
     let data = {};
     data.contactId = recordId;
@@ -107,7 +102,7 @@ const BottomDrawer = ({isVisible, toggleDrawer}) => {
     let ParentApi = await response.json();
     console.log('ParentApi ::::::::::::::', ParentApi);
     setParentRes(ParentApi);
-   
+
   };
 
   return (
@@ -123,7 +118,7 @@ const BottomDrawer = ({isVisible, toggleDrawer}) => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'flex-end',
-                gap: 90,
+                gap: 95,
               }}>
               <Divider
                 style={{
@@ -140,8 +135,8 @@ const BottomDrawer = ({isVisible, toggleDrawer}) => {
             <FlatList
               data={parentRes?.Relationships}
               renderItem={renderItems}
-              // keyExtractor={item => item.id.toString()}
-              style={{maxHeight: 200}}
+              keyExtractor={(item) => item.studentId}
+              style={{ maxHeight: 200 }}
             />
           </View>
         </View>
@@ -158,7 +153,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalContainer: {
-    height: 250,
+    flexGrow: 1,
+    maxHeight: 200,
     backgroundColor: 'white',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,

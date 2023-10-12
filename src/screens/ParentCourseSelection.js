@@ -1,10 +1,13 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {FlatList, TouchableOpacity} from 'react-native';
 import {Image} from 'react-native';
 import {SafeAreaView} from 'react-native';
 import {Text} from 'react-native';
 import {StyleSheet, View} from 'react-native';
 import {SvgXml} from 'react-native-svg';
+import {getAccessToken} from '../../redux/actions';
+import BASE_URL from '../../apiConfig';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const clock = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M8.00065 1.33337C11.6873 1.33337 14.6673 4.32004 14.6673 8.00004C14.6673 11.6867 11.6873 14.6667 8.00065 14.6667C4.32065 14.6667 1.33398 11.6867 1.33398 8.00004C1.33398 4.32004 4.32065 1.33337 8.00065 1.33337ZM7.76732 4.62004C7.49398 4.62004 7.26732 4.84004 7.26732 5.12004V8.48671C7.26732 8.66004 7.36065 8.82004 7.51398 8.91337L10.1273 10.4734C10.2073 10.52 10.294 10.5467 10.3873 10.5467C10.554 10.5467 10.7207 10.46 10.814 10.3C10.954 10.0667 10.8807 9.76004 10.6407 9.61337L8.26732 8.20004V5.12004C8.26732 4.84004 8.04065 4.62004 7.76732 4.62004Z" fill="#B9B9B9" fill-opacity="0.54"/>
@@ -56,12 +59,68 @@ const data = [
 ];
 
 const ParentCourseSelection = ({navigation}) => {
+  const [final, setFinal] = useState('');
+  const [contactId, setContactID] = useState('');
+
+  useEffect(() => {
+    const getStudentID = async () => {
+      try {
+        const storedDisabledState = await AsyncStorage.getItem('studentIdVal');
+        if (storedDisabledState !== null) {
+          console.log('gettted studentid valu is::::::::', storedDisabledState);
+          setContactID(storedDisabledState);
+          ParentCourseSelect(storedDisabledState);
+        }
+      } catch (error) {
+        console.error('Error', error);
+      }
+    };
+
+    getStudentID();
+  }, []);
+
+  // useEffect(()=>{
+  //   ParentCourseSelect();
+  // },[])
+
+  const ParentCourseSelect = async contactId => {
+    console.log('inside contactis', contactId);
+    console.log('inside contactis', typeof contactId);
+
+    let data = {};
+    data.contactId = contactId;
+
+    const body = JSON.stringify(data);
+    const token = await getAccessToken();
+    const bearer = 'Bearer ' + token;
+    const response = await fetch(
+      `${BASE_URL}/services/apexrest/RNCourseDisplay`,
+      {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Authorization: bearer,
+        }),
+        body,
+      },
+    );
+    let ParentCourseSelectRes = await response.json();
+    console.log(' ParentCourseSelectRes API RES', ParentCourseSelectRes);
+    setFinal(ParentCourseSelectRes);
+    console.log('final data is', final);
+  };
   const renderItem = ({item}) => {
     return (
       <View style={{marginTop: 5}}>
         <TouchableOpacity
           style={styles.courseTile}
-          onPress={() => navigation.navigate('ParentCourseBatch')}>
+          onPress={() =>
+            navigation.navigate('ParentCourseBatch', {
+              batchId: item?.batchId,
+              contactId: contactId,
+              CourseName: item?.CourseName,
+            })
+          }>
           <View>
             <Image
               source={require('../../assets/coursegirl.png')}
@@ -69,7 +128,7 @@ const ParentCourseSelection = ({navigation}) => {
             />
           </View>
           <View style={styles.titleContainer}>
-            <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.title}>{item.CourseName}</Text>
             <View style={styles.descriptionContainer}>
               <View style={styles.desItems}>
                 <SvgXml xml={clock} width="12" height="12" color="#000000" />
@@ -80,7 +139,7 @@ const ParentCourseSelection = ({navigation}) => {
                     letterSpacing: -0.3,
                     lineHeight: 12,
                   }}>
-                  {item.duration}
+                  {item.durationMonths || '--'} Months
                 </Text>
               </View>
               <View style={styles.desItems}>
@@ -93,7 +152,7 @@ const ParentCourseSelection = ({navigation}) => {
                     lineHeight: 12,
                     color: '#F38216',
                   }}>
-                  {item.rating}
+                  {item.rating || 4.4}
                 </Text>
               </View>
             </View>
@@ -132,10 +191,10 @@ const ParentCourseSelection = ({navigation}) => {
       </View>
       <View>
         <FlatList
-          data={data}
+          data={final}
           renderItem={renderItem}
           numColumns={2}
-          keyExtractor={item => item.id.toString()}
+          // keyExtractor={item => item.id.toString()}
         />
       </View>
     </SafeAreaView>
@@ -174,12 +233,14 @@ const styles = StyleSheet.create({
     lineHeight: 15,
     letterSpacing: -0.3,
     color: '#474646',
+    textDecorationLine: 'underline',
   },
   descriptionContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     margin: 7,
+    top: 20,
   },
   desItems: {
     flexDirection: 'row',
