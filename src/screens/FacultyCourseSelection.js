@@ -80,11 +80,7 @@ const FacultyCourseSelection = ({ navigation, route }) => {
     setFinal(FacultyCourseSelecRes);
     const newArray = FacultyCourseSelecRes?.testResponses.map((item) => ({
       testId: item.testId,
-<<<<<<< HEAD
-      isActive: true,
-=======
       IsActive: true
->>>>>>> 4c27836f08f84ad9c0286a1ff2394d1ba13b5962
       // status: "In Progress"
     }))
     setTestArray(newArray);

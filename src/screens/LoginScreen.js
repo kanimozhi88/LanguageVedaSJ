@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, TextInput, StyleSheet, Text, TouchableOpacity, Image, KeyboardAvoidingView, Dimensions, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getAccessToken, getLoginOtpStatus, getLoginStatus, getProfilePhotoMethod } from '../../redux/actions';
@@ -8,7 +8,6 @@ import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import OTPTextView from 'react-native-otp-textinput';
 import BASE_URL from '../../apiConfig';
 import { Appearance, useColorScheme } from 'react-native';
-import { black } from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 
 const LoginScreen = ({ route }) => {
 
@@ -32,6 +31,9 @@ const LoginScreen = ({ route }) => {
   const [showOtp, setShowOtp] = useState(false);
   const [showResend, setShowResend] = useState(false);
   const [otpTextShow, setOtpTextShow] = useState(true);
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [loginBtn,setLoginBtn] = useState(false);
+
 
   const restrictedPattern = /^[a-zA-Z0-9]*$/;
 
@@ -57,6 +59,9 @@ const LoginScreen = ({ route }) => {
     }
   }
 
+  // useEffect(()=>{
+  //   validateUserLogin();
+  // },[Phone,Password])
 
   const OTPApiRequest = async (email) => {
     let data = {};
@@ -84,12 +89,47 @@ const LoginScreen = ({ route }) => {
           {
             text: 'OK',
             // onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
-            onPress: () => handleOTP()
+            onPress: () =>[ handleOTP()]
           },
         ]
       );
     }
   }
+
+  const validateUserLogin = async () => {
+    let data = {};
+    data.username = Phone;
+    data.password = Password;
+    data.domain = 'test'
+
+    const body = JSON.stringify(data)
+    console.log("BAODY IS",body);
+    const token = await getAccessToken();
+    const bearer = 'Bearer ' + token;
+    console.log('bearer------>' + bearer);
+    const response = await fetch(`${BASE_URL}/services/apexrest/RNCommunityUserLogin`, {
+      method: 'POST',
+      headers: new Headers({
+        "Content-Type": "application/json",
+        "Authorization": bearer
+      }),
+      body,
+    });
+    let validateUserLoginRes = await response.json()
+    console.log("validateUserLoginRes API RESULT :::",  validateUserLoginRes)
+    if(validateUserLoginRes?.isSuccess === true){
+      setLoginBtn(true)
+      console.log("INSIDE IF:::::::::::::")
+      handleSubmitForOtp();
+      setForgotPassword(false);
+
+    }else{
+      Alert.alert('Entered Password is Incorrect')
+      setLoginBtn(true)
+      setForgotPassword(true);
+    }
+  }
+
 
 
 
@@ -106,7 +146,7 @@ const LoginScreen = ({ route }) => {
     const bearer = 'Bearer ' + token;
     console.log('bearer------>' + bearer);
     console.log(JSON.stringify(token));
-    const response = await fetch(`${BASE_URL}/services/apexrest/v1/search-records/`, {
+    const response = await fetch(`${BASE_URL}/services/apexrest/v1/search-record/`, {
       method: 'POST',
       headers: new Headers({
         "Content-Type": "application/json",
@@ -116,24 +156,24 @@ const LoginScreen = ({ route }) => {
     });
     let result = await response.json()
     setRecordId(result?.Result?.recordId);
-    if (result.Result.status === "Success" && result) {
-      Alert.alert(
-        'OTP sent successfully',
-        'OTP sent successfully to registered Mail Id',
-        [
-          {
-            text: 'OK',
-            // onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
-            onPress: () => [setShowOtp(true), setOtpTextShow(false), otpInputRef.current.focus()]
+    // if (result.Result.status === "Success" && result) {
+    //   Alert.alert(
+    //     'OTP sent successfully',
+    //     'OTP sent successfully to registered Mail Id',
+    //     [
+    //       {
+    //         text: 'OK',
+    //         // onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
+    //         onPress: () => [setShowOtp(true), setOtpTextShow(false), otpInputRef.current.focus()]
 
-          },
-        ]
+    //       },
+    //     ]
         
-      );
-    }
-    else {
-      alert('if you are not registered  please do sign up');
-    }
+    //   );
+    // }
+    // else {
+    //   alert('if you are not registered  please do sign up');
+    // }
 
     console.log("login api response is", result);
     dispatch(getDataMethod(result?.Result?.recordId));
@@ -143,9 +183,6 @@ const LoginScreen = ({ route }) => {
     dispatch(getEmailMethod(result?.Result?.Email));
     dispatch(getPhoneMethod(result?.Result?.Phone));
     dispatch(getProfilePhotoMethod(result?.Result?.profilePhoto));
-
-    console.log(JSON.stringify(result));
-
 
 
   }
@@ -221,47 +258,48 @@ const LoginScreen = ({ route }) => {
           <View style={{ marginTop: 20 }}>
             <Text style={styles.userIdTxt}>User Id</Text>
             <TextInput
-            placeholderTextColor={"#424242"}
-            style={[styles.input, { color: '#424242', 
-            // backgroundColor: inputBackgroundColor
-           }]}
+            placeholderTextColor={"#1B2236"}
+              style={[styles.input, { color: inputTextColor, 
+                // backgroundColor: inputBackgroundColor 
+              }]}
               placeholder="Enter User name"
               onChangeText={text => handleMobileNumberChange(text)}
               value={Phone}
             />
 
             {error !== '' && <Text>{error}</Text>}
-            {otpTextShow ?
-              <TouchableOpacity
+            {/* {otpTextShow ? */}
+              {/* <TouchableOpacity
                 style={{ alignSelf: "center", borderBottomColor: "#F38216", borderBottomWidth: 1 }}
-                onPress={() => handleSubmitForOtp()}>
-                <Text style={{ color: "#F38216", fontSize: 12 }}>Send OTP</Text>
-              </TouchableOpacity>
-              : null}
+                onPress={() => validateUserLogin()}>
+                <Text style={{ color: "#F38216", fontSize: 12 }}>Send </Text>
+              </TouchableOpacity> */}
+              {/* : null} */}
 
-            {/* <Text style={styles.passwordTxt}>Enter OTP</Text> */}
-            {showOtp ?
+            <Text style={styles.passwordTxt}>Password</Text>
+            {/* {showOtp ? */}
               <TextInput
-<<<<<<< HEAD
               placeholderTextColor={"#1B2236"}
                 style={styles.input}
-=======
-              placeholderTextColor={"#424242"}
-              style={[styles.input, { color: '#424242', backgroundColor: inputBackgroundColor }]}
->>>>>>> 4c27836f08f84ad9c0286a1ff2394d1ba13b5962
-                placeholder="Enter OTP"
+                placeholder="Enter Password"
                 secureTextEntry
                 onChangeText={text => handlePasswordChange(text)}
                 value={Password}
                 ref={otpInputRef}
               />
-              : null}
+              {/* : null} */}
 
-            {showResend ?
+            {forgotPassword ?
               <TouchableOpacity
-                style={{ alignSelf: "center", borderBottomColor: "#F38216", borderBottomWidth: 1 }}
-                onPress={() => handleSubmitForOtp()}>
-                <Text style={{ color: "#F38216", fontSize: 12 }}>Resend OTP</Text>
+                style={{alignSelf:"center",left:120,marginBottom:10}}
+                onPress={() => 
+               {Phone !== '' ?  
+ 
+                    navigation.navigate('OtpValidation',{email: Phone})
+                  : Alert.alert('Please enter the correct UserId') }
+                }
+                >
+                <Text style={{ color: "#F38216", fontSize: 12 ,}}>Forgot Password?</Text>
               </TouchableOpacity>
               : null}
 
@@ -296,7 +334,8 @@ const LoginScreen = ({ route }) => {
         <TouchableOpacity
           disabled={Password ? false : true}
           style={[styles.logInView, { backgroundColor: Password ? "orange" : "gray" }]}
-          onPress={() => handleOTP()}
+          // onPress={() => handleOTP()}
+          onPress={() => validateUserLogin()}
         >
           <Text style={styles.logInTxt}>Log In</Text>
         </TouchableOpacity>

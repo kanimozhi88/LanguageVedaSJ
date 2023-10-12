@@ -1,9 +1,10 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef,useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, alert, Alert, Image, Modal, ImageBackground } from "react-native";
-import { getAccessToken } from '../../redux/actions';
+import { getAccessToken, getLoginOtpStatus, getLoginStatus,getEmailMethod, getProfilePhotoMethod ,getDataMethod,getRecordType,getLastNameMethod,getPhoneMethod} from '../../redux/actions';
 import { useNavigation } from '@react-navigation/native';
 import OTPTextView from 'react-native-otp-textinput';
 import BASE_URL from "../../apiConfig";
+import { useDispatch} from "react-redux";
 
 const OtpValidation = ({ navigation, route }) => {
 
@@ -18,9 +19,15 @@ const OtpValidation = ({ navigation, route }) => {
   const [errorMessage,setErrorMessage] = useState('');
   const [inputOtp, setInputOtp] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [otpres, setOtpRes] = useState(false);
+const [recordId,setRecordId] = useState('');
+const [loginResponse, setLoginResponse] = useState('');
+
+ console.log("RECORDID IS:::::::::::::",recordId)
   console.log("one to six output", one, two, Three, four, five, six);
-  const email = route.params.email;
+  const email = route.params?.email;
   console.log("passed email id", email);
+  const dispatch = useDispatch();
 
   const storeIntoNumeric = () => {
     const codeFormatted = parseInt(`${one}${two}${Three}${four}${five}${six}`);
@@ -39,6 +46,60 @@ const OtpValidation = ({ navigation, route }) => {
     setFour('');
     setFive('');
     setSix();
+  }
+
+  useEffect(()=>{
+    LoginOtpApi();
+    dispatch(getDataMethod(''))
+
+  },[])
+  
+  const LoginOtpApi = async () => {
+    let data = {};
+    data.Email = email;
+
+    const body = JSON.stringify(data)
+    const token = await getAccessToken();
+    console.log('token........>' + token);
+    console.log('body...>' + JSON.stringify(body));
+    const bearer = 'Bearer ' + token;
+    console.log('bearer------>' + bearer);
+    console.log(JSON.stringify(token));
+    const response = await fetch(`${BASE_URL}/services/apexrest/v1/search-records/`, {
+      method: 'POST',
+      headers: new Headers({
+        "Content-Type": "application/json",
+        "Authorization": bearer
+      }),
+      body,
+    });
+    let result = await response.json()
+    setRecordId(result?.Result?.recordId)
+    setLoginResponse(result);
+    if (result.Result.status === "Success" && result) {
+      Alert.alert(
+        'OTP sent successfully',
+        'OTP sent successfully to registered Mail Id',
+        [
+          {
+            text: 'OK',
+            onPress: () => [setOtpRes(true)]
+            // onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
+            // onPress: () => [setShowOtp(true), setOtpTextShow(false), otpInputRef.current.focus()]
+
+          },
+        ]
+        
+      );
+    }
+    else {
+      alert('if you are not registered  please do sign up');
+    }
+
+    console.log("Forgot password login api response is", result);
+    
+
+
   }
 
   const handleError = error => {
@@ -74,6 +135,61 @@ const OtpValidation = ({ navigation, route }) => {
     }
   }
 
+  const handleOTP = async () => {
+    let data = {};
+    data.contactId = recordId;
+    data.otp = inputOtp;
+
+
+    const body = JSON.stringify(data)
+    const token = await getAccessToken();
+    console.log('token........>' + token);
+    console.log('body...>' + JSON.stringify(body));
+    const bearer = 'Bearer ' + token;
+    console.log('bearer------>' + bearer);
+    console.log(JSON.stringify(token));
+    const response = await fetch(`${BASE_URL}/services/apexrest/verifyotp`, {
+      method: 'POST',
+      headers: new Headers({
+        "Content-Type": "application/json",
+        "Authorization": bearer
+      }),
+      body,
+    });
+    let result = await response.json()
+
+    console.log("OTP api response is", result);
+    dispatch(getLoginOtpStatus(result?.status));
+    if (result.status === "Error" && result) {
+      Alert.alert(
+        'Invaldi OTP',
+        'Entered OTP is not valid, Please try again',
+        [
+          {
+            text: 'OK',
+            // onPress: () => navigation.navigate('OtpValidation', { email: Phone }),
+            onPress: () => {
+              setInputOtp('')
+              // setShowOtp(true);
+              // setOtpTextShow(false);
+              // setShowResend(true)
+              // // Use the ref to focus on the OTP input field
+              // otpInputRef.current.focus();
+            }
+          },
+        ]
+      );
+    }else{
+      dispatch(getDataMethod(loginResponse?.Result?.recordId));
+    dispatch(getLoginStatus(loginResponse?.Result?.status));
+    dispatch(getRecordType(loginResponse?.Result?.recordType));
+    dispatch(getLastNameMethod(loginResponse?.Result?.LastName));
+    dispatch(getEmailMethod(loginResponse?.Result?.Email));
+    dispatch(getPhoneMethod(loginResponse?.Result?.Phone));
+    dispatch(getProfilePhotoMethod(loginResponse?.Result?.profilePhoto));
+    }
+  }
+
 
   return (
     <View style={{flex:1, backgroundColor:"white"}}>
@@ -85,7 +201,11 @@ const OtpValidation = ({ navigation, route }) => {
        
       <View style={{margin:20}} >
         <Text style={{ color: "#B7547F", fontWeight: "bold", fontSize: 32, }}>Verification</Text>
-        <Text style={{ marginTop: 15,fontSize:22,alignSelf:"center"}}>Enter Your 4 Digit Number That send to +91******</Text>
+        {otpres ? 
+        <Text style={{ marginTop: 15,fontSize:22,alignSelf:"center"}}>Enter Your 4 Digit Number send to {email}</Text>
+        :
+        <Text style={{ marginTop: 15,fontSize:22,alignSelf:"center"}}>Sending Otp to {email}</Text>
+        }
         <OTPTextView
           inputCount={4}
           tintColor="orange"
@@ -102,12 +222,15 @@ const OtpValidation = ({ navigation, route }) => {
       </View>
       <Text style={{ justifyContent: "center", alignSelf: "center",fontSize:18,marginTop:15 }}>Don't Receive The OTP?</Text>
       <TouchableOpacity
-        onPress={() => [OTPApiRequest(email), setToNull()]}>
+        onPress={() => [LoginOtpApi(), setToNull()]}>
         <Text style={{ color: "orange", justifyContent: "center", alignSelf: "center", fontWeight: "800", marginTop: 5,fontSize:17 }}>RESEND OTP</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        onPress={() => storeIntoNumeric()}
+        onPress={() => 
+          handleOTP()
+          // storeIntoNumeric()
+        }
         style={{ backgroundColor: "orange", width: "90%", alignSelf: "center", borderRadius: 10, marginTop: 60 }}>
         <Text style={{ color: "white", padding: 10, alignSelf: "center", fontWeight: "700", fontSize: 19 }}>Continue</Text>
       </TouchableOpacity>

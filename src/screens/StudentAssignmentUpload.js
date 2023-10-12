@@ -454,11 +454,7 @@ const StudentAssignmentUpload = ({ navigation, route }) => {
                   // requestStoragePermission(updatedUrl,type)
                 }
               }}>
-<<<<<<< HEAD
-                <Text style={{color:"black"}}>Download</Text>
-=======
                 <Text style={{ color: '#424242' }}>Download</Text>
->>>>>>> 4c27836f08f84ad9c0286a1ff2394d1ba13b5962
               </MenuOption>}
           </MenuOptions>
         </Menu>

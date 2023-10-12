@@ -23,11 +23,11 @@ const AuthNavigation = ({isFirstLaunch}) => {
         SplashScreen.hide();
     }, [])
 
-    
    
     return (
      <NavigationContainer>
-         {(recordId !== '' || recordId !== null || Status === 'Success') && statusOtp !== 'Success' ?(
+         {/* {(recordId !== '' || recordId !== null || Status === 'Success') && statusOtp !== 'Success' ?( */}
+     { (recordId === '' || Status !== 'Success')  && statusOtp !== 'Success' ? (
         <Stack.Navigator>
             { isFirstLaunch ?
                 <Stack.Screen
