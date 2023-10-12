@@ -1,9 +1,11 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import {StyleSheet, Text, FlatList, ScrollView} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import {SvgXml} from 'react-native-svg';
-import SemiCircleChart from './SemiCircleChart';
+
+import BASE_URL from '../apiConfig';
+import {getAccessToken} from '../redux/actions';
 
 const downArrow = `<svg width="35" height="30" viewBox="0 0 35 30" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M17.5 20L11.0048 12.5H23.9952L17.5 20Z" fill="#2E2E4E"/>
@@ -60,8 +62,36 @@ const data = [
     status: 'Completed',
   },
 ];
-const ParentAssesment = () => {
+
+const ParentAssesment = ({batchId, contactId}) => {
   const [openItem, setOpenItem] = useState(null);
+  const [apiData, setApiData] = useState(null);
+
+  useEffect(() => {
+    parentAssignmentApi();
+  }, []);
+  const parentAssignmentApi = async () => {
+    let data = {};
+    data.batchId = batchId;
+    data.contactId = contactId;
+    const body = JSON.stringify(data);
+    const token = await getAccessToken();
+    const bearer = 'Bearer ' + token;
+    const response = await fetch(
+      `${BASE_URL}/services/apexrest/RNParentAssessmentController`,
+      {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Authorization: bearer,
+        }),
+        body,
+      },
+    );
+    let result = await response.json();
+    console.log('parent assesment ====', result);
+    setApiData(result);
+  };
 
   const expandItem = itemId => {
     setOpenItem(itemId);

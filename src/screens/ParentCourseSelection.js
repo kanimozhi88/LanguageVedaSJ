@@ -1,11 +1,11 @@
-import React, { useState , useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {FlatList, TouchableOpacity} from 'react-native';
 import {Image} from 'react-native';
 import {SafeAreaView} from 'react-native';
 import {Text} from 'react-native';
 import {StyleSheet, View} from 'react-native';
 import {SvgXml} from 'react-native-svg';
-import { getAccessToken } from '../../redux/actions';
+import {getAccessToken} from '../../redux/actions';
 import BASE_URL from '../../apiConfig';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -59,17 +59,15 @@ const data = [
 ];
 
 const ParentCourseSelection = ({navigation}) => {
-
-  
-  const [final,setFinal] = useState('');
-  const [contactId,setContactID] = useState('');
+  const [final, setFinal] = useState('');
+  const [contactId, setContactID] = useState('');
 
   useEffect(() => {
     const getStudentID = async () => {
       try {
         const storedDisabledState = await AsyncStorage.getItem('studentIdVal');
         if (storedDisabledState !== null) {
-          console.log("gettted studentid valu is::::::::", storedDisabledState);
+          console.log('gettted studentid valu is::::::::', storedDisabledState);
           setContactID(storedDisabledState);
           ParentCourseSelect(storedDisabledState);
         }
@@ -84,36 +82,45 @@ const ParentCourseSelection = ({navigation}) => {
   // useEffect(()=>{
   //   ParentCourseSelect();
   // },[])
-  
-  const ParentCourseSelect = async (contactId) => {
-    console.log("inside contactis", contactId)
-    console.log("inside contactis",typeof contactId)
+
+  const ParentCourseSelect = async contactId => {
+    console.log('inside contactis', contactId);
+    console.log('inside contactis', typeof contactId);
 
     let data = {};
     data.contactId = contactId;
 
-    const body = JSON.stringify(data)
+    const body = JSON.stringify(data);
     const token = await getAccessToken();
     const bearer = 'Bearer ' + token;
-    const response = await fetch(`${BASE_URL}/services/apexrest/RNCourseDisplay`, {
+    const response = await fetch(
+      `${BASE_URL}/services/apexrest/RNCourseDisplay`,
+      {
         method: 'POST',
         headers: new Headers({
-            "Content-Type": "application/json",
-            "Authorization": bearer
+          'Content-Type': 'application/json',
+          Authorization: bearer,
         }),
         body,
-    });
-    let ParentCourseSelectRes = await response.json()
-    console.log(" ParentCourseSelectRes API RES", ParentCourseSelectRes);
+      },
+    );
+    let ParentCourseSelectRes = await response.json();
+    console.log(' ParentCourseSelectRes API RES', ParentCourseSelectRes);
     setFinal(ParentCourseSelectRes);
-    console.log("final data is", final)
-}
+    console.log('final data is', final);
+  };
   const renderItem = ({item}) => {
     return (
       <View style={{marginTop: 5}}>
         <TouchableOpacity
           style={styles.courseTile}
-          onPress={() => navigation.navigate('ParentCourseBatch')}>
+          onPress={() =>
+            navigation.navigate('ParentCourseBatch', {
+              batchId: item?.batchId,
+              contactId: contactId,
+              CourseName: item?.CourseName,
+            })
+          }>
           <View>
             <Image
               source={require('../../assets/coursegirl.png')}
@@ -144,8 +151,6 @@ const ParentCourseSelection = ({navigation}) => {
                     letterSpacing: -0.3,
                     lineHeight: 12,
                     color: '#F38216',
-               
-
                   }}>
                   {item.rating || 4.4}
                 </Text>
@@ -235,7 +240,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     margin: 7,
-    top:20
+    top: 20,
   },
   desItems: {
     flexDirection: 'row',

@@ -35,7 +35,7 @@ const BottomDrawer = ({isVisible, toggleDrawer}) => {
             value={studentId}
             status={selectedStudentId === studentId ? 'checked' : 'unchecked'}
             onPress={() => [setSelectedStudentId(studentId),
-              saveBtnValueToAsyncStorage(studentId)]}
+              saveBtnValueToAsyncStorage(studentId),toggleDrawer]}
           />
         </View>
       </TouchableOpacity>

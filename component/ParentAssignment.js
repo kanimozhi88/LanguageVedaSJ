@@ -1,9 +1,12 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import {StyleSheet, Text, FlatList, ScrollView} from 'react-native';
 import {SvgXml} from 'react-native-svg';
-import SemiCircleChart from './SemiCircleChart';
+
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import {getAccessToken} from '../redux/actions';
+import BASE_URL from '../apiConfig';
+import {TextInput} from 'react-native';
 
 const downArrow = `<svg width="35" height="30" viewBox="0 0 35 30" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M17.5 20L11.0048 12.5H23.9952L17.5 20Z" fill="#2E2E4E"/>
@@ -13,7 +16,7 @@ const upArrow = `<svg width="13" height="8" viewBox="0 0 13 8" fill="none" xmlns
 <path d="M6.5 6.55671e-07L12.9952 7.5L0.00480872 7.5L6.5 6.55671e-07Z" fill="#2E2E4E"/>
 </svg>
 `;
-const data = [
+const assignmentData = [
   {
     id: '1',
     title: 'Ln 1 - Basic Words',
@@ -60,107 +63,106 @@ const data = [
     status: 'Completed',
   },
 ];
-const ParentAssignment = () => {
+const ParentAssignment = ({batchId, contactId}) => {
   const [openItem, setOpenItem] = useState(false);
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    parentAssignmentApi();
+  }, []);
+  const parentAssignmentApi = async () => {
+    let data = {};
+    data.batchId = batchId;
+    data.contactId = contactId;
+    const body = JSON.stringify(data);
+    const token = await getAccessToken();
+    const bearer = 'Bearer ' + token;
+    const response = await fetch(
+      `${BASE_URL}/services/apexrest/testassignmentController/`,
+      {
+        method: 'POST',
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Authorization: bearer,
+        }),
+        body,
+      },
+    );
+    let result = await response.json();
+    console.log('parent assignment ====', result);
+    setData(result);
+  };
   const toggler = () => {
     setOpenItem(!openItem);
     console.log('clicked');
   };
-  const renderItems = ({item}) => {
-    return (
-      <View style={styles.listContainer}>
-        <View>
-          <Text>{item.title}</Text>
-        </View>
-        <View
-          style={{
-            width: 83.17,
-            height: 21.5,
-            borderRadius: 10.5,
-            backgroundColor: '#3AC28C',
-          }}>
-          <Text
-            style={{
-              fontSize: 10,
-              fontWeight: '600',
-              lineHeight: 20,
-              letterSpacing: -1.1,
-              textAlign: 'center',
-              color: 'white',
-            }}>
-            {item.status}
-          </Text>
-        </View>
-        <View>
-          <SvgXml
-            xml={openItem ? upArrow : downArrow}
-            color={' #2E2E4E'}
-            width="15"
-            height={'10'}
-          />
-        </View>
-      </View>
-    );
-  };
   return (
     <>
       <ScrollView style={styles.container}>
-        {/* <View style={styles.titleContainer}>
-          <Text style={styles.title}> Assignment Status</Text>
-        </View>
-        <SemiCircleChart /> */}
-
         <View style={styles.titleContainer}>
           <Text style={styles.title}> Assignment</Text>
         </View>
-
-        {/* <FlatList
-          data={data}
-          renderItem={renderItems}
-          style={{maxHeight: 300}}
-          keyExtractor={item => item.id.toString()}
-        /> */}
-        {data.map(item => (
+        {assignmentData.map(item => (
           <>
             <TouchableOpacity onPress={toggler}>
-              <View key={item.id} style={styles.listContainer}>
-                <View>
-                  <Text>{item.title}</Text>
+              <View style={styles.listContainer}>
+                <View
+                  key={item.id}
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-around',
+                    marginTop: 15,
+                  }}>
+                  <View>
+                    <Text>{item.title}</Text>
+                  </View>
+                  <View
+                    style={{
+                      width: 83.17,
+                      height: 21.5,
+                      borderRadius: 10.5,
+                      backgroundColor: '#3AC28C',
+                    }}>
+                    <Text
+                      style={{
+                        fontSize: 10,
+                        fontWeight: '600',
+                        lineHeight: 20,
+                        letterSpacing: -1.1,
+                        textAlign: 'center',
+                        color: 'white',
+                      }}>
+                      {item.status}
+                    </Text>
+                  </View>
+                  <View>
+                    <SvgXml
+                      xml={openItem ? upArrow : downArrow}
+                      color={' #2E2E4E'}
+                      width="35"
+                      height={'20'}
+                    />
+                  </View>
                 </View>
                 <View
                   style={{
-                    width: 83.17,
-                    height: 21.5,
-                    borderRadius: 10.5,
-                    backgroundColor: '#3AC28C',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
+                    marginHorizontal: 15,
+                    marginVertical: 10,
+                    gap: 10,
                   }}>
-                  <Text
-                    style={{
-                      fontSize: 10,
-                      fontWeight: '600',
-                      lineHeight: 20,
-                      letterSpacing: -1.1,
-                      textAlign: 'center',
-                      color: 'white',
-                    }}>
-                    {item.status}
-                  </Text>
-                </View>
-                <View>
-                  <SvgXml
-                    xml={openItem ? upArrow : downArrow}
-                    color={' #2E2E4E'}
-                    width="15"
-                    height={'10'}
+                  <Text style={styles.subtitle}>Assignment Name</Text>
+                  <TextInput style={styles.readonlyInput} editable={false} />
+                  <Text style={styles.subtitle}>Test Date</Text>
+                  <TextInput style={styles.readonlyInput} editable={false} />
+                  <Text style={styles.subtitle}>Feed Back</Text>
+                  <TextInput
+                    style={styles.readonlyInputFeedback}
+                    editable={false}
                   />
                 </View>
-                {openItem && (
-                  <View>
-                    <Text>Assignment Name</Text>
-                    <Text>Test Date</Text>
-                    <Text>Feed Back</Text>
-                  </View>
-                )}
               </View>
             </TouchableOpacity>
           </>
@@ -195,14 +197,31 @@ const styles = StyleSheet.create({
     letterSpacing: -0.3,
   },
   listContainer: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    height: 59,
+
+    height: 379,
     width: 340,
     backgroundColor: 'white',
     elevation: 4,
     marginVertical: 10,
+  },
+  subtitle: {
+    fontWeight: '500',
+    fontSize: 16,
+    lineHeight: 24,
+    letterSpacing: -0.3,
+  },
+  readonlyInput: {
+    width: 197,
+    height: 38,
+    borderRadius: 4,
+    backgroundColor: '#F5F7FB',
+  },
+  readonlyInputFeedback: {
+    borderRadius: 4,
+    backgroundColor: '#F5F7FB',
+    width: 305,
+    height: 96,
   },
 });
