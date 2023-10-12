@@ -24,11 +24,15 @@ const ParentCourseTile = ({batchId, contactId, CourseName}) => {
 
   // time converter function
   const convertTo12HourFormat = time => {
-    const [hour, minute] = time.split(':');
-    const hourInt = parseInt(hour, 10);
-    const suffix = hourInt >= 12 ? 'PM' : 'AM';
-    const displayHour = hourInt > 12 ? hourInt - 12 : hourInt;
-    return `${displayHour}:${minute} ${suffix}`;
+    if (time) {
+      const [hour, minute] = time.split(':');
+      const hourInt = parseInt(hour, 10);
+      const suffix = hourInt >= 12 ? 'PM' : 'AM';
+      const displayHour = hourInt > 12 ? hourInt - 12 : hourInt;
+      return `${displayHour}:${minute} ${suffix}`;
+    } else {
+      return 'N/A'; // Handle the case when time is undefined
+    }
   };
   const openZoomLink = link => {
     // Use Linking to open the Zoom link in the device's default browser.

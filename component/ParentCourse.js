@@ -3,6 +3,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {getAccessToken} from '../redux/actions';
 import BASE_URL from '../apiConfig';
+import AnimatedCircularProgressBar from './AnimatedCircularProgressBar';
 
 const ParentCourse = ({batchId, contactId, CourseName}) => {
   const [data, setData] = useState(null);
@@ -13,11 +14,15 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
 
   // time converter function
   const convertTo12HourFormat = time => {
-    const [hour, minute] = time.split(':');
-    const hourInt = parseInt(hour, 10);
-    const suffix = hourInt >= 12 ? 'PM' : 'AM';
-    const displayHour = hourInt > 12 ? hourInt - 12 : hourInt;
-    return `${displayHour}:${minute} ${suffix}`;
+    if (time) {
+      const [hour, minute] = time.split(':');
+      const hourInt = parseInt(hour, 10);
+      const suffix = hourInt >= 12 ? 'PM' : 'AM';
+      const displayHour = hourInt > 12 ? hourInt - 12 : hourInt;
+      return `${displayHour}:${minute} ${suffix}`;
+    } else {
+      return 'N/A'; // Handle the case when time is undefined
+    }
   };
 
   const parentCourseApi = async () => {
@@ -161,8 +166,42 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
             </View>
           </View>
           <View style={styles.titleContainer}>
+            <Text style={styles.title}>Attendance</Text>
+          </View>
+          <View
+            style={{
+              width: 130,
+              height: 130,
+              borderRadius: 65,
+              borderColor: '#999999',
+              borderWidth: 1,
+              alignSelf:"center"
+            }}>
+            <AnimatedCircularProgressBar
+              size={127}
+              width={20}
+              fill={null}
+              tintColor="#AFFFCF"
+              backgroundColor="#F9F9F9"
+              duration={500} // Animation duration
+              max={100} // Max progress value
+              style={{fontSize: 18, color: 'white'}}
+            />
+          </View>
+          <Text
+            style={{
+              color: '#000000',
+              marginTop: 10,
+              alignSelf: 'center',
+              fontWeight: '500',
+              fontSize: 12,
+            }}>
+            Attendance
+          </Text>
+          <View style={styles.titleContainer}>
             <Text style={styles.title}>Class Details</Text>
           </View>
+
           <View
             style={{
               flexDirection: 'row',

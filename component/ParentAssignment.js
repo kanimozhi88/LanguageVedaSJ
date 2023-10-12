@@ -7,6 +7,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import {getAccessToken} from '../redux/actions';
 import BASE_URL from '../apiConfig';
 import {TextInput} from 'react-native';
+import AnimatedCircularProgressBar from './AnimatedCircularProgressBar';
 
 const downArrow = `<svg width="35" height="30" viewBox="0 0 35 30" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M17.5 20L11.0048 12.5H23.9952L17.5 20Z" fill="#2E2E4E"/>
@@ -99,6 +100,40 @@ const ParentAssignment = ({batchId, contactId}) => {
   return (
     <>
       <ScrollView style={styles.container}>
+      <View style={styles.titleContainer}>
+          <Text style={styles.title}> Assignment Status</Text>
+        </View>
+        <View
+            style={{
+              width: 130,
+              height: 130,
+              borderRadius: 65,
+              borderColor: '#999999',
+              borderWidth: 1,
+              alignSelf:"center"
+            }}>
+            <AnimatedCircularProgressBar
+              size={127}
+              width={20}
+              fill={null}
+              tintColor="#AFFFCF"
+              backgroundColor="#F9F9F9"
+              duration={500} // Animation duration
+              max={100} // Max progress value
+              style={{fontSize: 18, color: 'white'}}
+            />
+          </View>
+          <Text
+            style={{
+              color: '#000000',
+              marginTop: 10,
+              alignSelf: 'center',
+              fontWeight: '500',
+              fontSize: 12,
+            }}>
+            Status
+          </Text>
+
         <View style={styles.titleContainer}>
           <Text style={styles.title}> Assignment</Text>
         </View>
