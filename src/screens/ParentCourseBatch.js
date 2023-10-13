@@ -10,11 +10,15 @@ import ParentCourse from '../../component/ParentCourse';
 import ParentCourseTile from '../../component/ParentCourseTile';
 
 const ParentCourseBatch = ({navigation, route}) => {
-  const {contactId, CourseName} = route.params;
-  const batchId = 'a0D1e000002nExXEAU';
+  const {contactId, CourseName, batchId} = route.params;
+  // const batchId = 'a0D1e000002nExXEAU';
   console.log('passed Ids are --->', batchId, contactId, CourseName);
   const FirstRoute = () => (
-    <ParentCourse batchId={batchId} contactId={contactId} CourseName={CourseName}/>
+    <ParentCourse
+      batchId={batchId}
+      contactId={contactId}
+      CourseName={CourseName}
+    />
   );
 
   const SecondRoute = () => (
@@ -36,7 +40,7 @@ const ParentCourseBatch = ({navigation, route}) => {
   const [routes] = React.useState([
     {key: 'first', title: 'Course', color: '#F38216'},
     {key: 'second', title: 'Assignment', color: '#F38216'},
-    {key: 'third', title: 'Assesment', color: '#F38216'},
+    {key: 'third', title: 'Assessment', color: '#F38216'},
   ]);
 
   const renderTabBar = props => (

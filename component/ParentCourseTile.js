@@ -111,7 +111,7 @@ const ParentCourseTile = ({batchId, contactId, CourseName}) => {
         <View style={styles.titleContainer}>
           <Text>Timing : </Text>
           <Text style={styles.title}>
-            {/* {convertTo12HourFormat(tileData?.courseSchedules[0].startTimeAlone)} */}
+            {convertTo12HourFormat(tileData?.courseSchedules[0].startTimeAlone)}
           </Text>
         </View>
       </View>
