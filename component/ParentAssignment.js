@@ -1,13 +1,16 @@
-import React, {useEffect, useState} from 'react';
-import {View} from 'react-native';
-import {StyleSheet, Text, FlatList, ScrollView} from 'react-native';
-import {SvgXml} from 'react-native-svg';
+import React, { useEffect, useState } from 'react';
+import { View } from 'react-native';
+import { StyleSheet, Text, FlatList, ScrollView, TouchableOpacity } from 'react-native';
+import { SvgXml } from 'react-native-svg';
+import PieChart from 'react-native-pie-chart';
 
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import {getAccessToken} from '../redux/actions';
+
+// import {TouchableOpacity} from 'react-native-gesture-handler';
+import { getAccessToken } from '../redux/actions';
 import BASE_URL from '../apiConfig';
-import {TextInput} from 'react-native';
+import { TextInput } from 'react-native';
 import AnimatedCircularProgressBar from './AnimatedCircularProgressBar';
+import HalfDonutChart from './SemiDonutChart';
 
 const downArrow = `<svg width="35" height="30" viewBox="0 0 35 30" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M17.5 20L11.0048 12.5H23.9952L17.5 20Z" fill="#2E2E4E"/>
@@ -64,9 +67,66 @@ const assignmentData = [
     status: 'Completed',
   },
 ];
-const ParentAssignment = ({batchId, contactId}) => {
+const ParentAssignment = ({ batchId, contactId }) => {
   const [openItem, setOpenItem] = useState(false);
   const [data, setData] = useState(null);
+  const [final, setFinal] = useState('');
+
+  const [seriesArr, setSeriesArr] = useState({
+    completed: 1,
+    submitted: 1,
+    InProgress: 1,
+    Redo: 1,
+    YetToStart: 1
+  });
+
+  const records = [
+    {
+      testType: "Assignment",
+      testDate: "30/09/2023",
+      status: "Assignment submitted",
+      startTime: null,
+      startDate: "28/08/2023",
+      id: "a01e000003B9cKEAS",
+      feedBack: null,
+      facultyName: null,
+      endDate: "01/12/2023",
+      courseName: "Kannada",
+      contactName: "mirtual",
+      batchName: "English mrng",
+      assignmentTitle: "Hope Works",
+    },
+    {
+      testType: "Assignment",
+      testDate: "30/09/2023",
+      status: "Assignment submitted",
+      startTime: null,
+      startDate: "28/08/2023",
+      id: "a01e000003B9cKEAS",
+      feedBack: null,
+      facultyName: null,
+      endDate: "01/12/2023",
+      courseName: "Hindi",
+      contactName: "mirtual",
+      batchName: "English mrng",
+      assignmentTitle: "Hope Works",
+    },
+    {
+      testType: "Assignment",
+      testDate: "30/09/2023",
+      status: "Assignment submitted",
+      startTime: null,
+      startDate: "28/08/2023",
+      id: "a01e000003B9cKEAS",
+      feedBack: null,
+      facultyName: null,
+      endDate: "01/12/2023",
+      courseName: "English",
+      contactName: "mirtual",
+      batchName: "English mrng",
+      assignmentTitle: "Hope Works",
+    },
+  ]
 
   useEffect(() => {
     parentAssignmentApi();
@@ -92,18 +152,169 @@ const ParentAssignment = ({batchId, contactId}) => {
     let result = await response.json();
     console.log('parent assignment ====', result);
     setData(result);
+    setFinal(result?.records)
   };
+
+  const statusOrder = ["Assignment Submitted", "Vetting In Progress", "Redo", "Completed"];
+  if (final !== '') {
+    const sortedData = final.sort((a, b) => {
+      const statusA = statusOrder.indexOf(a.status);
+      const statusB = statusOrder.indexOf(b.status);
+      return statusA - statusB;
+    });
+    console.log("sorted data is", sortedData);
+
+  }
+
+  const getPieChartStatus = () => {
+    let completedCount = 0;
+    let redoCount = 0;
+    let vettingInProgressCount = 0;
+    let assignmentSubmittedCount = 0;
+    let yetToStartCount = 0; // Initialize a count for "Yet To Start"
+
+
+    if (final !== '' && final.length > 0) {
+      final.forEach(record => {
+        switch (record.status) {
+          case 'Completed':
+            completedCount++;
+            break;
+          case 'Redo':
+            redoCount++;
+            break;
+          case 'Vetting In Progress':
+            vettingInProgressCount++;
+            break;
+          case 'Assignment Submitted':
+            assignmentSubmittedCount++;
+            break;
+          case 'Yet_To_Submit':
+            yetToStartCount++; // Increment the count for "Yet To Start"
+            break;
+          default:
+            break;
+        }
+      });
+    }
+
+    setSeriesArr({
+      completed: completedCount,
+      submitted: assignmentSubmittedCount,
+      InProgress: vettingInProgressCount,
+      Redo: redoCount,
+      YetToStart: yetToStartCount, // Set the count for "Yet To Start"
+    });
+  };
+
+
+  const widthAndHeight = 145
+  const series = [seriesArr.completed, seriesArr.submitted, seriesArr.InProgress, seriesArr.Redo, seriesArr.YetToStart]
+  const sliceColor = ['#9B88ED', '#04BFDA', '#FB67CA', '#FFA84A', '#959e41']
+
   const toggler = () => {
     setOpenItem(!openItem);
     console.log('clicked');
   };
+  console.log("LENGTH IS::::::::",final?.length);
+
+
+  const AssignmentItem = ({ assignment, type }) => {
+    const [showMessage, setShowMessage] = useState(false);
+
+    const toggleMessage = () => {
+      console.log("inside")
+      setShowMessage(!showMessage);
+    };
+    return (
+      <View style={{
+        width: '100%',
+        backgroundColor: 'white',
+        alignSelf: 'center',
+        borderRadius: 10,
+        marginTop: 10,
+        elevation: 5,
+      }}>
+        <TouchableOpacity onPress={toggleMessage} style={{ backgroundColor: "#00000", borderRadius: 1, padding: 10, marginBottom: 10, justifyContent: "space-evenly" }}>
+          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+            <Text style={{ width: "40%", color: "#130F26", fontWeight: "400", fontSize: 16, fontFamily: "Poppins" }}>Ln 1- {assignment?.courseName}</Text>
+            <View
+              style={{
+                borderRadius: 15,
+                backgroundColor: '#3AC28C',
+
+              }}>
+              <Text
+                style={{
+                  fontSize: 10,
+                  fontWeight: '600',
+                  lineHeight: 20,
+                  letterSpacing: -1.1,
+                  textAlign: 'center',
+                  color: 'white',
+                  padding: 5
+                }}>
+                {assignment?.status}
+              </Text>
+            </View>
+            <View>
+              <SvgXml
+                xml={openItem ? upArrow : downArrow}
+                color={' #2E2E4E'}
+                width="35"
+                height={'20'}
+              />
+            </View>
+          </View>
+          {showMessage && (
+            <View
+              style={{
+                flexDirection: 'column',
+                justifyContent: 'flex-start',
+                marginHorizontal: 15,
+                marginVertical: 10,
+                gap: 10,
+              }}>
+
+              <Text style={styles.subtitle}>Assignment Name</Text>
+              {/* <View style={styles.readonlyInput}> */}
+              <Text style={styles.readonlyInput}> {assignment?.assignmentTitle}</Text>
+              {/* <View/> */}
+
+              <Text style={styles.subtitle}>Test Date</Text>
+              <Text style={styles.readonlyInput}>{assignment?.testDate}</Text>
+              <Text style={styles.subtitle}>Feed Back</Text>
+              <Text style={styles.readonlyInputFeedback}> {assignment?.feedBack}</Text>
+            </View>
+          )}
+
+        </TouchableOpacity>
+
+      </View>
+    );
+  };
+
+
+
   return (
     <>
       <ScrollView style={styles.container}>
-      <View style={styles.titleContainer}>
-          <Text style={styles.title}> Assignment Status</Text>
-        </View>
-        <View
+        {final?.length > 0  ?
+          <View>
+            <View style={styles.titleContainer}>
+              <Text style={styles.title}> Assignment Status</Text>
+            </View>
+          
+            <View style={{ alignSelf: "center" }}>
+              {seriesArr.completed !== 0 || seriesArr.submitted !== 0 || seriesArr.InProgress !== 0 || seriesArr.Redo ?
+                <PieChart
+                  widthAndHeight={widthAndHeight}
+                  series={series}
+                  sliceColor={sliceColor}
+                  coverRadius={0.55}
+                /> : <></>}
+            </View> 
+            {/* <View
             style={{
               width: 130,
               height: 130,
@@ -122,22 +333,34 @@ const ParentAssignment = ({batchId, contactId}) => {
               max={100} // Max progress value
               style={{fontSize: 18, color: 'white'}}
             />
-          </View>
-          <Text
-            style={{
-              color: '#000000',
-              marginTop: 10,
-              alignSelf: 'center',
-              fontWeight: '500',
-              fontSize: 12,
-            }}>
-            Status
-          </Text>
+          </View> */}
+          
+              <Text
+                style={{
+                  color: '#000000',
+                  marginTop: 10,
+                  alignSelf: 'center',
+                  fontWeight: '500',
+                  fontSize: 12,
+                }}>
+                Status
+              </Text> 
+        
+              <View style={styles.titleContainer}>
+                <Text style={styles.title}> Assignment</Text>
+              </View>
+      
+            <View style={{ marginBottom: 60 }}>
+              {final !== '' ?
+                final.map((item, index) => (
+                  <AssignmentItem key={index} assignment={item} />
+                ))
+                :
+                null
+              }
+            </View>
 
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}> Assignment</Text>
-        </View>
-        {assignmentData.map(item => (
+            {/* {assignmentData.map(item => (
           <>
             <TouchableOpacity onPress={toggler}>
               <View style={styles.listContainer}>
@@ -201,7 +424,13 @@ const ParentAssignment = ({batchId, contactId}) => {
               </View>
             </TouchableOpacity>
           </>
-        ))}
+        ))} */}
+
+          </View>
+          :
+          <Text style={{ color: "black", alignSelf: "center" }}> No Assignments Available</Text>
+        }
+
       </ScrollView>
     </>
   );

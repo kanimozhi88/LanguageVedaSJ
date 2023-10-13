@@ -78,7 +78,7 @@ const ParentCourseTile = ({batchId, contactId, CourseName}) => {
         <View style={styles.titleContainer}>
           <Text
             style={[styles.title, {textDecorationLine: 'underline'}]}
-            onPress={() => openZoomLink(tileData?.courseSchedules[0].zoomLink)}>
+            onPress={() => openZoomLink(tileData?.courseSchedules[0]?.zoomLink)}>
             {CourseName}
           </Text>
         </View>
@@ -91,7 +91,7 @@ const ParentCourseTile = ({batchId, contactId, CourseName}) => {
               letterSpacing: -0.3,
               lineHeight: 12,
             }}>
-            {tileData?.courseSchedules[0].Months || '-- months'} Months
+            {tileData?.courseSchedules[0]?.Months || '-- months'} Months
           </Text>
         </View>
       </View>
@@ -105,13 +105,13 @@ const ParentCourseTile = ({batchId, contactId, CourseName}) => {
         <View style={styles.titleContainer}>
           <Text>Mentor : </Text>
           <Text style={[styles.title, {color: '#F38216'}]}>
-            {tileData?.courseSchedules[0].facultyName}
+            {tileData?.courseSchedules[0]?.facultyName}
           </Text>
         </View>
         <View style={styles.titleContainer}>
           <Text>Timing : </Text>
           <Text style={styles.title}>
-            {convertTo12HourFormat(tileData?.courseSchedules[0].startTimeAlone)}
+            {/* {convertTo12HourFormat(tileData?.courseSchedules[0].startTimeAlone)} */}
           </Text>
         </View>
       </View>

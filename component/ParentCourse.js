@@ -59,8 +59,8 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
           </View>
           <View style={styles.subtitleContainer}>
             <Text style={styles.subtitle}>
-              {data.courseSchedules[0].courseDescription
-                ? data.courseSchedules[0].courseDescription
+              {data.courseSchedules[0]?.courseDescription
+                ? data.courseSchedules[0]?.courseDescription
                 : "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, Lorem Ipsum is simply dummy text"}
             </Text>
           </View>
@@ -93,13 +93,13 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
                     letterSpacing: -0.3,
                     lineHeight: 21,
                   }}>
-                  {data.courseSchedules[0].Monday ? 'Mon' : ''}
-                  {data.courseSchedules[0].Tuesday ? ', Tue' : ''}
-                  {data.courseSchedules[0].Wednesday ? ', Wed' : ''}
-                  {data.courseSchedules[0].Thursday ? ', Thu' : ''}
-                  {data.courseSchedules[0].Friday ? ', Fri' : ''}
-                  {data.courseSchedules[0].Saturday ? ', Sat' : ''}
-                  {data.courseSchedules[0].Sunday ? ', Sun' : ''}
+                  {data.courseSchedules[0]?.Monday ? 'Mon' : ''}
+                  {data.courseSchedules[0]?.Tuesday ? ', Tue' : ''}
+                  {data.courseSchedules[0]?.Wednesday ? ', Wed' : ''}
+                  {data.courseSchedules[0]?.Thursday ? ', Thu' : ''}
+                  {data.courseSchedules[0]?.Friday ? ', Fri' : ''}
+                  {data.courseSchedules[0]?.Saturday ? ', Sat' : ''}
+                  {data.courseSchedules[0]?.Sunday ? ', Sun' : ''}
                 </Text>
               </View>
               <View>
@@ -113,9 +113,9 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
                     letterSpacing: -0.3,
                     lineHeight: 21,
                   }}>
-                  {data.courseSchedules[0].startDate
+                  {data.courseSchedules[0]?.startDate
                     ? new Date(
-                        data.courseSchedules[0].startDate,
+                        data.courseSchedules[0]?.startDate,
                       ).toLocaleDateString()
                     : 'Not available'}
                 </Text>
@@ -138,9 +138,9 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
                     letterSpacing: -0.3,
                     lineHeight: 21,
                   }}>
-                  {data.courseSchedules[0].startTimeAlone
+                  {data.courseSchedules[0]?.startTimeAlone
                     ? convertTo12HourFormat(
-                        data.courseSchedules[0].startTimeAlone,
+                        data.courseSchedules[0]?.startTimeAlone,
                       )
                     : 'Not available'}
                 </Text>
@@ -156,9 +156,9 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
                     letterSpacing: -0.3,
                     lineHeight: 21,
                   }}>
-                  {data.courseSchedules[0].endDate
+                  {data.courseSchedules[0]?.endDate
                     ? new Date(
-                        data.courseSchedules[0].endDate,
+                        data.courseSchedules[0]?.endDate,
                       ).toLocaleDateString()
                     : 'Not available'}
                 </Text>
@@ -229,16 +229,16 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
             <View>
               <Text
                 style={{fontSize: 14, fontWeight: 'bold', letterSpacing: -0.3}}>
-                {data.courseSchedules[0].totalRevisions
-                  ? data.courseSchedules[0].totalRevisions
+                {data.courseSchedules[0]?.totalRevisions
+                  ? data.courseSchedules[0]?.totalRevisions
                   : 'Not available'}
               </Text>
             </View>
             <View>
               <Text
                 style={{fontSize: 14, fontWeight: 'bold', letterSpacing: -0.3}}>
-                {data.courseSchedules[0].totalRevisions
-                  ? data.courseSchedules[0].totalRevisions
+                {data.courseSchedules[0]?.totalRevisions
+                  ? data.courseSchedules[0]?.totalRevisions
                   : 'Not available'}
               </Text>
             </View>

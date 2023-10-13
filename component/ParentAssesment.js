@@ -222,12 +222,12 @@ const ParentAssesment = ({batchId, contactId}) => {
         <View style={styles.titleContainer}>
           <Text style={styles.title}> Assesment</Text>
         </View>
-        <FlatList
+        {/* <FlatList
           data={data}
           renderItem={renderItem}
           style={{maxHeight: 300}}
           keyExtractor={item => item.id.toString()}
-        />
+        /> */}
       </ScrollView>
     </>
   );
