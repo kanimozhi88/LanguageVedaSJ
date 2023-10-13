@@ -78,18 +78,21 @@ const ParentCourseTile = ({batchId, contactId, CourseName}) => {
         <View style={styles.titleContainer}>
           <Text
             style={[styles.title, {textDecorationLine: 'underline'}]}
-            onPress={() => openZoomLink(tileData?.courseSchedules[0]?.zoomLink)}>
+            onPress={() =>
+              openZoomLink(tileData?.courseSchedules[0]?.zoomLink)
+            }>
             {CourseName}
           </Text>
         </View>
         <View style={styles.desItems}>
-          <SvgXml xml={clock} width="12" height="12" color="#000000" />
+          <SvgXml xml={clock} width="12" height="12" color="#474646" />
           <Text
             style={{
               fontSize: 12,
               fontWeight: '500',
               letterSpacing: -0.3,
               lineHeight: 12,
+              color: '#474646',
             }}>
             {tileData?.courseSchedules[0]?.Months || '-- months'} Months
           </Text>
@@ -103,7 +106,7 @@ const ParentCourseTile = ({batchId, contactId, CourseName}) => {
           marginHorizontal: 10,
         }}>
         <View style={styles.titleContainer}>
-          <Text>Mentor : </Text>
+          <Text style={{color: '#474646'}}>Mentor : </Text>
           <Text style={[styles.title, {color: '#F38216'}]}>
             {tileData?.courseSchedules[0]?.facultyName}
           </Text>

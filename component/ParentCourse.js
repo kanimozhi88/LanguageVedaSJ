@@ -84,7 +84,7 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
                 gap: 15,
               }}>
               <View>
-                <Text>Class on</Text>
+                <Text style={styles.subtitle}>Class on</Text>
               </View>
               <View>
                 <Text
@@ -93,6 +93,7 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
                     fontWeight: 'bold',
                     letterSpacing: -0.3,
                     lineHeight: 21,
+                    color: '#474646',
                   }}>
                   {data.courseSchedules[0]?.Monday ? 'Mon' : ''}
                   {data.courseSchedules[0]?.Tuesday ? ', Tue' : ''}
@@ -104,7 +105,7 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
                 </Text>
               </View>
               <View>
-                <Text>Start Date</Text>
+                <Text style={styles.subtitle}>Start Date</Text>
               </View>
               <View>
                 <Text
@@ -113,6 +114,7 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
                     fontWeight: 'bold',
                     letterSpacing: -0.3,
                     lineHeight: 21,
+                    color: '#474646',
                   }}>
                   {data.courseSchedules[0]?.startDate
                     ? new Date(
@@ -129,7 +131,7 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
                 gap: 15,
               }}>
               <View>
-                <Text>Class Timings</Text>
+                <Text style={styles.subtitle}>Class Timings</Text>
               </View>
               <View>
                 <Text
@@ -138,6 +140,7 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
                     fontWeight: 'bold',
                     letterSpacing: -0.3,
                     lineHeight: 21,
+                    color: '#474646',
                   }}>
                   {data.courseSchedules[0]?.startTimeAlone
                     ? convertTo12HourFormat(
@@ -147,7 +150,7 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
                 </Text>
               </View>
               <View>
-                <Text>End Date</Text>
+                <Text style={styles.subtitle}>End Date</Text>
               </View>
               <View>
                 <Text
@@ -156,6 +159,7 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
                     fontWeight: 'bold',
                     letterSpacing: -0.3,
                     lineHeight: 21,
+                    color: '#474646',
                   }}>
                   {data.courseSchedules[0]?.endDate
                     ? new Date(
@@ -176,7 +180,7 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
               borderRadius: 65,
               borderColor: '#999999',
               borderWidth: 1,
-              alignSelf:"center"
+              alignSelf: 'center',
             }}>
             <AnimatedCircularProgressBar
               size={127}
@@ -212,10 +216,10 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
               marginHorizontal: 22,
             }}>
             <View>
-              <Text>Revision Class</Text>
+              <Text style={styles.subtitle}>Revision Class</Text>
             </View>
             <View>
-              <Text>Backup Class</Text>
+              <Text style={styles.subtitle}>Backup Class</Text>
             </View>
           </View>
           <View
@@ -229,7 +233,12 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
             }}>
             <View>
               <Text
-                style={{fontSize: 14, fontWeight: 'bold', letterSpacing: -0.3}}>
+                style={{
+                  fontSize: 14,
+                  fontWeight: 'bold',
+                  letterSpacing: -0.3,
+                  color: '#474646',
+                }}>
                 {data.courseSchedules[0]?.totalRevisions
                   ? data.courseSchedules[0]?.totalRevisions
                   : 'Not available'}
@@ -237,7 +246,12 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
             </View>
             <View>
               <Text
-                style={{fontSize: 14, fontWeight: 'bold', letterSpacing: -0.3}}>
+                style={{
+                  fontSize: 14,
+                  fontWeight: 'bold',
+                  letterSpacing: -0.3,
+                  color: '#474646',
+                }}>
                 {data.courseSchedules[0]?.totalRevisions
                   ? data.courseSchedules[0]?.totalRevisions
                   : 'Not available'}
@@ -269,6 +283,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 27,
     letterSpacing: -0.3,
+    color: '#474646',
   },
   subtitleContainer: {
     marginBottom: 15,
@@ -277,6 +292,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 12,
     lineHeight: 18,
+    color: '#474646',
     letterSpacing: -0.3,
   },
   detailsContainer: {

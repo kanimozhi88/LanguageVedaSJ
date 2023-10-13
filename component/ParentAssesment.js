@@ -154,6 +154,7 @@ const ParentAssesment = ({batchId, contactId}) => {
               style={{
                 borderRadius: 15,
                 backgroundColor: '#3AC28C',
+                flexGrow: 0.5,
               }}>
               <Text
                 style={{
@@ -379,11 +380,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 27,
     letterSpacing: -0.3,
+    color: '#474646',
   },
   listContainer: {
     flexDirection: 'column',
     flexGrow: 1,
-
     height: 379,
     width: 340,
     backgroundColor: 'white',
@@ -394,6 +395,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 16,
     lineHeight: 24,
+    color: '#474646',
     letterSpacing: -0.3,
   },
   readonlyInput: {
