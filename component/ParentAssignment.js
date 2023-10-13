@@ -240,9 +240,9 @@ const ParentAssignment = ({batchId, contactId}) => {
             </View>
             <View>
               <SvgXml
-                xml={openItem ? upArrow : downArrow}
+                xml={showMessage ? upArrow : downArrow}
                 color={' #2E2E4E'}
-                width="35"
+                width="20"
                 height={'20'}
               />
             </View>
@@ -259,7 +259,6 @@ const ParentAssignment = ({batchId, contactId}) => {
               <Text style={styles.subtitle}>Assignment Name</Text>
               {/* <View style={styles.readonlyInput}> */}
               <Text style={styles.readonlyInput}>
-                {' '}
                 {assignment?.assignmentTitle}
               </Text>
               {/* <View/> */}
@@ -268,7 +267,6 @@ const ParentAssignment = ({batchId, contactId}) => {
               <Text style={styles.readonlyInput}>{assignment?.testDate}</Text>
               <Text style={styles.subtitle}>Feed Back</Text>
               <Text style={styles.readonlyInputFeedback}>
-                {' '}
                 {assignment?.feedBack}
               </Text>
             </View>
@@ -434,16 +432,17 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     marginHorizontal: 20,
-    flex: 1,
-    maxHeight: 350,
+    flexGrow: 1,
+    // maxHeight: 350,
+    marginBottom: 90,
   },
   scrollViewContainer: {
     flexGrow: 1,
     // This allows the content to grow vertically
   },
-  scrollView: {
-    maxHeight: 350, // Adjust this value to your desired maximum height
-  },
+  // scrollView: {
+  //   maxHeight: 350, // Adjust this value to your desired maximum height
+  // },
   titleContainer: {
     marginVertical: 15,
   },
@@ -475,11 +474,13 @@ const styles = StyleSheet.create({
     height: 38,
     borderRadius: 4,
     backgroundColor: '#F5F7FB',
+    color: '#474646',
   },
   readonlyInputFeedback: {
     borderRadius: 4,
     backgroundColor: '#F5F7FB',
     width: 305,
     height: 96,
+    color: '#474646',
   },
 });

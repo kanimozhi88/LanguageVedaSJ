@@ -445,7 +445,7 @@ const MyCourses = () => {
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Courses you be Intrested</Text>
           </View>
-          <View style={{flex: 2}}>
+          <View style={{flex: 1}}>
             <InterestedCourses />
           </View>
         </View>

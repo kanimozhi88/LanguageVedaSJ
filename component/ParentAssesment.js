@@ -171,7 +171,7 @@ const ParentAssesment = ({batchId, contactId}) => {
             </View>
             <View>
               <SvgXml
-                xml={openItem ? upArrow : downArrow}
+                xml={showMessage ? upArrow : downArrow}
                 color={' #2E2E4E'}
                 width="35"
                 height={'20'}
@@ -362,16 +362,17 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     marginHorizontal: 20,
-    flex: 1,
-    maxHeight: 350,
+    flexGrow: 1,
+    // maxHeight: 350,
+    marginBottom:90,
   },
   scrollViewContainer: {
     flexGrow: 1,
     // This allows the content to grow vertically
   },
-  scrollView: {
-    maxHeight: 350, // Adjust this value to your desired maximum height
-  },
+  // scrollView: {
+  //   maxHeight: 350, // Adjust this value to your desired maximum height
+  // },
   titleContainer: {
     marginVertical: 15,
   },
@@ -395,19 +396,21 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontSize: 16,
     lineHeight: 24,
-    color: '#474646',
     letterSpacing: -0.3,
+    color: '#474646',
   },
   readonlyInput: {
     width: 197,
     height: 38,
     borderRadius: 4,
     backgroundColor: '#F5F7FB',
+    color: '#474646',
   },
   readonlyInputFeedback: {
     borderRadius: 4,
     backgroundColor: '#F5F7FB',
     width: 305,
     height: 96,
+    color: '#474646',
   },
 });

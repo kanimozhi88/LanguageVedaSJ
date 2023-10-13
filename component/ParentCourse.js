@@ -51,7 +51,7 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
 
   return (
     <ScrollView
-      style={styles.scrollView}
+      // style={styles.scrollView}
       contentContainerStyle={styles.scrollViewContainer}>
       {data ? (
         <View style={styles.container}>
@@ -206,56 +206,57 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
           <View style={styles.titleContainer}>
             <Text style={styles.title}>Class Details</Text>
           </View>
-
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: 120,
-              marginHorizontal: 22,
-            }}>
-            <View>
-              <Text style={styles.subtitle}>Revision Class</Text>
+          <View style={{marginBottom: 100}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 120,
+                marginHorizontal: 22,
+              }}>
+              <View>
+                <Text style={styles.subtitle}>Revision Class</Text>
+              </View>
+              <View>
+                <Text style={styles.subtitle}>Backup Class</Text>
+              </View>
             </View>
-            <View>
-              <Text style={styles.subtitle}>Backup Class</Text>
-            </View>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: 120,
-              marginHorizontal: 22,
-              marginVertical: 15,
-            }}>
-            <View>
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: 'bold',
-                  letterSpacing: -0.3,
-                  color: '#474646',
-                }}>
-                {data.courseSchedules[0]?.totalRevisions
-                  ? data.courseSchedules[0]?.totalRevisions
-                  : 'Not available'}
-              </Text>
-            </View>
-            <View>
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: 'bold',
-                  letterSpacing: -0.3,
-                  color: '#474646',
-                }}>
-                {data.courseSchedules[0]?.totalRevisions
-                  ? data.courseSchedules[0]?.totalRevisions
-                  : 'Not available'}
-              </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: 120,
+                marginHorizontal: 22,
+                marginVertical: 15,
+              }}>
+              <View>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 'bold',
+                    letterSpacing: -0.3,
+                    color: '#474646',
+                  }}>
+                  {data.courseSchedules[0]?.totalRevisions
+                    ? data.courseSchedules[0]?.totalRevisions
+                    : 'Not available'}
+                </Text>
+              </View>
+              <View>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 'bold',
+                    letterSpacing: -0.3,
+                    color: '#474646',
+                  }}>
+                  {data.courseSchedules[0]?.totalRevisions
+                    ? data.courseSchedules[0]?.totalRevisions
+                    : 'Not available'}
+                </Text>
+              </View>
             </View>
           </View>
         </View>
@@ -301,8 +302,5 @@ const styles = StyleSheet.create({
   scrollViewContainer: {
     flexGrow: 1,
     // This allows the content to grow vertically
-  },
-  scrollView: {
-    maxHeight: 350, // Adjust this value to your desired maximum height
   },
 });

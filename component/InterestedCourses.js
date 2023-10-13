@@ -1,4 +1,4 @@
-import React , {useEffect,useState}from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   FlatList,
   Image,
@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import {useSelector} from 'react-redux';
-import { getAccessToken } from '../redux/actions';
+import {getAccessToken} from '../redux/actions';
 import BASE_URL from '../apiConfig';
 
 const note = `<svg width="14" height="16" viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -28,16 +28,49 @@ const imageUrl =
   'https://d3njjcbhbojbot.cloudfront.net/api/utilities/v1/imageproxy/https://coursera-course-photos.s3.amazonaws.com/cb/3c4030d65011e682d8b14e2f0915fa/shutterstock_226881610.jpg?auto=format%2Ccompress&dpr=1';
 
 const InterestedCourses = () => {
-  const [parentRes,setParentRes] = useState([]);
+  const [parentRes, setParentRes] = useState([]);
   const recordId = useSelector(state => state.recordId);
-  const data = [{"TotalLessonPlans":5,"Recommended":true,"id":"a0E1e000002qzjREAQ","DurationInMonths":8,"CourseName":"Hindi","courseImage":"<a href=\"<p><img src=\"https://c8.alamy.com/comp/MWXG4B/letter-a-alphabet-symbol-english-letter-english-alphabet-from-yellow-golden-on-a-white-background-with-clipping-path-MWXG4B.jpg\" alt=\"English letter hi-res stock photography and images - Alamy\"></img></p>\" target=\"_blank\"><img src=\"<p><img src=\"https://c8.alamy.com/comp/MWXG4B/letter-a-alphabet-symbol-english-letter-english-alphabet-from-yellow-golden-on-a-white-background-with-clipping-path-MWXG4B.jpg\" alt=\"English letter hi-res stock photography and images - Alamy\"></img></p>\" alt=\"Hindi\"></a>"},{"TotalLessonPlans":0,"Recommended":true,"id":"a0E1e000002St65EAC","DurationInMonths":10,"CourseName":"Kannada","courseImage":"<a href=\"<p><img src=\"https://languageveda--developer.sandbox.file.force.com/servlet/rtaImage?eid=a0E1e000002St65&amp;feoid=00N1e00000Y7v7Y&amp;refid=0EM1e0000005rzX\" alt=\"01.png\"></img></p>\" target=\"_blank\"><img src=\"<p><img src=\"https://languageveda--developer.sandbox.file.force.com/servlet/rtaImage?eid=a0E1e000002St65&amp;feoid=00N1e00000Y7v7Y&amp;refid=0EM1e0000005rzX\" alt=\"01.png\"></img></p>\" alt=\"Kannada\"></a>"},{"TotalLessonPlans":0,"Recommended":true,"id":"a0E1e000002T3opEAC","DurationInMonths":null,"CourseName":"Marathi","courseImage":"<a href=\"<p><img src=\"https://languageveda--developer.sandbox.file.force.com/servlet/rtaImage?eid=a0E1e000002T3op&amp;feoid=00N1e00000Y7v7Y&amp;refid=0EM1e0000005s0p\" alt=\"14.png\"></img></p>\" target=\"_blank\"><img src=\"<p><img src=\"https://languageveda--developer.sandbox.file.force.com/servlet/rtaImage?eid=a0E1e000002T3op&amp;feoid=00N1e00000Y7v7Y&amp;refid=0EM1e0000005s0p\" alt=\"14.png\"></img></p>\" alt=\"Marathi\"></a>"},{"TotalLessonPlans":0,"Recommended":true,"id":"a0E1e000002r5O7EAI","DurationInMonths":10,"CourseName":"Hindi","courseImage":null}]
+  const data = [
+    {
+      TotalLessonPlans: 5,
+      Recommended: true,
+      id: 'a0E1e000002qzjREAQ',
+      DurationInMonths: 8,
+      CourseName: 'Hindi',
+      courseImage:
+        '<a href="<p><img src="https://c8.alamy.com/comp/MWXG4B/letter-a-alphabet-symbol-english-letter-english-alphabet-from-yellow-golden-on-a-white-background-with-clipping-path-MWXG4B.jpg" alt="English letter hi-res stock photography and images - Alamy"></img></p>" target="_blank"><img src="<p><img src="https://c8.alamy.com/comp/MWXG4B/letter-a-alphabet-symbol-english-letter-english-alphabet-from-yellow-golden-on-a-white-background-with-clipping-path-MWXG4B.jpg" alt="English letter hi-res stock photography and images - Alamy"></img></p>" alt="Hindi"></a>',
+    },
+    {
+      TotalLessonPlans: 0,
+      Recommended: true,
+      id: 'a0E1e000002St65EAC',
+      DurationInMonths: 10,
+      CourseName: 'Kannada',
+      courseImage:
+        '<a href="<p><img src="https://languageveda--developer.sandbox.file.force.com/servlet/rtaImage?eid=a0E1e000002St65&amp;feoid=00N1e00000Y7v7Y&amp;refid=0EM1e0000005rzX" alt="01.png"></img></p>" target="_blank"><img src="<p><img src="https://languageveda--developer.sandbox.file.force.com/servlet/rtaImage?eid=a0E1e000002St65&amp;feoid=00N1e00000Y7v7Y&amp;refid=0EM1e0000005rzX" alt="01.png"></img></p>" alt="Kannada"></a>',
+    },
+    {
+      TotalLessonPlans: 0,
+      Recommended: true,
+      id: 'a0E1e000002T3opEAC',
+      DurationInMonths: null,
+      CourseName: 'Marathi',
+      courseImage:
+        '<a href="<p><img src="https://languageveda--developer.sandbox.file.force.com/servlet/rtaImage?eid=a0E1e000002T3op&amp;feoid=00N1e00000Y7v7Y&amp;refid=0EM1e0000005s0p" alt="14.png"></img></p>" target="_blank"><img src="<p><img src="https://languageveda--developer.sandbox.file.force.com/servlet/rtaImage?eid=a0E1e000002T3op&amp;feoid=00N1e00000Y7v7Y&amp;refid=0EM1e0000005s0p" alt="14.png"></img></p>" alt="Marathi"></a>',
+    },
+    {
+      TotalLessonPlans: 0,
+      Recommended: true,
+      id: 'a0E1e000002r5O7EAI',
+      DurationInMonths: 10,
+      CourseName: 'Hindi',
+      courseImage: null,
+    },
+  ];
 
-  
-  useEffect(()=>{
+  useEffect(() => {
     ParentrecommenedCoursesApi();
-  },[])
-
-  
+  }, []);
 
   const ParentrecommenedCoursesApi = async () => {
     const token = await getAccessToken();
@@ -53,17 +86,15 @@ const InterestedCourses = () => {
       },
     );
     let ParentRecApi = await response.json();
-    console.log('ParentApi recommanded ::::::::::::::',  ParentRecApi);
+    console.log('ParentApi recommanded ::::::::::::::', ParentRecApi);
     setParentRes(JSON.parse(ParentRecApi));
-   
   };
 
   const renderItem = ({item}) => {
     return (
-     
-      <TouchableOpacity 
-      // onPress={()=> navig}
-      style={styles.tile}>
+      <TouchableOpacity
+        // onPress={()=> navig}
+        style={styles.tile}>
         <View style={styles.tileView}>
           <View>
             <Image
@@ -80,10 +111,10 @@ const InterestedCourses = () => {
               <Text
                 style={{
                   fontSize: 14,
-                  fontWeight:"500",
+                  fontWeight: '500',
                   // letterSpacing: -0.3,
-                  color:"#000000",
-                  marginTop:10
+                  color: '#000000',
+                  marginTop: 10,
                 }}>
                 {item?.CourseName}
               </Text>
@@ -96,7 +127,7 @@ const InterestedCourses = () => {
               }}>
               <View
                 style={{
-                  marginLeft:10,
+                  marginLeft: 10,
                   flexDirection: 'row',
                   alignItems: 'center',
                   gap: 7,
@@ -107,11 +138,13 @@ const InterestedCourses = () => {
                   height="13.33"
                   color="#00000000"
                 />
-                <Text style={{color:"black",fontSize:12,fontWeight:"500"}}>{item?.DurationInMonths} months</Text>
+                <Text style={{color: 'black', fontSize: 12, fontWeight: '500'}}>
+                  {item?.DurationInMonths} months
+                </Text>
               </View>
               <View
                 style={{
-                  marginLeft:40,
+                  marginLeft: 40,
                   flexDirection: 'row',
                   // alignItems: 'center',
                   gap: 7,
@@ -122,7 +155,10 @@ const InterestedCourses = () => {
                   height="13.33"
                   color="#00000000"
                 />
-                <Text style={{color:"black",fontSize:12,fontWeight:"500"}}> {item?.TotalLessonPlans} lessons</Text>
+                <Text style={{color: 'black', fontSize: 12, fontWeight: '500'}}>
+                  {' '}
+                  {item?.TotalLessonPlans} lessons
+                </Text>
               </View>
             </View>
             <View
@@ -131,7 +167,7 @@ const InterestedCourses = () => {
                 justifyContent: 'flex-end',
                 alignItems: 'center',
                 gap: 8,
-                top:10
+                top: 10,
               }}>
               <SvgXml xml={star} width="14" height="14" color="#F38216" />
               <Text
@@ -146,17 +182,16 @@ const InterestedCourses = () => {
           </View>
         </View>
       </TouchableOpacity>
-     
     );
   };
 
   return (
-    <View style={{flex:1}}>
+    <View style={{flex: 1}}>
       <FlatList
         data={parentRes}
         renderItem={renderItem}
         // keyExtractor={item => item.id.toString()}
-        style={{maxHeight: 200}}
+        style={{flexGrow: 1}}
       />
     </View>
   );
@@ -174,7 +209,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     // justifyContent: 'center',
     // alignItems: 'center',
-
   },
   tileView: {
     flexDirection: 'row',
@@ -185,7 +219,7 @@ const styles = StyleSheet.create({
     width: 106,
     height: 93,
     borderRadius: 4,
-    marginLeft:12,
-    marginTop:10,
+    marginLeft: 12,
+    marginTop: 10,
   },
 });
