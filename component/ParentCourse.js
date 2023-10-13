@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {getAccessToken} from '../redux/actions';
 import BASE_URL from '../apiConfig';
@@ -7,6 +7,7 @@ import AnimatedCircularProgressBar from './AnimatedCircularProgressBar';
 
 const ParentCourse = ({batchId, contactId, CourseName}) => {
   const [data, setData] = useState(null);
+  const maxHeight = useWindowDimensions();
 
   useEffect(() => {
     parentCourseApi();

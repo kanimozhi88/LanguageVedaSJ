@@ -362,6 +362,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     marginHorizontal: 20,
     flex: 1,
+    maxHeight: 350,
   },
   scrollViewContainer: {
     flexGrow: 1,
@@ -382,12 +383,29 @@ const styles = StyleSheet.create({
   listContainer: {
     flexDirection: 'column',
     flexGrow: 1,
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    height: 120,
+
+    height: 379,
     width: 340,
-    backgroundColor: '#ffffff',
+    backgroundColor: 'white',
     elevation: 4,
     marginVertical: 10,
+  },
+  subtitle: {
+    fontWeight: '500',
+    fontSize: 16,
+    lineHeight: 24,
+    letterSpacing: -0.3,
+  },
+  readonlyInput: {
+    width: 197,
+    height: 38,
+    borderRadius: 4,
+    backgroundColor: '#F5F7FB',
+  },
+  readonlyInputFeedback: {
+    borderRadius: 4,
+    backgroundColor: '#F5F7FB',
+    width: 305,
+    height: 96,
   },
 });
