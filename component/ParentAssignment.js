@@ -3,7 +3,6 @@ import {View} from 'react-native';
 import {
   StyleSheet,
   Text,
-  FlatList,
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
@@ -30,10 +29,8 @@ const ParentAssignment = ({batchId, contactId}) => {
 
   const [seriesArr, setSeriesArr] = useState({
     completed: 1,
-    submitted: 1,
     InProgress: 1,
     Redo: 1,
-    YetToStart: 1,
   });
 
   const records = [
@@ -87,6 +84,11 @@ const ParentAssignment = ({batchId, contactId}) => {
   useEffect(() => {
     parentAssignmentApi();
   }, []);
+
+  useEffect(() => {
+    getPieChartStatus();
+  }, [final]);
+
   const parentAssignmentApi = async () => {
     let data = {};
     data.batchId = batchId;
@@ -111,27 +113,26 @@ const ParentAssignment = ({batchId, contactId}) => {
     setFinal(result?.records);
   };
 
-  const statusOrder = [
-    'Assignment Submitted',
-    'Vetting In Progress',
-    'Redo',
-    'Completed',
-  ];
-  if (final !== '') {
-    const sortedData = final.sort((a, b) => {
-      const statusA = statusOrder.indexOf(a.status);
-      const statusB = statusOrder.indexOf(b.status);
-      return statusA - statusB;
-    });
-    console.log('sorted data is', sortedData);
-  }
+  // const statusOrder = [
+  //   'Assignment Submitted',
+  //   'Yet_To_Submit',
+  //   'Redo',
+  //   'Completed',
+  // ];
+  // if (final !== '') {
+  //   const sortedData = final.sort((a, b) => {
+  //     const statusA = statusOrder.indexOf(a.status);
+  //     const statusB = statusOrder.indexOf(b.status);
+  //     return statusA - statusB;
+  //   });
+  //   console.log('sorted data is', sortedData);
+  // }
 
   const getPieChartStatus = () => {
     let completedCount = 0;
     let redoCount = 0;
-    let vettingInProgressCount = 0;
     let assignmentSubmittedCount = 0;
-    let yetToStartCount = 0; // Initialize a count for "Yet To Start"
+    let yetToStartCount = 0; 
 
     if (final !== '' && final.length > 0) {
       final.forEach(record => {
@@ -142,14 +143,11 @@ const ParentAssignment = ({batchId, contactId}) => {
           case 'Redo':
             redoCount++;
             break;
-          case 'Vetting In Progress':
-            vettingInProgressCount++;
-            break;
           case 'Assignment Submitted':
             assignmentSubmittedCount++;
             break;
           case 'Yet_To_Submit':
-            yetToStartCount++; // Increment the count for "Yet To Start"
+            yetToStartCount++; 
             break;
           default:
             break;
@@ -159,28 +157,23 @@ const ParentAssignment = ({batchId, contactId}) => {
 
     setSeriesArr({
       completed: completedCount,
-      submitted: assignmentSubmittedCount,
-      InProgress: vettingInProgressCount,
+      InProgress: assignmentSubmittedCount +yetToStartCount ,
       Redo: redoCount,
-      YetToStart: yetToStartCount, // Set the count for "Yet To Start"
     });
   };
 
   const widthAndHeight = 145;
   const series = [
     seriesArr.completed,
-    seriesArr.submitted,
     seriesArr.InProgress,
     seriesArr.Redo,
-    seriesArr.YetToStart,
   ];
-  const sliceColor = ['#9B88ED', '#04BFDA', '#FB67CA', '#FFA84A', '#959e41'];
+  const sliceColor = ['#4AE8C9', '#FF6969', '#78C1F3'];
 
   const toggler = () => {
     setOpenItem(!openItem);
     console.log('clicked');
   };
-  console.log('LENGTH IS::::::::', final?.length);
 
   const AssignmentItem = ({assignment, type}) => {
     const [showMessage, setShowMessage] = useState(false);
@@ -275,7 +268,7 @@ const ParentAssignment = ({batchId, contactId}) => {
       </View>
     );
   };
-
+  
   return (
     <>
       <ScrollView style={styles.container}>
@@ -285,11 +278,27 @@ const ParentAssignment = ({batchId, contactId}) => {
               <Text style={styles.title}> Assignment Status</Text>
             </View>
 
-            <View style={{alignSelf: 'center'}}>
+            <View style={{alignSelf: 'center', flexDirection:"row"}}>
+              <View style={{marginTop:30,marginRight:25}}>
+                <View style={{flexDirection:"row"}}>
+                <View style={{backgroundColor:"#4AE8C9",height:10,width:10,borderRadius:5,alignSelf:"center"}}/>
+                <Text style={{fontSize:14,fontWeight:"400",fontFamily:"Poppins",color:"#718096",marginLeft:10}}>completed - {((seriesArr?.completed)/final?.length)*100}%</Text>
+                </View>
+                
+                <View style={{flexDirection:"row"}}>
+                <View style={{backgroundColor:"#FF6969",height:10,width:10,borderRadius:5,alignSelf:"center"}}/>
+                <Text style={{fontSize:14,fontWeight:"400",fontFamily:"Poppins",color:"#718096",marginLeft:10}}>Pending - {((seriesArr?.InProgress)/final?.length)*100}%</Text>
+                </View>
+                
+                <View style={{flexDirection:"row"}}>
+                <View style={{backgroundColor:"#78C1F3",height:10,width:10,borderRadius:5,alignSelf:"center"}}/>
+                <Text style={{fontSize:14,fontWeight:"400",fontFamily:"Poppins",color:"#718096",marginLeft:10}}>Redo - {((seriesArr?.Redo)/final?.length)*100}%</Text>
+               </View>
+
+              </View>
               {seriesArr.completed !== 0 ||
-              seriesArr.submitted !== 0 ||
               seriesArr.InProgress !== 0 ||
-              seriesArr.Redo ? (
+              seriesArr.Redo !== 0 ? (
                 <PieChart
                   widthAndHeight={widthAndHeight}
                   series={series}
@@ -328,6 +337,7 @@ const ParentAssignment = ({batchId, contactId}) => {
                 alignSelf: 'center',
                 fontWeight: '500',
                 fontSize: 12,
+                left:80
               }}>
               Status
             </Text>
