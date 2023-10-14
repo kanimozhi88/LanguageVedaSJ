@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
-import {StyleSheet, Text, FlatList, ScrollView} from 'react-native';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import {StyleSheet, Text, ScrollView,TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 
 import BASE_URL from '../apiConfig';
@@ -196,7 +195,18 @@ const ParentAssesment = ({batchId, contactId}) => {
               {/* <View/> */}
 
               <Text style={styles.subtitle}>Test Date</Text>
-              <Text style={styles.readonlyInput}>{assignment?.testDate}</Text>
+              <Text style={styles.readonlyInput}>{assessment?.testDate}</Text>
+
+              <Text style={styles.subtitle}>Total Questions</Text>
+              <Text style={styles.readonlyInput}>
+                {assessment?.totalQuestions}
+              </Text>
+
+              <Text style={styles.subtitle}>Score</Text>
+              <Text style={styles.readonlyInput}>
+                {assessment?.score ? assessment?.score : 'Not available'} %
+              </Text>
+
               <Text style={styles.subtitle}>Feed Back</Text>
               <Text style={styles.readonlyInputFeedback}>
                 {' '}
@@ -364,7 +374,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     flexGrow: 1,
     // maxHeight: 350,
-    marginBottom:90,
+    marginBottom: 90,
   },
   scrollViewContainer: {
     flexGrow: 1,
