@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
-import {StyleSheet, Text, ScrollView,TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, ScrollView, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 
 import BASE_URL from '../apiConfig';
@@ -17,7 +17,6 @@ const upArrow = `<svg width="13" height="8" viewBox="0 0 13 8" fill="none" xmlns
 `;
 
 const ParentAssesment = ({batchId, contactId}) => {
-  const [openItem, setOpenItem] = useState(null);
   const [final, setFinal] = useState('');
   const [seriesArr, setSeriesArr] = useState({
     completed: 1,
@@ -28,6 +27,9 @@ const ParentAssesment = ({batchId, contactId}) => {
   useEffect(() => {
     parentAssessmentApi();
   }, []);
+  useEffect(() => {
+    getPieChartStatus();
+   }, [final]);
   const parentAssessmentApi = async () => {
     let data = {};
     data.batchId = batchId;
@@ -66,9 +68,7 @@ const ParentAssesment = ({batchId, contactId}) => {
   }
   const getPieChartStatus = () => {
     let completedCount = 0;
-    let redoCount = 0;
     let vettingInProgressCount = 0;
-    let assignmentSubmittedCount = 0;
     let yetToStartCount = 0; // Initialize a count for "Yet To Start"
 
     if (final !== '' && final.length > 0) {
@@ -77,16 +77,10 @@ const ParentAssesment = ({batchId, contactId}) => {
           case 'Completed':
             completedCount++;
             break;
-          case 'Redo':
-            redoCount++;
-            break;
-          case 'Vetting In Progress':
+          case 'In Progress':
             vettingInProgressCount++;
             break;
-          case 'Assignment Submitted':
-            assignmentSubmittedCount++;
-            break;
-          case 'Yet_To_Submit':
+          case 'Yet To Start':
             yetToStartCount++; // Increment the count for "Yet To Start"
             break;
           default:
@@ -97,9 +91,7 @@ const ParentAssesment = ({batchId, contactId}) => {
 
     setSeriesArr({
       completed: completedCount,
-      submitted: assignmentSubmittedCount,
       InProgress: vettingInProgressCount,
-      Redo: redoCount,
       YetToStart: yetToStartCount, // Set the count for "Yet To Start"
     });
   };
@@ -109,7 +101,7 @@ const ParentAssesment = ({batchId, contactId}) => {
     seriesArr.InProgress,
     seriesArr.YetToStart,
   ];
-  const sliceColor = ['#04BFDA', '#FB67CA', '#FFA84A'];
+  const sliceColor = ['#4AE8C9', '#78C1F3', '#fff264'];
   console.log('LENGTH IS::::::::', final?.length);
 
   const AssessmentItem = ({assessment, type}) => {
@@ -228,8 +220,79 @@ const ParentAssesment = ({batchId, contactId}) => {
               <Text style={styles.title}> Assessment Status</Text>
             </View>
 
-            <View style={{alignSelf: 'center'}}>
-              {seriesArr.completed !== 0 || seriesArr.InProgress !== 0 ? (
+            <View style={{alignSelf: 'center', flexDirection: 'row'}}>
+              <View style={{marginTop: 30, marginRight: 25}}>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      backgroundColor: '#4AE8C9',
+                      height: 10,
+                      width: 10,
+                      borderRadius: 5,
+                      alignSelf: 'center',
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '400',
+                      fontFamily: 'Poppins',
+                      color: '#718096',
+                      marginLeft: 10,
+                    }}>
+                    Completed - {(seriesArr?.completed / final?.length) * 100}%
+                  </Text>
+                </View>
+
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      backgroundColor: '#78C1F3',
+                      height: 10,
+                      width: 10,
+                      borderRadius: 5,
+                      alignSelf: 'center',
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '400',
+                      fontFamily: 'Poppins',
+                      color: '#718096',
+                      marginLeft: 10,
+                    }}>
+                    In Progress -{' '}
+                    {(seriesArr?.InProgress / final?.length) * 100}%
+                  </Text>
+                </View>
+
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      backgroundColor: '#fff264',
+                      height: 10,
+                      width: 10,
+                      borderRadius: 5,
+                      alignSelf: 'center',
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '400',
+                      fontFamily: 'Poppins',
+                      color: '#718096',
+                      marginLeft: 10,
+                    }}>
+                    Yet to start -{' '}
+                    {(seriesArr?.YetToStart / final?.length) * 100}%
+                  </Text>
+                </View>
+              </View>
+              {seriesArr.completed !== 0 ||
+              seriesArr.InProgress !== 0 ||
+              seriesArr.YetToStart !== 0 ? (
                 <PieChart
                   widthAndHeight={widthAndHeight}
                   series={series}
@@ -240,27 +303,6 @@ const ParentAssesment = ({batchId, contactId}) => {
                 <></>
               )}
             </View>
-            {/* <View
-            style={{
-              width: 130,
-              height: 130,
-              borderRadius: 65,
-              borderColor: '#999999',
-              borderWidth: 1,
-              alignSelf:"center"
-            }}>
-            <AnimatedCircularProgressBar
-              size={127}
-              width={20}
-              fill={null}
-              tintColor="#AFFFCF"
-              backgroundColor="#F9F9F9"
-              duration={500} // Animation duration
-              max={100} // Max progress value
-              style={{fontSize: 18, color: 'white'}}
-            />
-          </View> */}
-
             <Text
               style={{
                 color: '#000000',

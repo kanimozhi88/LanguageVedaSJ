@@ -4,6 +4,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {getAccessToken} from '../redux/actions';
 import BASE_URL from '../apiConfig';
 import AnimatedCircularProgressBar from './AnimatedCircularProgressBar';
+import {AnimatedCircularProgress} from 'react-native-circular-progress';
 
 const ParentCourse = ({batchId, contactId, CourseName}) => {
   const [data, setData] = useState(null);
@@ -46,8 +47,51 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
       },
     );
     let result = await response.json();
+    console.log('parent course ====', result);
     setData(result);
   };
+  //Total Attendance percentage cal
+  const calculatePercentage = (value, total) => {
+    return (total / value) * 100;
+  };
+  const calculateOverallCourseDurationDaysPercentage = data => {
+    if (!data || data.length === 0) {
+      return 0;
+    }
+
+    const totalDuration = data.reduce(
+      (total, item) => total + item.CourseDurationDays,
+      0,
+    );
+    const overallPercentage = calculatePercentage(totalDuration, data.length); // Assuming the total course duration is 30 days for each object
+
+    return overallPercentage;
+  };
+
+  const overallPercentage = calculateOverallCourseDurationDaysPercentage(
+    data?.attendance,
+  );
+  //Attence Progress Bar
+  const [currentAttendancetFill, setCurrentAttendanceFill] = useState(0);
+  const targetFill = overallPercentage;
+  const duration = 600; // Animation duration in milliseconds
+  const intervalDuration = 1000; // Interval duration in milliseconds (time between each update)
+
+  useEffect(() => {
+    let animationInterval;
+    const step =
+      (targetFill - currentAttendancetFill) * (intervalDuration / duration);
+
+    if (currentAttendancetFill < targetFill) {
+      animationInterval = setInterval(() => {
+        setCurrentAttendanceFill(prevFill => {
+          const newFill = prevFill + step;
+          return newFill >= targetFill ? targetFill : newFill;
+        });
+      }, intervalDuration);
+    }
+    return () => clearInterval(animationInterval);
+  }, [currentAttendancetFill, targetFill]);
 
   return (
     <ScrollView
@@ -182,16 +226,21 @@ const ParentCourse = ({batchId, contactId, CourseName}) => {
               borderWidth: 1,
               alignSelf: 'center',
             }}>
-            <AnimatedCircularProgressBar
-              size={127}
+            <AnimatedCircularProgress
+              style={{alignSelf: 'center', margin: 4, color: 'orange'}}
+              size={120}
               width={20}
-              fill={null}
+              fill={currentAttendancetFill}
+              rotation={0}
+              lineCap="round"
               tintColor="#AFFFCF"
-              backgroundColor="#F9F9F9"
-              duration={500} // Animation duration
-              max={100} // Max progress value
-              style={{fontSize: 18, color: 'white'}}
-            />
+              backgroundColor="#F9F9F9">
+              {fill => (
+                <Text style={{fontSize: 18, color: 'white'}}>{`${Math.round(
+                  fill,
+                )}%`}</Text>
+              )}
+            </AnimatedCircularProgress>
           </View>
           <Text
             style={{

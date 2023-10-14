@@ -1,15 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
-import {
-  StyleSheet,
-  Text,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, Text, ScrollView, TouchableOpacity} from 'react-native';
 import {SvgXml} from 'react-native-svg';
 import PieChart from 'react-native-pie-chart';
-
-// import {TouchableOpacity} from 'react-native-gesture-handler';
 import {getAccessToken} from '../redux/actions';
 import BASE_URL from '../apiConfig';
 
@@ -24,7 +17,6 @@ const upArrow = `<svg width="13" height="8" viewBox="0 0 13 8" fill="none" xmlns
 
 const ParentAssignment = ({batchId, contactId}) => {
   const [openItem, setOpenItem] = useState(false);
-  const [data, setData] = useState(null);
   const [final, setFinal] = useState('');
 
   const [seriesArr, setSeriesArr] = useState({
@@ -109,7 +101,6 @@ const ParentAssignment = ({batchId, contactId}) => {
     );
     let result = await response.json();
     console.log('parent assignment ====', result);
-    setData(result);
     setFinal(result?.records);
   };
 
@@ -132,7 +123,7 @@ const ParentAssignment = ({batchId, contactId}) => {
     let completedCount = 0;
     let redoCount = 0;
     let assignmentSubmittedCount = 0;
-    let yetToStartCount = 0; 
+    let yetToStartCount = 0;
 
     if (final !== '' && final.length > 0) {
       final.forEach(record => {
@@ -147,7 +138,7 @@ const ParentAssignment = ({batchId, contactId}) => {
             assignmentSubmittedCount++;
             break;
           case 'Yet_To_Submit':
-            yetToStartCount++; 
+            yetToStartCount++;
             break;
           default:
             break;
@@ -157,17 +148,13 @@ const ParentAssignment = ({batchId, contactId}) => {
 
     setSeriesArr({
       completed: completedCount,
-      InProgress: assignmentSubmittedCount +yetToStartCount ,
+      InProgress: assignmentSubmittedCount + yetToStartCount,
       Redo: redoCount,
     });
   };
 
   const widthAndHeight = 145;
-  const series = [
-    seriesArr.completed,
-    seriesArr.InProgress,
-    seriesArr.Redo,
-  ];
+  const series = [seriesArr.completed, seriesArr.InProgress, seriesArr.Redo];
   const sliceColor = ['#4AE8C9', '#FF6969', '#78C1F3'];
 
   const toggler = () => {
@@ -268,7 +255,7 @@ const ParentAssignment = ({batchId, contactId}) => {
       </View>
     );
   };
-  
+
   return (
     <>
       <ScrollView style={styles.container}>
@@ -278,23 +265,73 @@ const ParentAssignment = ({batchId, contactId}) => {
               <Text style={styles.title}> Assignment Status</Text>
             </View>
 
-            <View style={{alignSelf: 'center', flexDirection:"row"}}>
-              <View style={{marginTop:30,marginRight:25}}>
-                <View style={{flexDirection:"row"}}>
-                <View style={{backgroundColor:"#4AE8C9",height:10,width:10,borderRadius:5,alignSelf:"center"}}/>
-                <Text style={{fontSize:14,fontWeight:"400",fontFamily:"Poppins",color:"#718096",marginLeft:10}}>completed - {((seriesArr?.completed)/final?.length)*100}%</Text>
+            <View style={{alignSelf: 'center', flexDirection: 'row'}}>
+              <View style={{marginTop: 30, marginRight: 25}}>
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      backgroundColor: '#4AE8C9',
+                      height: 10,
+                      width: 10,
+                      borderRadius: 5,
+                      alignSelf: 'center',
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '400',
+                      fontFamily: 'Poppins',
+                      color: '#718096',
+                      marginLeft: 10,
+                    }}>
+                    completed - {(seriesArr?.completed / final?.length) * 100}%
+                  </Text>
                 </View>
-                
-                <View style={{flexDirection:"row"}}>
-                <View style={{backgroundColor:"#FF6969",height:10,width:10,borderRadius:5,alignSelf:"center"}}/>
-                <Text style={{fontSize:14,fontWeight:"400",fontFamily:"Poppins",color:"#718096",marginLeft:10}}>Pending - {((seriesArr?.InProgress)/final?.length)*100}%</Text>
-                </View>
-                
-                <View style={{flexDirection:"row"}}>
-                <View style={{backgroundColor:"#78C1F3",height:10,width:10,borderRadius:5,alignSelf:"center"}}/>
-                <Text style={{fontSize:14,fontWeight:"400",fontFamily:"Poppins",color:"#718096",marginLeft:10}}>Redo - {((seriesArr?.Redo)/final?.length)*100}%</Text>
-               </View>
 
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      backgroundColor: '#FF6969',
+                      height: 10,
+                      width: 10,
+                      borderRadius: 5,
+                      alignSelf: 'center',
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '400',
+                      fontFamily: 'Poppins',
+                      color: '#718096',
+                      marginLeft: 10,
+                    }}>
+                    Pending - {(seriesArr?.InProgress / final?.length) * 100}%
+                  </Text>
+                </View>
+
+                <View style={{flexDirection: 'row'}}>
+                  <View
+                    style={{
+                      backgroundColor: '#78C1F3',
+                      height: 10,
+                      width: 10,
+                      borderRadius: 5,
+                      alignSelf: 'center',
+                    }}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: '400',
+                      fontFamily: 'Poppins',
+                      color: '#718096',
+                      marginLeft: 10,
+                    }}>
+                    Redo - {(seriesArr?.Redo / final?.length) * 100}%
+                  </Text>
+                </View>
               </View>
               {seriesArr.completed !== 0 ||
               seriesArr.InProgress !== 0 ||
@@ -337,7 +374,7 @@ const ParentAssignment = ({batchId, contactId}) => {
                 alignSelf: 'center',
                 fontWeight: '500',
                 fontSize: 12,
-                left:80
+                left: 80,
               }}>
               Status
             </Text>
