@@ -29,7 +29,7 @@ const ParentAssesment = ({batchId, contactId}) => {
   }, []);
   useEffect(() => {
     getPieChartStatus();
-   }, [final]);
+  }, [final]);
   const parentAssessmentApi = async () => {
     let data = {};
     data.batchId = batchId;
