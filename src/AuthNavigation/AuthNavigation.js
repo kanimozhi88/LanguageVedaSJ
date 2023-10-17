@@ -25,50 +25,51 @@ const AuthNavigation = ({isFirstLaunch}) => {
 
    
     return (
-     <NavigationContainer>
-         {/* {(recordId !== '' || recordId !== null || Status === 'Success') && statusOtp !== 'Success' ?( */}
-     { (recordId === '' || Status !== 'Success')  && statusOtp !== 'Success' ? (
-        <Stack.Navigator>
-            { isFirstLaunch ?
-                <Stack.Screen
-                    name="OnboardingScreen"
-                    component={OnboardingScreen}
-                    options={{
-                        headerShown: false
-                    }}
-                />
-                : <></>}
-            <Stack.Screen
-                name="LoginScreen"
-                component={LoginScreen}
+      <NavigationContainer>
+        {/* {(recordId !== '' || recordId !== null || Status === 'Success') && statusOtp !== 'Success' ?( */}
+        {(recordId === '' || Status !== 'Success') &&
+        statusOtp !== 'Success' ? (
+          <Stack.Navigator>
+            {isFirstLaunch ? (
+              <Stack.Screen
+                name="OnboardingScreen"
+                component={OnboardingScreen}
                 options={{
-                    headerShown: false
+                  headerShown: false,
                 }}
+              />
+            ) : (
+              <></>
+            )}
+            <Stack.Screen
+              name="LoginScreen"
+              component={LoginScreen}
+              options={{
+                headerShown: false,
+              }}
             />
             <Stack.Screen
-                name="OtpValidation"
-                component={OtpValidation}
-                options={{
-                    headerShown: false
-                }}
+              name="OtpValidation"
+              component={OtpValidation}
+              options={{
+                headerShown: false,
+              }}
             />
             <Stack.Screen
-                name="PasswordSet"
-                component={PasswordSet}
-                options={{
-                    headerShown: false
-                }}
+              name="PasswordSet"
+              component={PasswordSet}
+              options={{
+                headerShown: false,
+              }}
             />
-            
+
             {/* {recordId !== '' : <></> :<></>} */}
-        </Stack.Navigator>
-       
-       ) : <TabNavigation/>}
-        </NavigationContainer> 
-        
-        
-       
-    )
+          </Stack.Navigator>
+        ) : (
+          <TabNavigation />
+        )}
+      </NavigationContainer>
+    );
 }
 
 export default AuthNavigation;

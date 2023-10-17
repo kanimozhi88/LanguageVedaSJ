@@ -11,6 +11,7 @@ import moment from 'moment-timezone';
 import {SvgXml} from 'react-native-svg';
 import InterestedCourses from '../../component/InterestedCourses';
 import BottomDrawer from '../../component/BottomDrawer';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const courses = `
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -179,7 +180,7 @@ const MyCourses = () => {
   };
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <View style={styles.nameViewStyle}>
         {recordType == 'Parent' ? (
           <TouchableOpacity
@@ -452,7 +453,7 @@ const MyCourses = () => {
       ) : (
         <View></View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
